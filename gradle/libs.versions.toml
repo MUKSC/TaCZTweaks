@@ -1,0 +1,31 @@
+[versions]
+minecraft = "1.20.1"
+parchment = "2023.09.03"
+minecraft-forge = "1.20.1-47.3.12"
+minecraft-range = "[1.20,1.20.2)"
+forge = "47.3.12"
+forge-gradle = "[6.0,6.2)"
+librarian = "1.2.0"
+mixin = "0.8.5"
+mixin-gradle = "0.7-SNAPSHOT"
+mixinsquared = "0.2.0"
+mixinextras = "0.4.1"
+
+tacz = "Qd1RlJ8k"
+neat = "1.20.1-41-forge"
+
+[libraries]
+net-minecraftforge-forge = { module = "net.minecraftforge:forge", version.ref = "minecraft-forge" }
+com-github-bawnorton-mixinsquared-common = { module = "com.github.bawnorton.mixinsquared:mixinsquared-common", version.ref = "mixinsquared" }
+com-github-bawnorton-mixinsquared-forge = { module = "com.github.bawnorton.mixinsquared:mixinsquared-forge", version.ref = "mixinsquared" }
+io-github-llamalad7-mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
+io-github-llamalad7-mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
+org-spongepowered-mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
+
+modrinth-tacz = { module = "maven.modrinth:timeless-and-classics-zero", version.ref = "tacz" }
+modrinth-neat = { module = "maven.modrinth:neat", version.ref = "neat" }
+
+[plugins]
+forge-gradle = { id = "net.minecraftforge.gradle", version.ref = "forge-gradle" }
+librarian-forgegradle = { id = "org.parchmentmc.librarian.forgegradle", version.ref = "librarian" }
+mixin = { id = "org.spongepowered.mixin", version.ref = "mixin-gradle" }
