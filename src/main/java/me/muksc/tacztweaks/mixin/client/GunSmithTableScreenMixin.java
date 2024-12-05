@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks.mixin.client;
 
+import com.google.common.collect.Lists;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -18,27 +19,33 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Debug;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Debug(export = true)
 @Mixin(value = GunSmithTableScreen.class, remap = false)
 public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<GunSmithTableMenu> {
     @Shadow private List<ResourceLocation> selectedRecipeList;
 
     @Shadow @Nullable private Int2IntArrayMap playerIngredientCount;
 
-    @Shadow @Nullable private GunSmithTableRecipe selectedRecipe;
+    @Shadow @Final private Map<String, List<ResourceLocation>> recipes;
+
+    @Shadow @Final private List<String> recipeKeys;
 
     public GunSmithTableScreenMixin(GunSmithTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    @Inject(method = "classifyRecipes", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/TimelessAPI;getAllRecipes()Ljava/util/Map;"))
+    private void classifyRecipes$ensureAllRecipeKeysArePresent(CallbackInfo ci) {
+        recipeKeys.forEach(recipeKey -> recipes.computeIfAbsent(recipeKey, key -> Lists.newArrayList()));
     }
 
     @ModifyExpressionValue(method = "classifyRecipes", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/TimelessAPI;getAllRecipes()Ljava/util/Map;"))
@@ -64,38 +71,37 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
                 if (ammo != null) {
                     return ammo.isAmmoOfGun(gunStack, recipe.getOutput());
                 }
-                return false;
+                return true;
             }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"))
-    private Object init$selectedRecipeList$nullIfNullOrEmpty(List<ResourceLocation> instance, int i, Operation<Object> original) {
-        if (instance != null && !instance.isEmpty()) return original.call(instance, i);
+    private Object init$selectedRecipeList$nullIfEmpty(List<ResourceLocation> instance, int i, Operation<Object> original) {
+        if (!instance.isEmpty()) return original.call(instance, i);
         return null;
     }
 
     @WrapWithCondition(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gui/GunSmithTableScreen;getPlayerIngredientCount(Lcom/tacz/guns/crafting/GunSmithTableRecipe;)V"))
-    private boolean init$playerIngredientCount$nullIfNullOrEmpty(GunSmithTableScreen instance, GunSmithTableRecipe ingredient) {
-        if (selectedRecipeList != null && !selectedRecipeList.isEmpty()) return true;
+    private boolean init$playerIngredientCount$nullIfEmpty(GunSmithTableScreen instance, GunSmithTableRecipe ingredient) {
+        if (!selectedRecipeList.isEmpty()) return true;
         playerIngredientCount = null;
         return false;
     }
 
     @WrapOperation(method = "addTypeButtons", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean addTypeButtons$trueIfNull(List<ResourceLocation> instance, Operation<Boolean> original) {
-        if (instance != null) return original.call(instance);
-        return true;
+    private boolean addTypeButtons$renderTypeButtonRegardless(List<ResourceLocation> instance, Operation<Boolean> original) {
+        return false;
     }
 
     @WrapOperation(method = "lambda$addTypeButtons$7", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"))
-    private Object addTypeButtons$selectedRecipeList$nullIfNullOrEmpty(List<ResourceLocation> instance, int i, Operation<Object> original) {
-        if (instance != null && !instance.isEmpty()) return original.call(instance, i);
+    private Object addTypeButtons$selectedRecipeList$nullIfEmpty(List<ResourceLocation> instance, int i, Operation<Object> original) {
+        if (!instance.isEmpty()) return original.call(instance, i);
         return null;
     }
 
     @WrapWithCondition(method = "lambda$addTypeButtons$7", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gui/GunSmithTableScreen;getPlayerIngredientCount(Lcom/tacz/guns/crafting/GunSmithTableRecipe;)V"))
-    private boolean addTypeButtons$playerIngredientCount$nullIfNullOrEmpty(GunSmithTableScreen instance, GunSmithTableRecipe ingredient) {
-        if (selectedRecipeList != null && !selectedRecipeList.isEmpty()) return true;
+    private boolean addTypeButtons$playerIngredientCount$nullIfEmpty(GunSmithTableScreen instance, GunSmithTableRecipe ingredient) {
+        if (!selectedRecipeList.isEmpty()) return true;
         playerIngredientCount = null;
         return false;
     }
