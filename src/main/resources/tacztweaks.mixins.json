@@ -11,8 +11,9 @@
     "LivingEntityShootMixin"
   ],
   "client": [
-    "client.LocalPlayerMixin",
+    "client.GunSmithTableScreenMixin",
     "client.LocalPlayerAimMixin",
+    "client.LocalPlayerMixin",
     "client.LocalPlayerShootMixin",
     "client.MouseHandlerMixinMixin"
   ],
