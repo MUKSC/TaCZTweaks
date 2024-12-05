@@ -9,15 +9,15 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(LivingEntityAim.class)
+@Mixin(value = LivingEntityAim.class, remap = false)
 public abstract class LivingEntityAimMixin {
-    @ModifyExpressionValue(method = "tickSprint", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/ReloadState$StateType;isReloading()Z", remap = false), remap = false)
+    @ModifyExpressionValue(method = "tickSprint", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/ReloadState$StateType;isReloading()Z"))
     private boolean sprintWhileReloading(boolean original) {
         if (!Config.sprintWhileReloading) return original;
         return false;
     }
 
-    @ModifyExpressionValue(method = "tickSprint", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;isAiming:Z", remap = false), remap = false)
+    @ModifyExpressionValue(method = "tickSprint", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;isAiming:Z"))
     private boolean preventSprintingWhileShootCooldown(boolean original, @Local IGunOperator operator) {
         if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return original;
         return original || operator.getSynShootCoolDown() > 0L;

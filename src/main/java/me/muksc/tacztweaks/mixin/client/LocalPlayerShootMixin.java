@@ -14,15 +14,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = LocalPlayerShoot.class, remap = false)
 public abstract class LocalPlayerShootMixin {
-    @Shadow(remap = false) @Final private LocalPlayer player;
+    @Shadow @Final private LocalPlayer player;
 
-    @ModifyExpressionValue(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/IGunOperator;getSynSprintTime()F", remap = false), remap = false)
+    @ModifyExpressionValue(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/IGunOperator;getSynSprintTime()F"))
     private float shootWhileSprinting(float original) {
         if (Config.shootWhileSprinting == Config.EShootWhileSprinting.DISABLED) return original;
         return 0.0F;
     }
 
-    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerShoot;doShoot(Lcom/tacz/guns/client/resource/index/ClientGunIndex;Lcom/tacz/guns/api/item/IGun;Lnet/minecraft/world/item/ItemStack;Lcom/tacz/guns/resource/pojo/data/gun/GunData;J)V", remap = false), remap = false)
+    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerShoot;doShoot(Lcom/tacz/guns/client/resource/index/ClientGunIndex;Lcom/tacz/guns/api/item/IGun;Lnet/minecraft/world/item/ItemStack;Lcom/tacz/guns/resource/pojo/data/gun/GunData;J)V"))
     private void stopSprintingOnShot(CallbackInfoReturnable<ShootResult> cir) {
         if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return;
         player.setSprinting(false);

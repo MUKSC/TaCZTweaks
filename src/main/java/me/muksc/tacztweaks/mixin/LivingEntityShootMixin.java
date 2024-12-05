@@ -15,17 +15,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Supplier;
 
-@Mixin(LivingEntityShoot.class)
+@Mixin(value = LivingEntityShoot.class, remap = false)
 public abstract class LivingEntityShootMixin {
-    @Shadow(remap = false) @Final private LivingEntity shooter;
+    @Shadow @Final private LivingEntity shooter;
 
-    @ModifyExpressionValue(method = "shoot", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;sprintTimeS:F", remap = false), remap = false)
+    @ModifyExpressionValue(method = "shoot", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;sprintTimeS:F"))
     private float shootWhileSprinting(float original) {
         if (Config.shootWhileSprinting == Config.EShootWhileSprinting.DISABLED) return original;
         return 0.0F;
     }
 
-    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/network/NetworkHandler;sendToTrackingEntity(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;)V", remap = false), remap = false)
+    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/network/NetworkHandler;sendToTrackingEntity(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;)V"))
     private void stopSprintingOnShot(Supplier<Float> pitch, Supplier<Float> yaw, CallbackInfoReturnable<ShootResult> cir) {
         if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return;
         shooter.setSprinting(false);

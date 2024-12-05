@@ -8,7 +8,8 @@
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
     "LivingEntityAimMixin",
-    "LivingEntityShootMixin"
+    "LivingEntityShootMixin",
+    "ServerGamePacketListenerImplMixinMixin"
   ],
   "client": [
     "client.GunSmithTableScreenMixin",

@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import javax.annotation.Nullable;
 
-@Mixin(BlockRayTrace.class)
+@Mixin(value = BlockRayTrace.class, remap = false)
 public abstract class BlockRayTraceMixin {
-    @ModifyExpressionValue(method = "lambda$rayTraceBlocks$1", at = @At(value = "INVOKE", target = "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z"), remap = false)
+    @ModifyExpressionValue(method = "lambda$rayTraceBlocks$1", at = @At(value = "INVOKE", target = "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z"))
     private static boolean onAmmoHitBlock(
         boolean original,
         @Local(argsOnly = true) Level level,

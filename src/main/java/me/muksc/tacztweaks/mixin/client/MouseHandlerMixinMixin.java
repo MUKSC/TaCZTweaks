@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(value = MouseHandler.class, priority = 1500)
+@Mixin(value = MouseHandler.class, priority = 1500, remap = false)
 public abstract class MouseHandlerMixinMixin {
     @TargetHandler(
         mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",

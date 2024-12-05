@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(EntityKineticBullet.class)
+@Mixin(value = EntityKineticBullet.class, remap = false)
 public abstract class EntityKineticBulletMixin implements FlatDamageModifierHolder {
     @Unique
     private float tacztweaks$flatDamageModifier;
@@ -25,12 +25,12 @@ public abstract class EntityKineticBulletMixin implements FlatDamageModifierHold
         tacztweaks$flatDamageModifier = flatDamageModifier;
     }
 
-    @ModifyExpressionValue(method = "getDamage", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/ExtraDamage$DistanceDamagePair;getDamage()F", remap = false), remap = false)
+    @ModifyExpressionValue(method = "getDamage", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/ExtraDamage$DistanceDamagePair;getDamage()F"))
     private float applyFlatDamageModifier(float original) {
         return original + tacztweaks$flatDamageModifier;
     }
 
-    @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;", remap = false), remap = false)
+    @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;"))
     private void setInstance(CallbackInfo ci) {
         TaCZTweaks.ammoInstance = (EntityKineticBullet)(Object) this;
     }

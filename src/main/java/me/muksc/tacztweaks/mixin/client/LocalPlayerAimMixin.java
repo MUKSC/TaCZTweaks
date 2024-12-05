@@ -7,19 +7,18 @@ import com.tacz.guns.client.gameplay.LocalPlayerAim;
 import me.muksc.tacztweaks.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(LocalPlayerAim.class)
+@Mixin(value = LocalPlayerAim.class, remap = false)
 public abstract class LocalPlayerAimMixin {
-    @ModifyExpressionValue(method = "cancelSprint", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/ReloadState$StateType;isReloading()Z", remap = false), remap = false)
+    @ModifyExpressionValue(method = "cancelSprint", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/ReloadState$StateType;isReloading()Z"))
     private boolean sprintWhileReloading(boolean original) {
         if (!Config.sprintWhileReloading) return original;
         return false;
     }
 
-    @ModifyVariable(method = "cancelSprint", at = @At("LOAD"), ordinal = 1, remap = false)
-    private boolean stopSprintingOnShot(boolean isAiming, @Local IGunOperator operator) {
-        if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return isAiming;
-        return isAiming || operator.getSynShootCoolDown() > 0L;
+    @ModifyExpressionValue(method = "cancelSprint", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/IGunOperator;getSynIsAiming()Z"))
+    private boolean stopSprintingOnShot(boolean original, @Local IGunOperator operator) {
+        if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return original;
+        return original || operator.getSynShootCoolDown() > 0L;
     }
 }
