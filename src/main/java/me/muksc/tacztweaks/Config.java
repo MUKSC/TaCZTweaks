@@ -11,8 +11,9 @@ public class Config {
 
     private static final ForgeConfigSpec.EnumValue<EShootWhileSprinting> SHOOT_WHILE_SPRINTING = BUILDER.push("movement").defineEnum("shootWhileSprinting", EShootWhileSprinting.STOP_SPRINTING);
     private static final ForgeConfigSpec.BooleanValue SPRINT_WHILE_RELOADING = BUILDER.define("sprintWhileReloading", true);
-    private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_UPPER_LIMIT = BUILDER.defineInRange("crawlPitchUpperLimit", 25.0F, 0F, 90F);
-    private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_LOWER_LIMIT = BUILDER.defineInRange("crawlPitchLowerLimit", -10.0, -90F, 0F);
+    private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_UPPER_LIMIT = BUILDER.comment("Default: 25.0").defineInRange("crawlPitchUpperLimit", 25.0F, 0F, 90F);
+    private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_LOWER_LIMIT = BUILDER.comment("Default: -10.0").defineInRange("crawlPitchLowerLimit", -10.0, -90F, 0F);
+    private static final ForgeConfigSpec.BooleanValue DYNAMIC_CRAWL_PITCH_LIMIT = BUILDER.define("dynamicCrawlPitchLimit", false);
 
     private static final ForgeConfigSpec.BooleanValue PIERCE_BLOCKS = BUILDER.pop().push("bullet").define("pierceBlocks", true);
     private static final ForgeConfigSpec.ConfigValue<Float> PIERCE_DAMAGE_FALLOFF = BUILDER.define("pierceDamageFalloff", 5F);
@@ -25,6 +26,7 @@ public class Config {
     public static boolean sprintWhileReloading;
     public static float crawlPitchUpperLimit;
     public static float crawlPitchLowerLimit;
+    public static boolean dynamicCrawlPitchLimit;
 
     public static boolean pierceBlocks;
     public static float pierceDamageFalloff;
@@ -37,6 +39,7 @@ public class Config {
         sprintWhileReloading = SPRINT_WHILE_RELOADING.get();
         crawlPitchUpperLimit = CRAWL_PITCH_UPPER_LIMIT.get().floatValue();
         crawlPitchLowerLimit = CRAWL_PITCH_LOWER_LIMIT.get().floatValue();
+        dynamicCrawlPitchLimit = DYNAMIC_CRAWL_PITCH_LIMIT.get();
 
         pierceBlocks = PIERCE_BLOCKS.get();
         pierceDamageFalloff = PIERCE_DAMAGE_FALLOFF.get();
