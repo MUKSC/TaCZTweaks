@@ -16,7 +16,8 @@
     "client.LocalPlayerAimMixin",
     "client.LocalPlayerMixin",
     "client.LocalPlayerShootMixin",
-    "client.MouseHandlerMixinMixin"
+    "client.MouseHandlerMixinMixin",
+    "client.PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

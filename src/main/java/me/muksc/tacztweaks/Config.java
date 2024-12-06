@@ -17,6 +17,8 @@ public class Config {
     private static final ForgeConfigSpec.BooleanValue PIERCE_BLOCKS = BUILDER.pop().push("bullet").define("pierceBlocks", true);
     private static final ForgeConfigSpec.ConfigValue<Float> PIERCE_DAMAGE_FALLOFF = BUILDER.define("pierceDamageFalloff", 5F);
 
+    private static final ForgeConfigSpec.BooleanValue CRAWL_VISUAL_TWEAK = BUILDER.pop().push("misc").define("crawlVisualTweak", true);
+
     static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
     public static EShootWhileSprinting shootWhileSprinting;
@@ -27,6 +29,8 @@ public class Config {
     public static boolean pierceBlocks;
     public static float pierceDamageFalloff;
 
+    public static boolean crawlVisualTweak;
+
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         shootWhileSprinting = SHOOT_WHILE_SPRINTING.get();
@@ -36,6 +40,8 @@ public class Config {
 
         pierceBlocks = PIERCE_BLOCKS.get();
         pierceDamageFalloff = PIERCE_DAMAGE_FALLOFF.get();
+
+        crawlVisualTweak = CRAWL_VISUAL_TWEAK.get();
     }
 
     public enum EShootWhileSprinting {
