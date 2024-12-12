@@ -11,6 +11,7 @@ public class Config {
 
     private static final ForgeConfigSpec.EnumValue<EShootWhileSprinting> SHOOT_WHILE_SPRINTING = BUILDER.push("movement").defineEnum("shootWhileSprinting", EShootWhileSprinting.STOP_SPRINTING);
     private static final ForgeConfigSpec.BooleanValue SPRINT_WHILE_RELOADING = BUILDER.define("sprintWhileReloading", true);
+    private static final ForgeConfigSpec.BooleanValue RELOAD_WHILE_SHOOTING = BUILDER.define("reloadWhileShooting", true);
     private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_UPPER_LIMIT = BUILDER.comment("Default: 25.0").defineInRange("crawlPitchUpperLimit", 25.0F, 0F, 90F);
     private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_LOWER_LIMIT = BUILDER.comment("Default: -10.0").defineInRange("crawlPitchLowerLimit", -10.0, -90F, 0F);
     private static final ForgeConfigSpec.BooleanValue DYNAMIC_CRAWL_PITCH_LIMIT = BUILDER.define("dynamicCrawlPitchLimit", false);
@@ -24,6 +25,7 @@ public class Config {
 
     public static EShootWhileSprinting shootWhileSprinting;
     public static boolean sprintWhileReloading;
+    public static boolean reloadWhileShooting;
     public static float crawlPitchUpperLimit;
     public static float crawlPitchLowerLimit;
     public static boolean dynamicCrawlPitchLimit;
@@ -37,6 +39,7 @@ public class Config {
     static void onLoad(final ModConfigEvent event) {
         shootWhileSprinting = SHOOT_WHILE_SPRINTING.get();
         sprintWhileReloading = SPRINT_WHILE_RELOADING.get();
+        reloadWhileShooting = RELOAD_WHILE_SHOOTING.get();
         crawlPitchUpperLimit = CRAWL_PITCH_UPPER_LIMIT.get().floatValue();
         crawlPitchLowerLimit = CRAWL_PITCH_LOWER_LIMIT.get().floatValue();
         dynamicCrawlPitchLimit = DYNAMIC_CRAWL_PITCH_LIMIT.get();

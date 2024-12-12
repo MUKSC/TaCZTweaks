@@ -8,13 +8,16 @@
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
     "LivingEntityAimMixin",
+    "LivingEntityReloadMixin",
     "LivingEntityShootMixin",
     "ServerGamePacketListenerImplMixinMixin"
   ],
   "client": [
+    "accessor.LocalPlayerShootAccessor",
     "client.GunSmithTableScreenMixin",
     "client.LocalPlayerAimMixin",
     "client.LocalPlayerMixin",
+    "client.LocalPlayerReloadMixin",
     "client.LocalPlayerShootMixin",
     "client.MouseHandlerMixinMixin",
     "client.PlayerRendererMixin"
