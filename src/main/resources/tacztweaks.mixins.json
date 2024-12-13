@@ -5,12 +5,14 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "tacztweaks.refmap.json",
   "mixins": [
+    "BlockBehaviourMixin",
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
     "LivingEntityAimMixin",
     "LivingEntityReloadMixin",
     "LivingEntityShootMixin",
-    "ServerGamePacketListenerImplMixinMixin"
+    "ServerGamePacketListenerImplMixinMixin",
+    "accessor.EntityKineticBulletAccessor"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",

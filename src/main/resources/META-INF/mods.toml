@@ -30,3 +30,10 @@ mandatory = true
 versionRange = "[1.0.3,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies."${id}"]]
+modId = "kotlinforforge"
+mandatory = true
+versionRange = "${kotlinforforge_version_range}"
+ordering = "NONE"
+side = "BOTH"

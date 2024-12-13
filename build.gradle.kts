@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.kotlin)
     alias(libs.plugins.forge.gradle)
     alias(libs.plugins.librarian.forgegradle)
     alias(libs.plugins.mixin)
@@ -45,6 +46,7 @@ minecraft {
 }
 
 repositories {
+    maven("https://thedarkcolour.github.io/KotlinForForge")
     maven("https://maven.bawnorton.com/releases")
     exclusiveContent {
         forRepository {
@@ -62,6 +64,7 @@ repositories {
 
 dependencies {
     minecraft(libs.net.minecraftforge.forge)
+    implementation(libs.thedarkcolour.kotlinforforge)
     libs.com.github.bawnorton.mixinsquared.run {
         common.run {
             annotationProcessor(this)
@@ -100,8 +103,9 @@ tasks.processResources {
         "minecraft_version" to libs.versions.minecraft.asProvider().get(),
         "minecraft_version_range" to libs.versions.minecraft.range.get(),
         "forge_version" to libs.versions.forge.asProvider().get(),
-        "forge_version_range" to "[${libs.versions.forge.asProvider().get().split(".").first()},)",
-        "loader_version_range" to "[${libs.versions.forge.asProvider().get().split(".").first()},)"
+        "forge_version_range" to "[${libs.versions.forge.asProvider().get().substringBefore('.')},)",
+        "loader_version_range" to "[${libs.versions.forge.asProvider().get().substringBefore('.')},)",
+        "kotlinforforge_version_range" to "[${libs.versions.kotlinforforge.get().substringBeforeLast('.')},)"
     )
     inputs.properties(properties)
     filesMatching(listOf("META-INF/mods.toml", "pack.mcmeta")) { expand(properties) }

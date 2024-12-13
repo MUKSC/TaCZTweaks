@@ -1,10 +1,12 @@
 [versions]
+kotlin = "2.0.0"
 minecraft = "1.20.1"
 parchment = "2023.09.03"
 minecraft-forge = "1.20.1-47.3.12"
 minecraft-range = "[1.20,1.20.2)"
 forge = "47.3.12"
 forge-gradle = "[6.0,6.2)"
+kotlinforforge = "4.11.0"
 librarian = "1.2.0"
 mixin = "0.8.5"
 mixin-gradle = "0.7-SNAPSHOT"
@@ -16,6 +18,7 @@ neat = "1.20.1-41-forge"
 
 [libraries]
 net-minecraftforge-forge = { module = "net.minecraftforge:forge", version.ref = "minecraft-forge" }
+thedarkcolour-kotlinforforge = { module = "thedarkcolour:kotlinforforge", version.ref = "kotlinforforge" }
 com-github-bawnorton-mixinsquared-common = { module = "com.github.bawnorton.mixinsquared:mixinsquared-common", version.ref = "mixinsquared" }
 com-github-bawnorton-mixinsquared-forge = { module = "com.github.bawnorton.mixinsquared:mixinsquared-forge", version.ref = "mixinsquared" }
 io-github-llamalad7-mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
@@ -26,6 +29,7 @@ modrinth-tacz = { module = "maven.modrinth:timeless-and-classics-zero", version.
 modrinth-neat = { module = "maven.modrinth:neat", version.ref = "neat" }
 
 [plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 forge-gradle = { id = "net.minecraftforge.gradle", version.ref = "forge-gradle" }
 librarian-forgegradle = { id = "org.parchmentmc.librarian.forgegradle", version.ref = "librarian" }
 mixin = { id = "org.spongepowered.mixin", version.ref = "mixin-gradle" }

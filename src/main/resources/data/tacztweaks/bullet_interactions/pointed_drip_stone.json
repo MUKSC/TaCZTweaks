@@ -1,0 +1,15 @@
+{
+  "blocks": [
+    "minecraft:pointed_dripstone"
+  ],
+  "block_break": {
+    "type": "dynamic_damage",
+    "multiplier": 5.0
+  },
+  "pierce": {
+    "type": "damage",
+    "condition": "on_break",
+    "damage_falloff": 5
+  },
+  "drop": true
+}

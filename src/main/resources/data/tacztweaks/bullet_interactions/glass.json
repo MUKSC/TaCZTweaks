@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    "#forge:glass",
+    "#forge:glass_panes"
+  ],
+  "block_break": {
+    "type": "dynamic_damage"
+  },
+  "pierce": {
+    "type": "damage",
+    "condition": "always",
+    "damage_falloff": 2
+  }
+}

@@ -16,9 +16,6 @@ public class Config {
     private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_LOWER_LIMIT = BUILDER.comment("Default: -10.0").defineInRange("crawlPitchLowerLimit", -10.0, -90F, 0F);
     private static final ForgeConfigSpec.BooleanValue DYNAMIC_CRAWL_PITCH_LIMIT = BUILDER.define("dynamicCrawlPitchLimit", false);
 
-    private static final ForgeConfigSpec.BooleanValue PIERCE_BLOCKS = BUILDER.pop().push("bullet").define("pierceBlocks", true);
-    private static final ForgeConfigSpec.ConfigValue<Float> PIERCE_DAMAGE_FALLOFF = BUILDER.define("pierceDamageFalloff", 5F);
-
     private static final ForgeConfigSpec.BooleanValue CRAWL_VISUAL_TWEAK = BUILDER.pop().push("misc").define("crawlVisualTweak", true);
 
     static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -30,9 +27,6 @@ public class Config {
     public static float crawlPitchLowerLimit;
     public static boolean dynamicCrawlPitchLimit;
 
-    public static boolean pierceBlocks;
-    public static float pierceDamageFalloff;
-
     public static boolean crawlVisualTweak;
 
     @SubscribeEvent
@@ -43,9 +37,6 @@ public class Config {
         crawlPitchUpperLimit = CRAWL_PITCH_UPPER_LIMIT.get().floatValue();
         crawlPitchLowerLimit = CRAWL_PITCH_LOWER_LIMIT.get().floatValue();
         dynamicCrawlPitchLimit = DYNAMIC_CRAWL_PITCH_LIMIT.get();
-
-        pierceBlocks = PIERCE_BLOCKS.get();
-        pierceDamageFalloff = PIERCE_DAMAGE_FALLOFF.get();
 
         crawlVisualTweak = CRAWL_VISUAL_TWEAK.get();
     }
