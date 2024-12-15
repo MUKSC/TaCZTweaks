@@ -20,6 +20,7 @@ class BulletInteraction(
             override val key: String,
             override val codec: Codec<out BlockBreak>
         ) : DispatchCodec<BlockBreak> {
+            NEVER("never", Never.CODEC),
             COUNT("count", Count.CODEC),
             FIXED_DAMAGE("fixed_damage", FixedDamage.CODEC),
             DYNAMIC_DAMAGE("dynamic_damage", DynamicDamage.CODEC);
@@ -27,6 +28,14 @@ class BulletInteraction(
             companion object {
                 private val map = entries.associateBy(EBlockBreakType::key)
                 val CODEC = DispatchCodec.getCodec(map::getValue)
+            }
+        }
+
+        class Never : BlockBreak {
+            override val type: EBlockBreakType = EBlockBreakType.NEVER
+
+            companion object {
+                val CODEC = Codec.unit(Never())
             }
         }
 
@@ -84,12 +93,21 @@ class BulletInteraction(
             override val key: String,
             override val codec: Codec<out Pierce>
         ) : DispatchCodec<Pierce> {
+            NEVER("never", Never.CODEC),
             COUNT("count", Count.CODEC),
             DAMAGE("damage", Damage.CODEC);
 
             companion object {
                 private val map = EPierceType.entries.associateBy(EPierceType::key)
                 val CODEC = DispatchCodec.getCodec(map::getValue)
+            }
+        }
+
+        class Never : Pierce {
+            override val type: EPierceType = EPierceType.NEVER
+
+            companion object {
+                val CODEC = Codec.unit(Never())
             }
         }
 

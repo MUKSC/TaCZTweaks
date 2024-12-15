@@ -70,6 +70,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val armorIgnore = AttachmentDataUtils.getArmorIgnoreWithAttachment(gun.stack, gun.index?.gunData)
 
         val breakBlock = when (interaction.blockBreak) {
+            is BulletInteraction.BlockBreak.Never -> { false }
             is BulletInteraction.BlockBreak.Count -> BlockBreakingManager.addCurrentProgress(level, pos, 1.0F / interaction.blockBreak.count) >= 1.0F
             is BulletInteraction.BlockBreak.FixedDamage -> run {
                 val damage = interaction.blockBreak.damage
@@ -89,6 +90,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val ext = ammo as EntityKineticBulletExtension
         val accessor = ammo as EntityKineticBulletAccessor
         return when (interaction.pierce) {
+            is BulletInteraction.Pierce.Never -> { false }
             is BulletInteraction.Pierce.Count -> {
                 var pierce = ext.`tacztweaks$getBlockPierce`() < interaction.pierce.count && (!interaction.pierce.requireGunPierce || accessor.pierce > 0)
                 if (interaction.pierce.condition == ECondition.ON_BREAK) pierce = pierce && breakBlock
