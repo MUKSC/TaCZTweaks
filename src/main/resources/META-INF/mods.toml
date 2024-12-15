@@ -1,14 +1,17 @@
 modLoader = "javafml"
 loaderVersion = "${loader_version_range}"
-license = "All-Rights-Reserved"
+issueTrackerURL = "https://github.com/MUKSC/TaCZTweaks/issues"
+license = "GNU General Public License v3.0"
 
 [[mods]]
 modId = "${id}"
 version = "${version}"
 displayName = "${name}"
+displayURL = "https://modrinth.com/mod/tacz-tweaks"
+logoFile = "icon.png"
 authors = "MUKSC"
 description = '''
-'''
+A collection of random tweaks and features to enhance my experience with TaCZ.'''
 
 [[dependencies."${id}"]]
 modId = "forge"

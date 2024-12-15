@@ -118,7 +118,17 @@ tasks.jar {
             "Implementation-Version" to project.version
         ))
     }
+    from("LICENSE") {
+        rename { "${it}_${archiveBaseName.get()}" }
+    }
     finalizedBy("reobfJar")
+}
+
+tasks.jarJar {
+    from("LICENSE") {
+        rename { "${it}_${archiveBaseName.get()}" }
+    }
+    finalizedBy("reobfJarJar")
 }
 
 tasks.withType<JavaCompile>().configureEach {
