@@ -21,6 +21,7 @@
     "client.GunSmithTableScreenMixin",
     "client.LocalPlayerAimMixin",
     "client.LocalPlayerMixin",
+    "client.LocalPlayerMixinMixin",
     "client.LocalPlayerReloadMixin",
     "client.LocalPlayerShootMixin",
     "client.MouseHandlerMixinMixin",

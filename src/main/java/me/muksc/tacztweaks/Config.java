@@ -17,6 +17,7 @@ public class Config {
     private static final ForgeConfigSpec.BooleanValue DYNAMIC_CRAWL_PITCH_LIMIT = BUILDER.define("dynamicCrawlPitchLimit", false);
 
     private static final ForgeConfigSpec.BooleanValue CRAWL_VISUAL_TWEAK = BUILDER.pop().push("misc").define("crawlVisualTweak", true);
+    private static final ForgeConfigSpec.BooleanValue DISABLE_TACZ_CRAWL = BUILDER.comment("For better compatibility").define("disableTaCZCrawl", false);
 
     static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -28,6 +29,7 @@ public class Config {
     public static boolean dynamicCrawlPitchLimit;
 
     public static boolean crawlVisualTweak;
+    public static boolean disableTaCZCrawl;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -39,6 +41,7 @@ public class Config {
         dynamicCrawlPitchLimit = DYNAMIC_CRAWL_PITCH_LIMIT.get();
 
         crawlVisualTweak = CRAWL_VISUAL_TWEAK.get();
+        disableTaCZCrawl = DISABLE_TACZ_CRAWL.get();
     }
 
     public enum EShootWhileSprinting {
