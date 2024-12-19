@@ -1,8 +1,11 @@
 package me.muksc.tacztweaks;
 
+import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.data.BulletInteractionManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.TickEvent;
@@ -41,5 +44,13 @@ public class TaCZTweaks {
     public void onBlockBreak(BlockEvent.BreakEvent e) {
         if (!(e.getLevel() instanceof ServerLevel level)) return;
         BlockBreakingManager.INSTANCE.onBlockBreak(level, e.getPos());
+    }
+
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MOD_ID, value = Dist.CLIENT)
+    static class ClientSetupEvent {
+        @SubscribeEvent
+        public static void onClientSetup(RegisterKeyMappingsEvent event) {
+            event.register(UnloadKey.UNLOAD_KEY);
+        }
     }
 }

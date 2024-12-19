@@ -9,8 +9,10 @@
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
     "LivingEntityAimMixin",
+    "LivingEntityMixinMixin",
     "LivingEntityReloadMixin",
     "LivingEntityShootMixin",
+    "NetworkHandlerMixin",
     "ServerGamePacketListenerImplMixinMixin",
     "accessor.EntityKineticBulletAccessor"
   ],
