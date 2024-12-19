@@ -32,6 +32,7 @@ public abstract class MouseHandlerMixinMixin {
         if (!Config.dynamicCrawlPitchLimit) return Config.crawlPitchLowerLimit;
 
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return Config.crawlPitchLowerLimit;
         BlockHitResult result = player.clientLevel.clip(new ClipContext(
             player.getEyePosition(),
             player.getEyePosition().add(player.getLookAngle().scale(1.5)),
