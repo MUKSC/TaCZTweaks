@@ -9,6 +9,7 @@ import com.tacz.guns.api.item.IAmmo;
 import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.gui.GunSmithTableScreen;
+import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
 import com.tacz.guns.inventory.GunSmithTableMenu;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
@@ -20,11 +21,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +42,28 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
 
     public GunSmithTableScreenMixin(GunSmithTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    @ModifyExpressionValue(method = "lambda$addCraftButton$2", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/crafting/GunSmithTableRecipe;getInputs()Ljava/util/List;"))
+    private List<GunSmithTableIngredient> addCraftButton$creativeCraft(List<GunSmithTableIngredient> original) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || !player.isCreative()) return original;
+        return Collections.emptyList();
+    }
+
+    @ModifyArg(method = "renderIngredient", at = @At(value = "INVOKE", target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"), index = 1)
+    private Object[] renderIngredient$creativeCraft$modifyDisplayCount(Object[] args) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || !player.isCreative()) return args;
+        args[1] = 9999;
+        return args;
+    }
+
+    @ModifyArg(method = "renderIngredient", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", remap = true), index = 4)
+    private int renderIngredient$creativeCraft$modifyColor(int color) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || !player.isCreative()) return color;
+        return 16777215;
     }
 
     @Inject(method = "classifyRecipes", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/TimelessAPI;getAllRecipes()Ljava/util/Map;"))

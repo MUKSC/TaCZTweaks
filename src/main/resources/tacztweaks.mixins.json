@@ -8,6 +8,7 @@
     "BlockBehaviourMixin",
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
+    "GunSmithTableMenuMixin",
     "LivingEntityAimMixin",
     "LivingEntityMixinMixin",
     "LivingEntityReloadMixin",
