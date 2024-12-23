@@ -2,11 +2,13 @@ package me.muksc.tacztweaks.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.client.gameplay.LocalPlayerDataHolder;
 import com.tacz.guns.client.gameplay.LocalPlayerReload;
+import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.mixin.accessor.LocalPlayerShootAccessor;
@@ -17,18 +19,19 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = LocalPlayerReload.class, remap = false)
 public abstract class LocalPlayerReloadMixin {
     @Shadow @Final private LocalPlayer player;
     @Shadow @Final private LocalPlayerDataHolder data;
 
-    @ModifyArg(method = "doReload", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/animation/statemachine/GunAnimationStateMachine;setNoAmmo(Z)Lcom/tacz/guns/client/animation/statemachine/GunAnimationStateMachine;"), index = 0)
-    private boolean setNoAmmo(boolean noAmmo, @Local(argsOnly = true) IGun iGun, @Local(argsOnly = true) ItemStack mainhandItem, @Local Bolt boltType) {
-        if (!Config.reloadWhileShooting) return noAmmo;
+    @Inject(method = "doReload", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;stopPlayGunSound()V"))
+    private void setNoAmmo(IGun iGun, ClientGunIndex gunIndex, ItemStack mainhandItem, CallbackInfo ci, @Local Bolt boltType, @Local LocalBooleanRef noAmmoRef) {
+        if (!Config.reloadWhileShooting) return;
         int ammoCount = iGun.getCurrentAmmoCount(mainhandItem) + (iGun.hasBulletInBarrel(mainhandItem) && boltType != Bolt.OPEN_BOLT ? 1 : 0);
-        return ammoCount <= 0;
+        noAmmoRef.set(ammoCount <= 0);
     }
 
     @ModifyExpressionValue(method = "lambda$reload$1", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/client/gameplay/LocalPlayerDataHolder;clientStateLock:Z"))
