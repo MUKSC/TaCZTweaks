@@ -11,8 +11,9 @@ import kotlin.jvm.optionals.getOrNull
 object Context {
     lateinit var ammo: EntityKineticBullet
 
-    object Gun {
-        var stack: ItemStack? = null
+    class Gun(
+        val stack: ItemStack
+    ) {
         val gun: IGun?
             get() = IGun.getIGunOrNull(stack)
         val id: ResourceLocation?

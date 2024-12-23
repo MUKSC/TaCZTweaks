@@ -64,7 +64,8 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
      */
     fun handleInteraction(level: ServerLevel, state: BlockState, pos: BlockPos): Boolean {
         val ammo = Context.ammo
-        val gun = Context.Gun
+        val ext = ammo as EntityKineticBulletExtension
+        val gun = Context.Gun(ext.`tacztweaks$getGunStack`())
 
         val interaction = getInteraction(state, gun.id) ?: return false
         val armorIgnore = AttachmentDataUtils.getArmorIgnoreWithAttachment(gun.stack, gun.index?.gunData)
@@ -87,7 +88,6 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         }
         if (breakBlock) level.destroyBlock(pos, interaction.drop, ammo.owner)
 
-        val ext = ammo as EntityKineticBulletExtension
         val accessor = ammo as EntityKineticBulletAccessor
         return when (interaction.pierce) {
             is BulletInteraction.Pierce.Never -> { false }
