@@ -1,0 +1,2 @@
+- Creative players can now craft items in the Gun Smith Table without requiring items
+- Fixed the issue where bullets refer to the wrong gun when the player switches weapons before the bullet hits

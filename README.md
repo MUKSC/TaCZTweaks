@@ -7,6 +7,8 @@ TaCZ Tweaks is an addon for the [Timeless and Classics Zero](https://modrinth.co
 - Options to allow: shoot while sprinting, sprint while reloading, reload while shooting.
 - Options to change upper and lower pitch limit while crawling.
   - Additionally, an option to change pitch limits based on the hitbox of the blocks.
+- Recipes in the Gun Smith Table will be filtered according to the gun you're currently holding  
+  - Creative players can now craft items in the Gun Smith Table without requiring items
 - A new key config to unloading the gun.
 - A small visual tweak to the animation when transitioning into or out of the crawling state.
 - Option to completely disable TaCZ crawling for better mod compatibility.
