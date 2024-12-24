@@ -4,6 +4,7 @@ minecraft = "1.20.1"
 parchment = "2023.09.03"
 minecraft-forge = "1.20.1-47.3.12"
 minecraft-range = "[1.20,1.20.2)"
+minecraft-list = "1.20,1.20.1"
 forge = "47.3.12"
 forge-gradle = "[6.0,6.2)"
 kotlinforforge = "4.11.0"
@@ -12,6 +13,7 @@ mixin = "0.8.5"
 mixin-gradle = "0.7-SNAPSHOT"
 mixinsquared = "0.2.0"
 mixinextras = "0.4.1"
+mod-publish = "0.8.4"
 
 tacz = "1.0.3"
 tacz-modrinth = "Qd1RlJ8k"
@@ -34,3 +36,4 @@ kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 forge-gradle = { id = "net.minecraftforge.gradle", version.ref = "forge-gradle" }
 librarian-forgegradle = { id = "org.parchmentmc.librarian.forgegradle", version.ref = "librarian" }
 mixin = { id = "org.spongepowered.mixin", version.ref = "mixin-gradle" }
+mod-publish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish" }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.forge.gradle)
     alias(libs.plugins.librarian.forgegradle)
     alias(libs.plugins.mixin)
+    alias(libs.plugins.mod.publish)
 }
 
 version = project.property("mod_version") as String
@@ -134,4 +135,29 @@ tasks.jarJar {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+}
+
+publishMods {
+    displayName = "${project.findProperty("mod_name")} ${project.version}"
+    changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
+    file = tasks.jarJar.get().archiveFile
+    type = STABLE
+    modLoaders.add("forge")
+
+    modrinth {
+        projectId = project.findProperty("modrinth_id") as String
+        projectDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.addAll(libs.versions.minecraft.list.get().split(','))
+
+        requires("kotlin-for-forge")
+        requires("timeless-and-classics-zero")
+    }
+
+    github {
+        repository = project.findProperty("repository") as String
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        commitish = "main"
+        tagName = "v${project.version}"
+    }
 }
