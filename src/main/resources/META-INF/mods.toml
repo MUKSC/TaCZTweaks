@@ -30,7 +30,7 @@ side = "BOTH"
 [[dependencies."${id}"]]
 modId = "tacz"
 mandatory = true
-versionRange = "[1.0.3,)"
+versionRange = "${tacz_version_range}"
 ordering = "AFTER"
 side = "BOTH"
 
