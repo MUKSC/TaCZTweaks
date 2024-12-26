@@ -5,21 +5,24 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.tacz.guns.api.item.IAmmo;
-import com.tacz.guns.api.item.IAttachment;
-import com.tacz.guns.api.item.IGun;
+import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.client.gui.GunSmithTableScreen;
+import com.tacz.guns.client.resource.pojo.PackInfo;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
 import com.tacz.guns.inventory.GunSmithTableMenu;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import me.muksc.tacztweaks.UtilKt;
+import me.muksc.tacztweaks.client.Recipes;
+import me.muksc.tacztweaks.client.gui.PackFilterWidget;
+import me.muksc.tacztweaks.client.gui.SearchWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,20 +31,95 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Mixin(value = GunSmithTableScreen.class, remap = false)
 public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<GunSmithTableMenu> {
+    @Shadow private int indexPage;
+    @Shadow private String selectedType;
     @Shadow private List<ResourceLocation> selectedRecipeList;
-
+    @Shadow @Nullable private GunSmithTableRecipe selectedRecipe;
     @Shadow @Nullable private Int2IntArrayMap playerIngredientCount;
-
     @Shadow @Final private Map<String, List<ResourceLocation>> recipes;
-
     @Shadow @Final private List<String> recipeKeys;
+    @Shadow protected abstract void init();
+    @Shadow @Nullable protected abstract GunSmithTableRecipe getSelectedRecipe(ResourceLocation recipeId);
 
     public GunSmithTableScreenMixin(GunSmithTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    @Unique @Nullable
+    private SearchWidget tacztweaks$searchBar = null;
+
+    @Unique @Nullable
+    private PackFilterWidget tacztweaks$packFilter = null;
+
+    @Unique
+    private Map<String, PackInfo> tacztweaks$packs = Collections.emptyMap();
+
+    @Unique
+    private Map<ResourceLocation, String> tacztweaks$idToPackId = Collections.emptyMap();
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (tacztweaks$searchBar != null && tacztweaks$searchBar.mouseClicked(pMouseX, pMouseY, pButton)) return true;
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        boolean canSearch = pKeyCode != 256 && tacztweaks$searchBar != null;
+        if (canSearch && (tacztweaks$searchBar.keyPressed(pKeyCode, pScanCode, pModifiers) || tacztweaks$searchBar.canConsumeInput())) return true;
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+    }
+
+    @Override
+    public boolean charTyped(char pCodePoint, int pModifiers) {
+        if (tacztweaks$searchBar != null && tacztweaks$searchBar.charTyped(pCodePoint, pModifiers)) return true;
+        return super.charTyped(pCodePoint, pModifiers);
+    }
+
+    @Inject(method = "init", at = @At("TAIL"), remap = true)
+    private void init$addWidgets(CallbackInfo ci) {
+        if (tacztweaks$searchBar == null) {
+            tacztweaks$searchBar = new SearchWidget(font, 0, 0, 206, 18);
+            tacztweaks$searchBar.setResponder(query -> init());
+        }
+        tacztweaks$searchBar.setX(leftPos + 137);
+        tacztweaks$searchBar.setY(topPos + 190);
+        addRenderableWidget(tacztweaks$searchBar);
+
+        if (tacztweaks$packFilter == null) {
+            tacztweaks$packFilter = new PackFilterWidget(tacztweaks$packs, font, leftPos + 346, topPos + 4,  width - (leftPos + 346) - 5, 205);
+            tacztweaks$packFilter.setOnFilterChanged((index, filter) -> init());
+        }
+        addRenderableWidget(tacztweaks$packFilter);
+    }
+
+    @Inject(method = "init", at = @At("HEAD"), remap = true)
+    private void init$filterBySearchQuery(CallbackInfo ci) {
+        String query = tacztweaks$searchBar != null ? tacztweaks$searchBar.getValue().toLowerCase() : "";
+        selectedRecipeList = recipes.get(selectedType).stream().filter(recipeId -> {
+            MutableBoolean flag = new MutableBoolean(false);
+            TimelessAPI.getRecipe(recipeId).ifPresent(recipe -> {
+                String name = recipe.getOutput().getHoverName().getString().toLowerCase();
+                if (query.isEmpty() || name.contains(query)) flag.setTrue();
+
+                ResourceLocation id = UtilKt.getTaCZId(recipe.getOutput());
+                if (id == null || tacztweaks$packFilter == null || !tacztweaks$packFilter.shouldFilter()) return;
+                flag.setValue(flag.getValue() && tacztweaks$packFilter.include(tacztweaks$idToPackId.get(id)));
+            });
+            return flag.getValue();
+        }).toList();
+        if (selectedRecipe != null && !selectedRecipeList.contains(selectedRecipe.getId())) {
+            if (selectedRecipeList.isEmpty()) {
+                selectedRecipe = null;
+            } else {
+                selectedRecipe = getSelectedRecipe(selectedRecipeList.get(0));
+            }
+        }
+        int lastIndexPage = (selectedRecipeList.size() - 1) / 6;
+        if (indexPage > lastIndexPage) indexPage = lastIndexPage;
     }
 
     @ModifyExpressionValue(method = "lambda$addCraftButton$2", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/crafting/GunSmithTableRecipe;getInputs()Ljava/util/List;"))
@@ -73,29 +151,10 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
 
     @ModifyExpressionValue(method = "classifyRecipes", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/TimelessAPI;getAllRecipes()Ljava/util/Map;"))
     private Map<ResourceLocation, GunSmithTableRecipe> classifyRecipes$filterRecipes(Map<ResourceLocation, GunSmithTableRecipe> original) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return original;
-
-        ItemStack gunStack = player.getMainHandItem();
-        if (gunStack.isEmpty()) return original;
-
-        IGun gun = IGun.getIGunOrNull(gunStack);
-        if (gun == null) return original;
-
-        return original.entrySet().stream()
-            .filter(entry -> {
-                GunSmithTableRecipe recipe = entry.getValue();
-
-                IAttachment attachment = IAttachment.getIAttachmentOrNull(recipe.getOutput());
-                if (attachment != null) {
-                    return gun.allowAttachment(gunStack, recipe.getOutput());
-                }
-                IAmmo ammo = IAmmo.getIAmmoOrNull(recipe.getOutput());
-                if (ammo != null) {
-                    return ammo.isAmmoOfGun(gunStack, recipe.getOutput());
-                }
-                return true;
-            }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Recipes recipes =  Recipes.Companion.getRecipes(original);
+        tacztweaks$packs = recipes.getPacks();
+        tacztweaks$idToPackId = recipes.getIdToPackId();
+        return recipes.getRecipes();
     }
 
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"))
