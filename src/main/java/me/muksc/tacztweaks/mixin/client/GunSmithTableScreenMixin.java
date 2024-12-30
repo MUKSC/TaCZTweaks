@@ -90,9 +90,12 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
         addRenderableWidget(tacztweaks$searchBar);
 
         if (tacztweaks$packFilter == null) {
-            tacztweaks$packFilter = new PackFilterWidget(tacztweaks$packs, font, leftPos + 346, topPos + 4,  width - (leftPos + 346) - 5, 205);
+            tacztweaks$packFilter = new PackFilterWidget(tacztweaks$packs, font, 0, 0,  0, 205);
             tacztweaks$packFilter.setOnFilterChanged((index, filter) -> init());
         }
+        tacztweaks$packFilter.setX(leftPos + 346);
+        tacztweaks$packFilter.setY(topPos + 4);
+        tacztweaks$packFilter.setWidth(width - (leftPos + 346) - 5);
         addRenderableWidget(tacztweaks$packFilter);
     }
 
