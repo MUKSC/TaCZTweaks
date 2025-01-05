@@ -13,13 +13,14 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = LivingEntity.class, priority = 1500, remap = false)
 public abstract class LivingEntityMixinMixin implements ShooterDataHolderProvider {
     @SuppressWarnings("MissingUnique")
-    @Final private ShooterDataHolder tacz$data;
+    private ShooterDataHolder tacz$data;
 
     @Override
     public ShooterDataHolder tacztweaks$getShooterDataHolder() {
         return tacz$data;
     }
 
+    @Dynamic
     @TargetHandler(
         mixin = "com.tacz.guns.mixin.common.LivingEntityMixin",
         name = "crawl"
@@ -29,6 +30,7 @@ public abstract class LivingEntityMixinMixin implements ShooterDataHolderProvide
         return !Config.disableTaCZCrawl;
     }
 
+    @Dynamic
     @TargetHandler(
         mixin = "com.tacz.guns.mixin.common.LivingEntityMixin",
         name = "onTickServerSide"

@@ -66,29 +66,13 @@ repositories {
 dependencies {
     minecraft(libs.net.minecraftforge.forge)
     implementation(libs.thedarkcolour.kotlinforforge)
-    libs.com.github.bawnorton.mixinsquared.run {
-        common.run {
-            annotationProcessor(this)
-            compileOnly(this)
-        }
-        forge.run {
-            jarJar(this) {
-                jarJar.ranged(this, "[${libs.versions.mixinsquared.get()},)")
-            }
-            implementation(this)
-        }
+    compileOnly(annotationProcessor(libs.com.github.bawnorton.mixinsquared.common.get())) { }
+    implementation(jarJar(libs.com.github.bawnorton.mixinsquared.forge.get())) {
+        jarJar.ranged(this, "[${libs.versions.mixinsquared.get()},)")
     }
-    libs.io.github.llamalad7.mixinextras.run {
-        common.run {
-            annotationProcessor(this)
-            compileOnly(this)
-        }
-        forge.run {
-            jarJar(this) {
-                jarJar.ranged(this, "[${libs.versions.mixinextras.get()},)")
-            }
-            implementation(this)
-        }
+    compileOnly(annotationProcessor(libs.io.github.llamalad7.mixinextras.common.get())) { }
+    implementation(jarJar(libs.io.github.llamalad7.mixinextras.forge.get())) {
+        jarJar.ranged(this, "[${libs.versions.mixinextras.get()},)")
     }
     annotationProcessor(variantOf(libs.org.spongepowered.mixin) { classifier("processor") })
 

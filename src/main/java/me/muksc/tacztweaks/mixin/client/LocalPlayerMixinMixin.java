@@ -5,11 +5,13 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.tacz.guns.client.gameplay.LocalPlayerCrawl;
 import me.muksc.tacztweaks.Config;
 import net.minecraft.client.player.LocalPlayer;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = LocalPlayer.class, priority = 1500, remap = false)
 public abstract class LocalPlayerMixinMixin {
+    @Dynamic
     @TargetHandler(
         mixin = "com.tacz.guns.mixin.client.LocalPlayerMixin",
         name = "crawl"
@@ -19,6 +21,7 @@ public abstract class LocalPlayerMixinMixin {
         return !Config.disableTaCZCrawl;
     }
 
+    @Dynamic
     @TargetHandler(
         mixin = "com.tacz.guns.mixin.client.LocalPlayerMixin",
         name = "onTickClientSide"
