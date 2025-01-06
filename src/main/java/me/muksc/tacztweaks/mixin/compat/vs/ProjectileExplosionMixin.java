@@ -7,6 +7,7 @@ import com.tacz.guns.util.block.ProjectileExplosion;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.compat.vs.ExplosionInvoker;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.*;
@@ -21,9 +22,9 @@ import java.util.List;
 @Mixin(value = ProjectileExplosion.class, remap = false)
 public abstract class ProjectileExplosionMixin {
     @Shadow @Final private Level level;
-    @Shadow @Final @Mutable private double x;
-    @Shadow @Final @Mutable private double y;
-    @Shadow @Final @Mutable private double z;
+    @Shadow @Final private double x;
+    @Shadow @Final private double y;
+    @Shadow @Final private double z;
     @Shadow @Final private float radius;
     @Shadow @Final private boolean knockback;
 
@@ -42,20 +43,15 @@ public abstract class ProjectileExplosionMixin {
         }
 
         tacztweaks$isModifyingExplosion = true;
-        double origX = this.x;
-        double origY = this.y;
-        double origZ = this.z;
         try {
             VSGameUtilsKt.transformToNearbyShipsAndWorld(this.level, this.x, this.y, this.z, this.radius, (x, y, z) -> {
-                this.x = x;
-                this.y = y;
-                this.z = z;
+                var explosion = (Explosion) (Object) this;
+                explosion.x = x;
+                explosion.y = y;
+                explosion.z = z;
                 this.explode();
             });
         } finally {
-            this.x = origX;
-            this.y = origY;
-            this.z = origZ;
             tacztweaks$isModifyingExplosion = false;
         }
     }

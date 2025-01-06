@@ -23,6 +23,7 @@ mixin {
 }
 
 minecraft {
+    accessTransformer("src/main/resources/META-INF/accesstransformer.cfg")
     mappings(mapOf(
         "channel" to "parchment",
         "version" to "${libs.versions.parchment.get()}-${libs.versions.minecraft.asProvider().get()}"
