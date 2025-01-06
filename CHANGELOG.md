@@ -1,1 +1,4 @@
-- Added pack filter and search to the Gun Smith Table
+- Now targets TaCZ 1.1.4
+- Added FirstAid compat (Enabled by default)
+- Added Valkyrien Skies compat (Disabled by default)
+  - Some behaviours may differ from base TaCZ, especially explosions

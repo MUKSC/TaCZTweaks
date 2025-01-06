@@ -4,6 +4,7 @@ TaCZ Tweaks is an addon for the [Timeless and Classics Zero](https://modrinth.co
 
 ## Features
 - Bullets can now break and/or pierce blocks. Fully customizable via data packs.
+- Options to enable compatibility with other mods; currently supports [FirstAid](https://modrinth.com/mod/firstaid) and [Valkyrien Skies](https://modrinth.com/mod/valkyrien-skies)
 - Options to allow: shoot while sprinting, sprint while reloading, reload while shooting.
 - Options to change upper and lower pitch limit while crawling.
   - Additionally, an option to change pitch limits based on the hitbox of the blocks.
