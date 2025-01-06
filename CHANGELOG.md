@@ -1,4 +1,1 @@
-- Now targets TaCZ 1.1.4
-- Added FirstAid compat (Enabled by default)
-- Added Valkyrien Skies compat (Disabled by default)
-  - Some behaviours may differ from base TaCZ, especially explosions
+- Fixed wrong behaviour in VS explosion compat
