@@ -1,1 +1,1 @@
-- Fixed wrong behaviour in VS explosion compat
+- Fixed a crash on startup when the FirstAid mod is present 
