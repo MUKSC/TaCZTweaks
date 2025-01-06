@@ -14,8 +14,8 @@
     "LivingEntityMixinMixin",
     "LivingEntityReloadMixin",
     "LivingEntityShootMixin",
+    "LivingEntitySprintMixin",
     "NetworkHandlerMixin",
-    "ServerGamePacketListenerImplMixinMixin",
     "accessor.EntityKineticBulletAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
@@ -27,13 +27,14 @@
   "client": [
     "accessor.LocalPlayerShootAccessor",
     "client.GunSmithTableScreenMixin",
-    "client.LocalPlayerAimMixin",
     "client.LocalPlayerMixin",
     "client.LocalPlayerMixinMixin",
     "client.LocalPlayerReloadMixin",
     "client.LocalPlayerShootMixin",
+    "client.LocalPlayerSprintMixin",
     "client.MouseHandlerMixinMixin",
-    "client.PlayerRendererMixin"
+    "client.PlayerRendererMixin",
+    "client.TickAnimationEventMixin"
   ],
   "injectors": {
     "defaultRequire": 1

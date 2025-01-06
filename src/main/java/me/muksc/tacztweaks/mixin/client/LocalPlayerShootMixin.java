@@ -22,7 +22,7 @@ public abstract class LocalPlayerShootMixin {
         return 0.0F;
     }
 
-    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerShoot;doShoot(Lcom/tacz/guns/client/resource/index/ClientGunIndex;Lcom/tacz/guns/api/item/IGun;Lnet/minecraft/world/item/ItemStack;Lcom/tacz/guns/resource/pojo/data/gun/GunData;J)V"))
+    @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerShoot;doShoot(Lcom/tacz/guns/client/resource/GunDisplayInstance;Lcom/tacz/guns/api/item/IGun;Lnet/minecraft/world/item/ItemStack;Lcom/tacz/guns/resource/pojo/data/gun/GunData;J)V"))
     private void stopSprintingOnShot(CallbackInfoReturnable<ShootResult> cir) {
         if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return;
         player.setSprinting(false);

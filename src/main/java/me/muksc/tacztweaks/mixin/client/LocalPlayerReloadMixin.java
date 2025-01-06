@@ -8,8 +8,10 @@ import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.client.gameplay.LocalPlayerDataHolder;
 import com.tacz.guns.client.gameplay.LocalPlayerReload;
+import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.GunData;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.mixin.accessor.LocalPlayerShootAccessor;
 import net.minecraft.client.player.LocalPlayer;
@@ -28,13 +30,13 @@ public abstract class LocalPlayerReloadMixin {
     @Shadow @Final private LocalPlayerDataHolder data;
 
     @Inject(method = "doReload", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;stopPlayGunSound()V"))
-    private void setNoAmmo(IGun iGun, ClientGunIndex gunIndex, ItemStack mainhandItem, CallbackInfo ci, @Local Bolt boltType, @Local LocalBooleanRef noAmmoRef) {
+    private void setNoAmmo(IGun iGun, GunDisplayInstance display, GunData gunData, ItemStack mainhandItem, CallbackInfo ci, @Local Bolt boltType, @Local LocalBooleanRef noAmmoRef) {
         if (!Config.reloadWhileShooting) return;
         int ammoCount = iGun.getCurrentAmmoCount(mainhandItem) + (iGun.hasBulletInBarrel(mainhandItem) && boltType != Bolt.OPEN_BOLT ? 1 : 0);
         noAmmoRef.set(ammoCount <= 0);
     }
 
-    @ModifyExpressionValue(method = "lambda$reload$1", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/client/gameplay/LocalPlayerDataHolder;clientStateLock:Z"))
+    @ModifyExpressionValue(method = "lambda$reload$2", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/client/gameplay/LocalPlayerDataHolder;clientStateLock:Z"))
     private boolean allowReloadWhileShoot(boolean original, @Local(argsOnly = true) ItemStack mainhandItem, @Local(argsOnly = true) AbstractGunItem gunItem) {
         if (!Config.reloadWhileShooting) return original;
         if (IGunOperator.fromLivingEntity(player).needCheckAmmo() && !gunItem.canReload(player, mainhandItem)) return original;
@@ -43,7 +45,7 @@ public abstract class LocalPlayerReloadMixin {
         if (data.lockedCondition == LocalPlayerShootAccessor.getShootLockedCondition()) return false;
         if (data.lockedCondition == null && !operator.getSynReloadState().getStateType().isReloading()
             && operator.getSynDrawCoolDown() <= 0
-            && operator.getSynBoltCoolDown() < 0
+            && !operator.getSynIsBolting()
             && operator.getSynMeleeCoolDown() <= 0L) return false;
         return original;
     }
