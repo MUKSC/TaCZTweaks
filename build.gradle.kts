@@ -39,7 +39,11 @@ minecraft {
             }
         }
 
-        create("client")
+        val client = create("client")
+        create("client2") {
+            parent(client)
+            args("--username", "Dev2")
+        }
         create("server") {
             args("--nogui")
         }
@@ -47,8 +51,10 @@ minecraft {
 }
 
 repositories {
+    mavenCentral()
     maven("https://thedarkcolour.github.io/KotlinForForge")
     maven("https://maven.bawnorton.com/releases")
+    maven("https://repo.spongepowered.org/repository/maven-public")
     exclusiveContent {
         forRepository {
             maven {
@@ -77,6 +83,7 @@ dependencies {
     annotationProcessor(variantOf(libs.org.spongepowered.mixin) { classifier("processor") })
 
     implementation(fg.deobf(libs.modrinth.tacz.get()))
+    implementation(fg.deobf(libs.modrinth.firstaid.get()))
     runtimeOnly(fg.deobf(libs.modrinth.neat.get()))
 }
 

@@ -4,6 +4,7 @@
   "package": "me.muksc.tacztweaks.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "tacztweaks.refmap.json",
+  "plugin": "me.muksc.tacztweaks.ModMixinPlugin",
   "mixins": [
     "BlockBehaviourMixin",
     "BlockRayTraceMixin",
@@ -15,7 +16,9 @@
     "LivingEntityShootMixin",
     "NetworkHandlerMixin",
     "ServerGamePacketListenerImplMixinMixin",
-    "accessor.EntityKineticBulletAccessor"
+    "accessor.EntityKineticBulletAccessor",
+    "compat.firstaid.EntityKineticBulletMixin",
+    "compat.firstaid.EventHandlerMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",

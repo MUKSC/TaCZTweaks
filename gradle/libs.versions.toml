@@ -17,6 +17,7 @@ mod-publish = "0.8.4"
 
 tacz = "1.0.3"
 tacz-modrinth = "Qd1RlJ8k"
+firstaid-modrinth = "1.20.1-1.1"
 neat-modrinth = "1.20.1-41-forge"
 
 [libraries]
@@ -29,6 +30,7 @@ io-github-llamalad7-mixinextras-forge = { module = "io.github.llamalad7:mixinext
 org-spongepowered-mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 
 modrinth-tacz = { module = "maven.modrinth:timeless-and-classics-zero", version.ref = "tacz-modrinth" }
+modrinth-firstaid = { module = "maven.modrinth:firstaid", version.ref = "firstaid-modrinth" }
 modrinth-neat = { module = "maven.modrinth:neat", version.ref = "neat-modrinth" }
 
 [plugins]
