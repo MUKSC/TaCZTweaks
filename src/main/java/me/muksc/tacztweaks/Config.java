@@ -18,7 +18,7 @@ public class Config {
 
     private static final ForgeConfigSpec.BooleanValue VS_COLLISION_COMPAT = BUILDER.pop().push("misc").define("vsCollisionCompat", false);
     private static final ForgeConfigSpec.BooleanValue VS_EXPLOSION_COMPAT = BUILDER.define("vsExplosionCompat", false);
-    private static final ForgeConfigSpec.BooleanValue FIRST_AID_COMPAT = BUILDER.pop().push("misc").define("firstAidCompat", true);
+    private static final ForgeConfigSpec.BooleanValue FIRST_AID_COMPAT = BUILDER.define("firstAidCompat", true);
     private static final ForgeConfigSpec.BooleanValue CRAWL_VISUAL_TWEAK = BUILDER.define("crawlVisualTweak", true);
     private static final ForgeConfigSpec.BooleanValue DISABLE_TACZ_CRAWL = BUILDER.comment("For better compatibility").define("disableTaCZCrawl", false);
 
