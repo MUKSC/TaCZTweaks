@@ -18,7 +18,11 @@
     "ServerGamePacketListenerImplMixinMixin",
     "accessor.EntityKineticBulletAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
-    "compat.firstaid.EventHandlerMixin"
+    "compat.firstaid.EventHandlerMixin",
+    "compat.vs.BlockRayTraceMixin",
+    "compat.vs.ClipContextAccessor",
+    "compat.vs.ExplosionMixin",
+    "compat.vs.ProjectileExplosionMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",

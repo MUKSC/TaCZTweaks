@@ -62,7 +62,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
     /**
      * @return whether to pierce the block or not
      */
-    fun handleInteraction(level: ServerLevel, state: BlockState, pos: BlockPos): Boolean {
+    fun handleInteraction(level: ServerLevel, state: BlockState, pos: BlockPos, worldPos: BlockPos?): Boolean {
         val ammo = Context.ammo
         val ext = ammo as EntityKineticBulletExtension
         val gun = Context.Gun(ext.`tacztweaks$getGunStack`())
@@ -80,7 +80,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 interaction.blockBreak.accumulate && BlockBreakingManager.addCurrentProgress(level, pos, delta) >= 1.0F
             }
             is BulletInteraction.BlockBreak.DynamicDamage -> run {
-                val damage = interaction.blockBreak.run { (ammo.getDamage(pos.center) + modifier) * multiplier }
+                val damage = interaction.blockBreak.run { (ammo.getDamage((worldPos ?: pos).center) + modifier) * multiplier }
                 val delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, pos)
                 if (delta >= 1.0F) return@run true
                 interaction.blockBreak.accumulate && BlockBreakingManager.addCurrentProgress(level, pos, delta) >= 1.0F
@@ -108,7 +108,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                     ext.`tacztweaks$setFlatDamageModifier`(ext.`tacztweaks$getFlatDamageModifier`() - interaction.pierce.damageFalloff)
                     ext.`tacztweaks$setDamageMultiplier`(ext.`tacztweaks$getDamageMultiplier`() * interaction.pierce.damageMultiplier)
                 }
-                pierce && ammo.getDamage(pos.center) > 0.0F
+                pierce && ammo.getDamage((worldPos ?: pos).center) > 0.0F
             }
         }
     }

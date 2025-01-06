@@ -67,6 +67,7 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+    maven("https://maven.valkyrienskies.org")
 }
 
 dependencies {
@@ -84,6 +85,11 @@ dependencies {
 
     implementation(fg.deobf(libs.modrinth.tacz.get()))
     implementation(fg.deobf(libs.modrinth.firstaid.get()))
+    implementation(fg.deobf(libs.org.valkyrienskies.forge.get()))
+    compileOnly(libs.org.valkyrienskies.core.api)
+    compileOnly(libs.org.valkyrienskies.core.api.game)
+    compileOnly(libs.org.valkyrienskies.core.util)
+    compileOnly(libs.org.valkyrienskies.core.impl)
     runtimeOnly(fg.deobf(libs.modrinth.neat.get()))
 }
 

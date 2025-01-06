@@ -13,6 +13,7 @@ class ModMixinPlugin : IMixinConfigPlugin {
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean = when {
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.firstaid.") -> isModLoaded("firstaid")
+        mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs.") -> isModLoaded("valkyrienskies")
         else -> true
     }
 

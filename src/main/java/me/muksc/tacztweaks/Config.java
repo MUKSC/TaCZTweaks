@@ -16,6 +16,8 @@ public class Config {
     private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_LOWER_LIMIT = BUILDER.comment("Default: -10.0").defineInRange("crawlPitchLowerLimit", -10.0, -90F, 0F);
     private static final ForgeConfigSpec.BooleanValue DYNAMIC_CRAWL_PITCH_LIMIT = BUILDER.define("dynamicCrawlPitchLimit", false);
 
+    private static final ForgeConfigSpec.BooleanValue VS_COLLISION_COMPAT = BUILDER.pop().push("misc").define("vsCollisionCompat", false);
+    private static final ForgeConfigSpec.BooleanValue VS_EXPLOSION_COMPAT = BUILDER.define("vsExplosionCompat", false);
     private static final ForgeConfigSpec.BooleanValue FIRST_AID_COMPAT = BUILDER.pop().push("misc").define("firstAidCompat", true);
     private static final ForgeConfigSpec.BooleanValue CRAWL_VISUAL_TWEAK = BUILDER.define("crawlVisualTweak", true);
     private static final ForgeConfigSpec.BooleanValue DISABLE_TACZ_CRAWL = BUILDER.comment("For better compatibility").define("disableTaCZCrawl", false);
@@ -29,6 +31,8 @@ public class Config {
     public static float crawlPitchLowerLimit;
     public static boolean dynamicCrawlPitchLimit;
 
+    public static boolean vsCollisionCompat;
+    public static boolean vsExplosionCompat;
     public static boolean firstAidCompat;
     public static boolean crawlVisualTweak;
     public static boolean disableTaCZCrawl;
@@ -42,6 +46,8 @@ public class Config {
         crawlPitchLowerLimit = CRAWL_PITCH_LOWER_LIMIT.get().floatValue();
         dynamicCrawlPitchLimit = DYNAMIC_CRAWL_PITCH_LIMIT.get();
 
+        vsCollisionCompat = VS_COLLISION_COMPAT.get();
+        vsExplosionCompat = VS_EXPLOSION_COMPAT.get();
         firstAidCompat = FIRST_AID_COMPAT.get();
         crawlVisualTweak = CRAWL_VISUAL_TWEAK.get();
         disableTaCZCrawl = DISABLE_TACZ_CRAWL.get();

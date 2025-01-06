@@ -29,6 +29,6 @@ public abstract class BlockRayTraceMixin {
         if (original == null || original.getType() == HitResult.Type.MISS) return original;
         if (blockState == null || blockState.isAir()) return original;
         if (!(level instanceof ServerLevel serverLevel)) return original;
-        return BulletInteractionManager.INSTANCE.handleInteraction(serverLevel, blockState, new BlockPos(blockPos)) ? null : original;
+        return BulletInteractionManager.INSTANCE.handleInteraction(serverLevel, blockState, blockPos, null) ? null : original;
     }
 }
