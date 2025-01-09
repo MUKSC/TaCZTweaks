@@ -104,7 +104,7 @@ tasks.processResources {
         "forge_version" to libs.versions.forge.asProvider().get(),
         "forge_version_range" to "[${libs.versions.forge.asProvider().get().substringBefore('.')},)",
         "loader_version_range" to "[${libs.versions.forge.asProvider().get().substringBefore('.')},)",
-        "tacz_version_range" to "[${libs.versions.tacz.asProvider().get()}]",
+        "tacz_version_range" to "(${libs.versions.tacz.previous.get()},${libs.versions.tacz.next.get()})",
         "kotlinforforge_version_range" to "[${libs.versions.kotlinforforge.get().substringBeforeLast('.')},)"
     )
     inputs.properties(properties)
