@@ -23,7 +23,9 @@ class Recipes(
                 val gun = IGun.getIGunOrNull(gunStack) ?: return@run null
                 original.filter { recipe ->
                     IAmmo.getIAmmoOrNull(recipe.output)?.let { return@filter it.isAmmoOfGun(gunStack, recipe.output) }
-                    IAttachment.getIAttachmentOrNull(recipe.output)?.let { return@filter gun.allowAttachment(gunStack, recipe.output) }
+                    IAttachment.getIAttachmentOrNull(recipe.output)?.let {
+                        return@filter gun.allowAttachmentType(gunStack, it.getType(recipe.output)) && gun.allowAttachment(gunStack, recipe.output)
+                    }
                     true
                 }
             } ?: original
