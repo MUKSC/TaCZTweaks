@@ -1,1 +1,2 @@
-- TaCZ 1.1.4-hotfix
+- Fixed false positives in the gun smith table recipe filtering
+- Fixed some CME crashes in the gun smith table screen
