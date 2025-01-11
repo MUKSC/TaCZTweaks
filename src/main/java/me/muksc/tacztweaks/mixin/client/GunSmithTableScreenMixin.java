@@ -1,26 +1,23 @@
 package me.muksc.tacztweaks.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.tacz.guns.api.item.IAmmo;
-import com.tacz.guns.api.item.IAttachment;
-import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.gui.GunSmithTableScreen;
 import com.tacz.guns.client.resource.pojo.PackInfo;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
 import com.tacz.guns.inventory.GunSmithTableMenu;
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import me.muksc.tacztweaks.UtilKt;
 import me.muksc.tacztweaks.client.Recipes;
 import me.muksc.tacztweaks.client.gui.PackFilterWidget;
 import me.muksc.tacztweaks.client.gui.SearchWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -66,6 +63,7 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (tacztweaks$searchBar != null && tacztweaks$searchBar.mouseClicked(pMouseX, pMouseY, pButton)) return true;
+        if (tacztweaks$packFilter != null && tacztweaks$packFilter.mouseClicked(pMouseX, pMouseY, pButton)) return true;
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
@@ -90,7 +88,7 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
         }
         tacztweaks$searchBar.setX(leftPos + 137);
         tacztweaks$searchBar.setY(topPos + 190);
-        addRenderableWidget(tacztweaks$searchBar);
+        addRenderableOnly(tacztweaks$searchBar);
 
         if (tacztweaks$packFilter == null) {
             tacztweaks$packFilter = new PackFilterWidget(tacztweaks$packs, font, 0, 0,  0, 205);
@@ -99,7 +97,7 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
         tacztweaks$packFilter.setX(leftPos + 346);
         tacztweaks$packFilter.setY(topPos + 4);
         tacztweaks$packFilter.setWidth(width - (leftPos + 346) - 5);
-        addRenderableWidget(tacztweaks$packFilter);
+        addRenderableOnly(tacztweaks$packFilter);
     }
 
     @Inject(method = "init", at = @At("HEAD"), remap = true)
