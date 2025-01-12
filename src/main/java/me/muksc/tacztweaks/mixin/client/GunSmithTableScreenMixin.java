@@ -111,7 +111,9 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
 
                 ResourceLocation id = UtilKt.getTaCZId(recipe.getOutput());
                 if (id == null || tacztweaks$packFilter == null || !tacztweaks$packFilter.shouldFilter()) return;
-                flag.setValue(flag.getValue() && tacztweaks$packFilter.include(tacztweaks$idToPackId.get(id)));
+                String packId = tacztweaks$idToPackId.get(id);
+                if (packId == null) return;
+                flag.setValue(flag.getValue() && tacztweaks$packFilter.include(packId));
             });
             return flag.getValue();
         }).toList();
