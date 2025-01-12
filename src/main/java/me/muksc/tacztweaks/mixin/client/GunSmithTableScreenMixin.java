@@ -68,6 +68,12 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
     }
 
     @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        if (tacztweaks$packFilter != null && tacztweaks$packFilter.mouseScrolled(pMouseX, pMouseY, pDelta)) return true;
+        return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+    }
+
+    @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         boolean canSearch = pKeyCode != 256 && tacztweaks$searchBar != null;
         if (canSearch && (tacztweaks$searchBar.keyPressed(pKeyCode, pScanCode, pModifiers) || tacztweaks$searchBar.canConsumeInput())) return true;
