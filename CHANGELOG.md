@@ -1,2 +1,2 @@
-- Fixed false positives in the gun smith table recipe filtering
-- Fixed some CME crashes in the gun smith table screen
+- Fixed the issue where the block breaking progress sometimes doesn't reset properly
+- Fixed the crash in the gun smith table when a pack has missing pack info
