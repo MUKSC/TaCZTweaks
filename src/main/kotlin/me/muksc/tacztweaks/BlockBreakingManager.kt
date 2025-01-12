@@ -10,10 +10,7 @@ import java.util.Objects.hash
 object BlockBreakingManager {
     private val blockBreakProgress = Object2ObjectOpenHashMap<ServerLevel, Long2ObjectMap<Progress>>()
 
-    /**
-     * @return new delta
-     */
-    fun addCurrentProgress(level: ServerLevel, pos: BlockPos, delta: Float): Float {
+    fun addCurrentProgress(level: ServerLevel, pos: BlockPos, delta: Float): Boolean {
         val progress = blockBreakProgress.computeIfAbsent(level) { Long2ObjectOpenHashMap() }
             .compute(pos.asLong()) { key, value ->
                 (value ?: Progress()).apply {
@@ -23,14 +20,14 @@ object BlockBreakingManager {
             }!!
 
         val stage = run {
-            if (progress.delta > 1.0F) {
+            if (progress.delta >= 1.0F) {
                 blockBreakProgress[level]?.remove(pos.asLong())
                 return@run -1
             }
             progress.stage
         }
         level.destroyBlockProgress(hash(level, pos), pos, stage)
-        return progress.delta
+        return progress.delta >= 1.0F
     }
 
     fun onLevelTick(level: ServerLevel) {

@@ -72,18 +72,16 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
 
         val breakBlock = when (interaction.blockBreak) {
             is BulletInteraction.BlockBreak.Never -> { false }
-            is BulletInteraction.BlockBreak.Count -> BlockBreakingManager.addCurrentProgress(level, pos, 1.0F / interaction.blockBreak.count) >= 1.0F
+            is BulletInteraction.BlockBreak.Count -> BlockBreakingManager.addCurrentProgress(level, pos, 1.0F / interaction.blockBreak.count)
             is BulletInteraction.BlockBreak.FixedDamage -> run {
                 val damage = interaction.blockBreak.damage
                 val delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, pos)
-                if (delta >= 1.0F) return@run true
-                interaction.blockBreak.accumulate && BlockBreakingManager.addCurrentProgress(level, pos, delta) >= 1.0F
+                interaction.blockBreak.accumulate && BlockBreakingManager.addCurrentProgress(level, pos, delta)
             }
             is BulletInteraction.BlockBreak.DynamicDamage -> run {
                 val damage = interaction.blockBreak.run { (ammo.getDamage((worldPos ?: pos).center) + modifier) * multiplier }
                 val delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, pos)
-                if (delta >= 1.0F) return@run true
-                interaction.blockBreak.accumulate && BlockBreakingManager.addCurrentProgress(level, pos, delta) >= 1.0F
+                interaction.blockBreak.accumulate && BlockBreakingManager.addCurrentProgress(level, pos, delta)
             }
         }
         if (breakBlock) level.destroyBlock(pos, interaction.drop, ammo.owner)
