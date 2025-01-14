@@ -1,2 +1,1 @@
-- Fixed the issue where the block breaking progress sometimes doesn't reset properly
-- Fixed the crash in the gun smith table when a pack has missing pack info
+- Fixed the issue where the client receives block breaking updates at the wrong position
