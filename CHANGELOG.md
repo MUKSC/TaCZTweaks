@@ -1,1 +1,1 @@
-- Fixed the issue where the client receives block breaking updates at the wrong position
+- Fixed the issue where scrolling the pack list did not affect the clickable area of a pack in the gun smith table 
