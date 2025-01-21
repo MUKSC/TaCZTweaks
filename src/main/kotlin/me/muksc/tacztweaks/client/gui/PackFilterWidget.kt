@@ -37,8 +37,8 @@ class PackFilterWidget(
         val maxY = (y + height - PADDING).toDouble()
         if (mouseX !in minX..maxX || mouseY !in minY..maxY) return false
 
-        val index = ceil((mouseY - minY) / ROW_HEIGHT).toInt() - 1
-        if (index > list.lastIndex) return false
+        val index = ceil((mouseY - minY) / ROW_HEIGHT).toInt() - 1 + indexOffset
+        if (index !in 0..list.lastIndex) return false
         val id = list[index].first
         val filter = !selected[id]!!
         selected[id] = filter
