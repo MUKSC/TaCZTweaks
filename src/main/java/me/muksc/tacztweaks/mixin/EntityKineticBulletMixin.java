@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
@@ -18,6 +19,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 @Mixin(value = EntityKineticBullet.class, remap = false)
 public abstract class EntityKineticBulletMixin implements EntityKineticBulletExtension {
     @Unique
@@ -27,10 +32,7 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     private int tacztweaks$blockPierce = 0;
 
     @Unique
-    private float tacztweaks$flatDamageModifier = 0.0F;
-
-    @Unique
-    private float tacztweaks$damageMultiplier = 1.0F;
+    private List<DamageModifier> tacztweaks$damageModifiers = new LinkedList<>();
 
     @Override
     public ItemStack tacztweaks$getGunStack() {
@@ -48,23 +50,8 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     }
 
     @Override
-    public float tacztweaks$getFlatDamageModifier() {
-        return tacztweaks$flatDamageModifier;
-    }
-
-    @Override
-    public void tacztweaks$setFlatDamageModifier(float flatDamageModifier) {
-        tacztweaks$flatDamageModifier = flatDamageModifier;
-    }
-
-    @Override
-    public float tacztweaks$getDamageMultiplier() {
-        return tacztweaks$damageMultiplier;
-    }
-
-    @Override
-    public void tacztweaks$setDamageMultiplier(float damageMultiplier) {
-        tacztweaks$damageMultiplier = damageMultiplier;
+    public void tacztweaks$addDamageModifier(double distance, float flat, float multiplier) {
+        tacztweaks$damageModifiers.add(new DamageModifier(distance, flat, multiplier));
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/resource/pojo/data/gun/BulletData;)V", at = @At("RETURN"))
@@ -73,8 +60,12 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     }
 
     @ModifyExpressionValue(method = "getDamage", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/ExtraDamage$DistanceDamagePair;getDamage()F"))
-    private float applyDamageModifier(float original) {
-        return (original + tacztweaks$flatDamageModifier) * tacztweaks$damageMultiplier;
+    private float applyDamageModifiers(float original, @Local double playerDistance) {
+        final AtomicReference<Float> damage = new AtomicReference<>(original);
+        tacztweaks$damageModifiers.stream().takeWhile(x -> x.distance() < playerDistance).forEach(modifier -> {
+            damage.set((damage.get() + modifier.flat()) * modifier.multiplier());
+        });
+        return damage.get();
     }
 
     @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;"))
