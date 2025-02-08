@@ -2,6 +2,7 @@ package me.muksc.tacztweaks.network.message;
 
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
+import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.ShooterDataHolderProvider;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +22,7 @@ public class ClientMessagePlayerUnload {
 
     public static void handle(ClientMessagePlayerUnload message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        if (!context.getDirection().getReceptionSide().isServer()) {
+        if (!context.getDirection().getReceptionSide().isServer() || !Config.allowUnload) {
             context.setPacketHandled(true);
             return;
         }

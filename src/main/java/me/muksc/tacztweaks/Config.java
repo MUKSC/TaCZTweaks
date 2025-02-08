@@ -15,6 +15,7 @@ public class Config {
     private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_UPPER_LIMIT = BUILDER.comment("Default: 25.0").defineInRange("crawlPitchUpperLimit", 25.0F, 0F, 90F);
     private static final ForgeConfigSpec.ConfigValue<Double> CRAWL_PITCH_LOWER_LIMIT = BUILDER.comment("Default: -10.0").defineInRange("crawlPitchLowerLimit", -10.0, -90F, 0F);
     private static final ForgeConfigSpec.BooleanValue DYNAMIC_CRAWL_PITCH_LIMIT = BUILDER.define("dynamicCrawlPitchLimit", false);
+    private static final ForgeConfigSpec.BooleanValue ALLOW_UNLOAD = BUILDER.define("allowUnload", true);
 
     private static final ForgeConfigSpec.BooleanValue VS_COLLISION_COMPAT = BUILDER.pop().push("misc").define("vsCollisionCompat", false);
     private static final ForgeConfigSpec.BooleanValue VS_EXPLOSION_COMPAT = BUILDER.define("vsExplosionCompat", false);
@@ -30,6 +31,7 @@ public class Config {
     public static float crawlPitchUpperLimit;
     public static float crawlPitchLowerLimit;
     public static boolean dynamicCrawlPitchLimit;
+    public static boolean allowUnload;
 
     public static boolean vsCollisionCompat;
     public static boolean vsExplosionCompat;
@@ -45,6 +47,7 @@ public class Config {
         crawlPitchUpperLimit = CRAWL_PITCH_UPPER_LIMIT.get().floatValue();
         crawlPitchLowerLimit = CRAWL_PITCH_LOWER_LIMIT.get().floatValue();
         dynamicCrawlPitchLimit = DYNAMIC_CRAWL_PITCH_LIMIT.get();
+        allowUnload = ALLOW_UNLOAD.get();
 
         vsCollisionCompat = VS_COLLISION_COMPAT.get();
         vsExplosionCompat = VS_EXPLOSION_COMPAT.get();

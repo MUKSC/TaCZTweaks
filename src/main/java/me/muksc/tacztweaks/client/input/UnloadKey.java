@@ -2,6 +2,7 @@ package me.muksc.tacztweaks.client.input;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.tacz.guns.network.NetworkHandler;
+import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.network.message.ClientMessagePlayerUnload;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,7 +30,7 @@ public class UnloadKey {
 
     @SubscribeEvent
     public static void onUnloadPress(InputEvent.Key event) {
-        if (!isInGame() || !UNLOAD_KEY.consumeClick()) return;
+        if (!isInGame() || !UNLOAD_KEY.consumeClick() || !Config.allowUnload) return;
         NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerUnload());
     }
 }
