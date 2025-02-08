@@ -152,6 +152,18 @@ publishMods {
         requires("timeless-and-classics-zero")
     }
 
+    curseforge {
+        projectId = project.findProperty("curseforge_id") as String
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.addAll(libs.versions.minecraft.list.get().split(','))
+
+        clientRequired = true
+        serverRequired = true
+
+        requires("kotlin-for-forge")
+        requires("timeless-and-classics-zero")
+    }
+
     github {
         repository = project.findProperty("repository") as String
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
