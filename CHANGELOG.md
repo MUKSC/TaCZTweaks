@@ -1,1 +1,4 @@
-- Fixed the issue where scrolling the pack list did not affect the clickable area of a pack in the gun smith table 
+- Added a new config option to disallow unloading a gun
+- Fixed the janky behaviour of `sprintWhileReloading` for the weapons with dynamic reload
+- Fixed the issue where bullet damage falloff was incorrectly applied in some cases
+- Fixed the issue where explosions weren't damaging entities if the Valkyrien Skies mod is present
