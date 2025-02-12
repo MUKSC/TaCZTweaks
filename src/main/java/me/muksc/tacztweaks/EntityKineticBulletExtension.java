@@ -16,4 +16,8 @@ public interface EntityKineticBulletExtension {
     void tacztweaks$setBlockPierce(int blockPierce);
 
     void tacztweaks$addDamageModifier(double distance, float flat, float multiplier);
+
+    boolean tacztweaks$whizzed();
+
+    void tacztweaks$setWhizzed();
 }

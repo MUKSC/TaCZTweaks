@@ -34,6 +34,9 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     @Unique
     private List<DamageModifier> tacztweaks$damageModifiers = new LinkedList<>();
 
+    @Unique
+    private boolean tacztweaks$whizzed = false;
+
     @Override
     public ItemStack tacztweaks$getGunStack() {
         return tacztweaks$gunStack;
@@ -47,6 +50,16 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     @Override
     public void tacztweaks$setBlockPierce(int blockPierce) {
         tacztweaks$blockPierce = blockPierce;
+    }
+
+    @Override
+    public boolean tacztweaks$whizzed() {
+        return tacztweaks$whizzed;
+    }
+
+    @Override
+    public void tacztweaks$setWhizzed() {
+        tacztweaks$whizzed = true;
     }
 
     @Override

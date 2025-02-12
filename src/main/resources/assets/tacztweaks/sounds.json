@@ -1,0 +1,50 @@
+{
+  "generic.whizz.near": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/near1"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/near2"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/near3"
+      }
+    ]
+  },
+  "generic.whizz.mid": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/mid1"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/mid2"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/mid3"
+      }
+    ]
+  },
+  "generic.whizz.far": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/far1"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/far2"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:whizz/far3"
+      }
+    ]
+  }
+}

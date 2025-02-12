@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.StringRepresentable
 
 class BulletInteraction(
-    val blocks: List<BulletInteractionBlock>,
+    val blocks: List<BlockOrBlockTag>,
     val guns: List<ResourceLocation>,
     val blockBreak: BlockBreak,
     val pierce: Pierce,
@@ -167,7 +167,7 @@ class BulletInteraction(
 
     companion object {
         val CODEC = RecordCodecBuilder.create<BulletInteraction> { it.group(
-            Codec.list(BulletInteractionBlock.CODEC).fieldOf("blocks").forGetter { it.blocks },
+            Codec.list(BlockOrBlockTag.CODEC).fieldOf("blocks").forGetter { it.blocks },
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("guns", emptyList()).forGetter { it.guns },
             BlockBreak.CODEC.fieldOf("block_break").forGetter { it.blockBreak },
             Pierce.CODEC.fieldOf("pierce").forGetter { it.pierce },

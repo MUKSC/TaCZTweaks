@@ -1,0 +1,22 @@
+{
+  "whizzes": [
+    {
+      "threshold": 2.0,
+      "sound": {
+        "sound": "tacztweaks:generic.whizz.near"
+      }
+    },
+    {
+      "threshold": 5.0,
+      "sound": {
+        "sound": "tacztweaks:generic.whizz.mid"
+      }
+    },
+    {
+      "threshold": 10.0,
+      "sound": {
+        "sound": "tacztweaks:generic.whizz.far"
+      }
+    }
+  ]
+}
