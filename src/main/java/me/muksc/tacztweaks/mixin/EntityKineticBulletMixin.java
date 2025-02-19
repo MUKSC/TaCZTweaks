@@ -83,6 +83,6 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
 
     @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;"))
     private void setInstance(CallbackInfo ci) {
-        Context.ammo = (EntityKineticBullet)(Object) this;
+        Context.ammo = EntityKineticBullet.class.cast(this);
     }
 }

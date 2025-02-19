@@ -2,7 +2,6 @@ package me.muksc.tacztweaks.mixin.client;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.client.gameplay.LocalPlayerCrawl;
 import com.tacz.guns.client.gameplay.LocalPlayerReload;
 import me.muksc.tacztweaks.Config;
@@ -19,8 +18,8 @@ public abstract class LocalPlayerMixinMixin {
         name = "swapSprintStatus"
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerReload;cancelReload()V"))
-    private boolean sprintWhileReloading(LocalPlayerReload instance, @Local(argsOnly = true) boolean sprinting) {
-        return sprinting && !Config.sprintWhileReloading;
+    private boolean sprintWhileReloading(LocalPlayerReload instance) {
+        return !Config.sprintWhileReloading;
     }
 
     @Dynamic

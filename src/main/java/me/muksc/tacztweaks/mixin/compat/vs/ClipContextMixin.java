@@ -21,7 +21,7 @@ import java.util.Set;
 @Mixin(ClipContext.class)
 public abstract class ClipContextMixin implements ClipContextExtension {
     @Unique
-    private Set<BlockPos> tacztweaks$ignores = new HashSet<>();
+    private final Set<BlockPos> tacztweaks$ignores = new HashSet<>();
 
     @Override
     public void tacztweaks$setIgnores(Collection<BlockPos> ignores) {

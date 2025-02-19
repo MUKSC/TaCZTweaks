@@ -16,7 +16,7 @@ public abstract class EntityKineticBulletMixin {
     @Inject(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/eventbus/api/IEventBus;post(Lnet/minecraftforge/eventbus/api/Event;)Z", ordinal = 0))
     private void fireProjectileImpactEvent(TacHitResult result, Vec3 startVec, Vec3 endVec, CallbackInfo ci) {
         if (!Config.firstAidCompat) return;
-        var instance = (EntityKineticBullet) (Object) this;
+        var instance = EntityKineticBullet.class.cast(this);
         EventHandler.onProjectileImpact(new ProjectileImpactEvent(instance, result));
     }
 }

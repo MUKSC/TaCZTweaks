@@ -9,7 +9,6 @@ import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.client.gameplay.LocalPlayerDataHolder;
 import com.tacz.guns.client.gameplay.LocalPlayerReload;
 import com.tacz.guns.client.resource.GunDisplayInstance;
-import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import me.muksc.tacztweaks.Config;

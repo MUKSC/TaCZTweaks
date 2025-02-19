@@ -34,7 +34,7 @@ public abstract class ProjectileExplosionMixin {
     @Inject(method = "explode", at = @At("TAIL"), remap = true)
     private void afterExplode(CallbackInfo ci) {
         if (!Config.vsExplosionCompat) return;
-        var explosion = (Explosion) (Object) this;
+        var explosion = Explosion.class.cast(this);
         var invoker = (ExplosionInvoker) this;
         if (tacztweaks$isModifyingExplosion) {
             if (AmmoConfig.EXPLOSIVE_AMMO_KNOCK_BACK.get() && knockback) invoker.tacztweaks$invokeDoExplodeForce();
