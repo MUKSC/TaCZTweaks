@@ -1,4 +1,24 @@
 {
+  "generic.hit.metal": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "tacztweaks:hit/metal1"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:hit/metal2"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:hit/metal3"
+      },
+      {
+        "type": "file",
+        "name": "tacztweaks:hit/metal4"
+      }
+    ]
+  },
   "generic.whizz.near": {
     "sounds": [
       {

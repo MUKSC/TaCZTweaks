@@ -1,10 +1,10 @@
 package me.muksc.tacztweaks;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 public interface EntityKineticBulletExtension {
     record DamageModifier(
-        double distance,
         float flat,
         float multiplier
     ) { }
@@ -13,11 +13,17 @@ public interface EntityKineticBulletExtension {
 
     int tacztweaks$getBlockPierce();
 
-    void tacztweaks$setBlockPierce(int blockPierce);
+    void tacztweaks$incrementBlockPierce();
 
-    void tacztweaks$addDamageModifier(double distance, float flat, float multiplier);
+    int tacztweaks$getEntityPierce();
 
-    boolean tacztweaks$whizzed();
+    void tacztweaks$incrementEntityPierce();
 
-    void tacztweaks$setWhizzed();
+    void tacztweaks$addDamageModifier(float flat, float multiplier);
+
+    void tacztweaks$popDamageModifier();
+
+    Vec3 tacztweaks$getPosition();
+
+    void tacztweaks$setPosition(Vec3 position);
 }

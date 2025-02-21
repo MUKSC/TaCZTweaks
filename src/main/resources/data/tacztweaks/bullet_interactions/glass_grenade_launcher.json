@@ -1,10 +1,14 @@
 {
+  "type": "block",
+  "target": {
+    "type": "ammo",
+    "values": [
+      "tacz:40mm"
+    ]
+  },
   "blocks": [
     "#forge:glass",
     "#forge:glass_panes"
-  ],
-  "guns": [
-    "tacz:m320"
   ],
   "block_break": {
     "type": "dynamic_damage"

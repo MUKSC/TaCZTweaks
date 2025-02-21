@@ -1,5 +1,14 @@
 {
-  "whizzes": [
+  "type": "whizz",
+  "target": {
+    "type": "speed",
+    "values": [
+      {
+        "min": 10.0
+      }
+    ]
+  },
+  "sounds": [
     {
       "threshold": 2.0,
       "sound": {

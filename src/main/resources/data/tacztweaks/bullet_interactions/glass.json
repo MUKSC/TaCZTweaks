@@ -1,4 +1,5 @@
 {
+  "type": "block",
   "blocks": [
     "#forge:glass",
     "#forge:glass_panes"
@@ -8,7 +9,6 @@
   },
   "pierce": {
     "type": "damage",
-    "condition": "always",
     "damage_falloff": 2
   }
 }

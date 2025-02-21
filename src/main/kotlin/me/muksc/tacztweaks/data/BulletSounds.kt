@@ -1,23 +1,15 @@
 package me.muksc.tacztweaks.data
 
 import com.mojang.serialization.Codec
-import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import me.muksc.tacztweaks.DispatchCodec
 import net.minecraft.resources.ResourceLocation
-import java.util.*
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
-@Suppress("UNCHECKED_CAST")
-fun <T> Codec<T>.nullableFieldOf(name: String): MapCodec<T?> =
-    Codec.optionalField<T>(name, this).xmap(
-        { it.orElse(null) },
-        { Optional.ofNullable(it) as Optional<T> }
-    )
-
-class BulletSounds(
-    val target: Target,
-    val blocks: List<BlockSounds>,
-    val entities: List<EntitySounds>,
-    val whizzes: List<Whizz>
+sealed class BulletSounds(
+    val type: EBulletSoundsType,
+    val target: Target<*>
 ) {
     class Sound(
         val sound: ResourceLocation,
@@ -33,56 +25,97 @@ class BulletSounds(
         }
     }
 
-    class BlockSounds(
+    enum class EBulletSoundsType(
+        override val key: String,
+        override val codec: Codec<out BulletSounds>
+    ) : DispatchCodec<BulletSounds> {
+        BLOCK("block", Block.CODEC),
+        ENTITY("entity", Entity.CODEC),
+        WHIZZ("whizz", Whizz.CODEC);
+
+        companion object {
+            private val map = EBulletSoundsType.entries.associateBy(EBulletSoundsType::key)
+            val CODEC = DispatchCodec.getCodec(map::getValue)
+        }
+    }
+
+    class Block(
+        target: Target<*>,
         val blocks: List<BlockOrBlockTag>,
         val hit: Sound?,
         val pierce: Sound?,
         val `break`: Sound?
-    ) {
+    ) : BulletSounds(EBulletSoundsType.BLOCK, target) {
+        constructor(
+            target: Target<*>,
+            blocks: List<BlockOrBlockTag>,
+            hit: Optional<Sound>,
+            pierce: Optional<Sound>,
+            `break`: Optional<Sound>
+        ) : this(target, blocks, hit.getOrNull(), pierce.getOrNull(), `break`.getOrNull())
+
         companion object {
-            val CODEC = RecordCodecBuilder.create<BlockSounds> { it.group(
-                Codec.list(BlockOrBlockTag.CODEC).optionalFieldOf("blocks", emptyList()).forGetter(BlockSounds::blocks),
-                Sound.CODEC.nullableFieldOf("hit").forGetter(BlockSounds::hit),
-                Sound.CODEC.nullableFieldOf("pierce").forGetter(BlockSounds::pierce),
-                Sound.CODEC.nullableFieldOf("break").forGetter(BlockSounds::`break`)
-            ).apply(it, ::BlockSounds) }
+            val CODEC = RecordCodecBuilder.create<Block> { it.group(
+                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Block::target),
+                Codec.list(BlockOrBlockTag.CODEC).optionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
+                Sound.CODEC.optionalFieldOf("hit").forGetter { Optional.ofNullable(it.hit) },
+                Sound.CODEC.optionalFieldOf("pierce").forGetter { Optional.ofNullable(it.pierce) },
+                Sound.CODEC.optionalFieldOf("break").forGetter { Optional.ofNullable(it.`break`) }
+            ).apply(it, ::Block) }
         }
     }
 
-    class EntitySounds(
+    class Entity(
+        target: Target<*>,
         val entities: List<EntityOrEntityTag>,
-        val hit: String?,
-        val pierce: String?,
-        val kill: String?
-    ) {
+        val hit: Sound?,
+        val pierce: Sound?,
+        val kill: Sound?
+    ) : BulletSounds(EBulletSoundsType.ENTITY, target) {
+        constructor(
+            target: Target<*>,
+            entities: List<EntityOrEntityTag>,
+            hit: Optional<Sound>,
+            pierce: Optional<Sound>,
+            kill: Optional<Sound>
+        ) : this(target, entities, hit.getOrNull(), pierce.getOrNull(), kill.getOrNull())
+
         companion object {
-            val CODEC = RecordCodecBuilder.create<EntitySounds> { it.group(
-                Codec.list(EntityOrEntityTag.CODEC).fieldOf("entities").forGetter(EntitySounds::entities),
-                Codec.STRING.nullableFieldOf("hit").forGetter(EntitySounds::hit),
-                Codec.STRING.nullableFieldOf("pierce").forGetter(EntitySounds::pierce),
-                Codec.STRING.nullableFieldOf("kill").forGetter(EntitySounds::kill)
-            ).apply(it, ::EntitySounds) }
+            val CODEC = RecordCodecBuilder.create<Entity> { it.group(
+                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
+                Codec.list(EntityOrEntityTag.CODEC).fieldOf("entities").forGetter(Entity::entities),
+                Sound.CODEC.optionalFieldOf("hit").forGetter { Optional.ofNullable(it.hit) },
+                Sound.CODEC.optionalFieldOf("pierce").forGetter { Optional.ofNullable(it.pierce) },
+                Sound.CODEC.optionalFieldOf("kill").forGetter { Optional.ofNullable(it.kill) }
+            ).apply(it, ::Entity) }
         }
     }
 
     class Whizz(
-        val threshold: Double,
-        val sound: Sound
-    ) {
+        target: Target<*>,
+        val sounds: List<DistanceSound>
+    ) : BulletSounds(EBulletSoundsType.WHIZZ, target) {
+        class DistanceSound(
+            val threshold: Double,
+            val sound: Sound
+        ) {
+            companion object {
+                val CODEC = RecordCodecBuilder.create<DistanceSound> { it.group(
+                    Codec.DOUBLE.fieldOf("threshold").forGetter(DistanceSound::threshold),
+                    Sound.CODEC.fieldOf("sound").forGetter(DistanceSound::sound)
+                ).apply(it, ::DistanceSound) }
+            }
+        }
+
         companion object {
             val CODEC = RecordCodecBuilder.create<Whizz> { it.group(
-                Codec.DOUBLE.fieldOf("threshold").forGetter(Whizz::threshold),
-                Sound.CODEC.fieldOf("sound").forGetter(Whizz::sound)
+                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Whizz::target),
+                Codec.list(DistanceSound.CODEC).optionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds)
             ).apply(it, ::Whizz) }
         }
     }
 
     companion object {
-        val CODEC = RecordCodecBuilder.create<BulletSounds> { it.group(
-            Target.CODEC.optionalFieldOf("target", Target.DEFAULT).forGetter(BulletSounds::target),
-            Codec.list(BlockSounds.CODEC).optionalFieldOf("blocks", emptyList()).forGetter(BulletSounds::blocks),
-            Codec.list(EntitySounds.CODEC).optionalFieldOf("entities", emptyList()).forGetter(BulletSounds::entities),
-            Codec.list(Whizz.CODEC).optionalFieldOf("whizzes", emptyList()).forGetter(BulletSounds::whizzes)
-        ).apply(it, ::BulletSounds) }
+        val CODEC = EBulletSoundsType.CODEC.dispatch(BulletSounds::type, EBulletSoundsType::codec)
     }
 }
