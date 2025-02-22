@@ -131,6 +131,16 @@ tasks.jarJar {
     finalizedBy("reobfJarJar")
 }
 
+val packageExamplePack = tasks.register<Zip>("packageExamplePack") {
+    from(layout.projectDirectory.dir("tacz-tweaks-example-pack"))
+    destinationDirectory = layout.buildDirectory
+    archiveFileName = "tacz-tweaks-example-pack.zip"
+}
+
+tasks.build {
+    dependsOn(packageExamplePack)
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
@@ -139,6 +149,7 @@ publishMods {
     displayName = "${project.findProperty("mod_name")} ${project.version}"
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
     file = tasks.jarJar.get().archiveFile
+    additionalFiles.from(packageExamplePack.get().archiveFile)
     type = STABLE
     modLoaders.add("forge")
 
