@@ -157,4 +157,12 @@ object Config : JsonFileCodecConfig<Config>(
             } }
             .coloured(true)
     }
+
+    fun touch() { /* Nothing */ }
+
+    init {
+        if (!loadFromFile()) {
+            saveToFile()
+        }
+    }
 }

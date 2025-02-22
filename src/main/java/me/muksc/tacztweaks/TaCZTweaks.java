@@ -42,6 +42,7 @@ public class TaCZTweaks {
             ConfigScreenHandler.ConfigScreenFactory.class,
             () -> new ConfigScreenHandler.ConfigScreenFactory(Config.INSTANCE::generateConfigScreen)
         );
+        Config.INSTANCE.touch();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
