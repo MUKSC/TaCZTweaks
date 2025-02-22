@@ -22,7 +22,7 @@ public class ClientMessagePlayerUnload {
 
     public static void handle(ClientMessagePlayerUnload message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        if (!context.getDirection().getReceptionSide().isServer() || !Config.allowUnload) {
+        if (!context.getDirection().getReceptionSide().isServer() || !Config.Gun.INSTANCE.allowUnload()) {
             context.setPacketHandled(true);
             return;
         }

@@ -19,7 +19,7 @@ public abstract class LocalPlayerMixinMixin {
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerReload;cancelReload()V"))
     private boolean sprintWhileReloading(LocalPlayerReload instance) {
-        return !Config.sprintWhileReloading;
+        return !Config.Gun.INSTANCE.sprintWhileReloading();
     }
 
     @Dynamic
@@ -29,7 +29,7 @@ public abstract class LocalPlayerMixinMixin {
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerCrawl;crawl(Z)V"))
     private boolean disableCrawl(LocalPlayerCrawl instance, boolean isCrawl) {
-        return !Config.disableTaCZCrawl;
+        return Config.Crawl.INSTANCE.enabled();
     }
 
     @Dynamic
@@ -39,6 +39,6 @@ public abstract class LocalPlayerMixinMixin {
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/gameplay/LocalPlayerCrawl;tickCrawl()V"))
     private boolean disableTickCrawl(LocalPlayerCrawl instance) {
-        return !Config.disableTaCZCrawl;
+        return Config.Crawl.INSTANCE.enabled();
     }
 }

@@ -27,7 +27,7 @@ public abstract class LivingEntityMixinMixin implements ShooterDataHolderProvide
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/shooter/LivingEntityCrawl;crawl(Z)V"))
     private boolean disableCrawl(LivingEntityCrawl instance, boolean isCrawl) {
-        return !Config.disableTaCZCrawl;
+        return Config.Crawl.INSTANCE.enabled();
     }
 
     @Dynamic
@@ -37,6 +37,6 @@ public abstract class LivingEntityMixinMixin implements ShooterDataHolderProvide
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/shooter/LivingEntityCrawl;tickCrawling()V"))
     private boolean disableTickCrawling(LivingEntityCrawl instance) {
-        return !Config.disableTaCZCrawl;
+        return Config.Crawl.INSTANCE.enabled();
     }
 }

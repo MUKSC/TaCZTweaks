@@ -28,7 +28,7 @@ public abstract class BlockRayTraceMixin {
 
     @Inject(method = "performRayTrace", at = @At("HEAD"), cancellable = true)
     private static <T> void performRayTrace$vsCollisionCompat(ClipContext context, BiFunction<ClipContext, BlockPos, T> hitFunction, Function<ClipContext, T> missFactory, CallbackInfoReturnable<T> cir) {
-        if (!Config.vsCollisionCompat) return;
+        if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
         ClipContextAccessor accessor = (ClipContextAccessor) context;
         if (!(accessor.getCollisionContext() instanceof EntityCollisionContext entityCollisionContext)) return;
         Entity entity = entityCollisionContext.getEntity();
@@ -54,7 +54,7 @@ public abstract class BlockRayTraceMixin {
 
     @Inject(method = "getBlockHitResult", at = @At("HEAD"), cancellable = true)
     private static void getBlockHitResult$vsCollisionCompat(Level level, ClipContext rayTraceContext, BlockPos blockPos, BlockState blockState, CallbackInfoReturnable<BlockHitResult> cir) {
-        if (!Config.vsCollisionCompat) return;
+        if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
         cir.setReturnValue(tacztweaks$result);
     }
 }

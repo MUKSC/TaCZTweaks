@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks.client.gui
 
 import com.tacz.guns.client.resource.pojo.PackInfo
+import me.muksc.tacztweaks.TaCZTweaks
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -48,7 +49,7 @@ class PackFilterWidget(
 
     override fun renderWidget(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         graphics.fill(x, y, x + width, y + height, -267386864)
-        graphics.drawString(font, Component.translatable("tacztweaks.packs.filter"), x + PADDING, y + PADDING, -1)
+        graphics.drawString(font, TaCZTweaks.translatable("packs.filter"), x + PADDING, y + PADDING, -1)
         graphics.enableScissor(PADDING + x, PADDING + y + ROW_HEIGHT, x + width - PADDING, y + height - PADDING)
         for ((index, pair) in list.withIndex()) {
             val selected = selected[pair.first]!!

@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks.client.gui
 
+import me.muksc.tacztweaks.TaCZTweaks
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
@@ -10,7 +11,7 @@ class SearchWidget(font: Font, x: Int, y: Int, width: Int, height: Int) : EditBo
         setTextColor(-1)
         setTextColorUneditable(-1)
         setMaxLength(256)
-        setHint(Component.translatable("tacztweaks.search"))
+        setHint(TaCZTweaks.translatable("search"))
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {

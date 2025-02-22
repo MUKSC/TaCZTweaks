@@ -30,7 +30,7 @@ public class UnloadKey {
 
     @SubscribeEvent
     public static void onUnloadPress(InputEvent.Key event) {
-        if (!isInGame() || !UNLOAD_KEY.consumeClick() || !Config.allowUnload) return;
+        if (!isInGame() || !UNLOAD_KEY.consumeClick() || !Config.Gun.INSTANCE.allowUnload()) return;
         NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerUnload());
     }
 }

@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LivingEntityAimMixin {
     @ModifyExpressionValue(method = "tickSprint", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/ReloadState$StateType;isReloading()Z"))
     private boolean sprintWhileReloading(boolean original) {
-        if (!Config.sprintWhileReloading) return original;
+        if (!Config.Gun.INSTANCE.sprintWhileReloading()) return original;
         return false;
     }
 
     @ModifyExpressionValue(method = "tickSprint", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;isAiming:Z"))
     private boolean preventSprintingWhileShootCooldown(boolean original, @Local IGunOperator operator) {
-        if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return original;
+        if (Config.Gun.INSTANCE.shootWhileSprinting()) return original;
         return original || operator.getSynShootCoolDown() > 0L;
     }
 }

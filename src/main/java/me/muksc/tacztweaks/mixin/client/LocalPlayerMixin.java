@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LocalPlayerMixin {
     @ModifyReturnValue(method = "canStartSprinting", at = @At("RETURN"))
     private boolean preventSprintingWhileShootCooldown(boolean original) {
-        if (Config.shootWhileSprinting != Config.EShootWhileSprinting.STOP_SPRINTING) return original;
+        if (Config.Gun.INSTANCE.shootWhileSprinting()) return original;
         IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer((LocalPlayer)(Object) this);
         return original && operator.getClientShootCoolDown() <= 0L;
     }

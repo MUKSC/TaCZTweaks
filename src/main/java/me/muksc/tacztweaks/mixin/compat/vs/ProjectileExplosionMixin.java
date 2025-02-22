@@ -33,7 +33,7 @@ public abstract class ProjectileExplosionMixin {
 
     @Inject(method = "explode", at = @At("TAIL"), remap = true)
     private void afterExplode(CallbackInfo ci) {
-        if (!Config.vsExplosionCompat) return;
+        if (!Config.Compat.INSTANCE.vsExplosionCompat()) return;
         var explosion = Explosion.class.cast(this);
         var invoker = (ExplosionInvoker) this;
         if (tacztweaks$isModifyingExplosion) {
@@ -65,7 +65,7 @@ public abstract class ProjectileExplosionMixin {
 
     @ModifyExpressionValue(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;"), remap = true)
     private List<Entity> noRayTrace(List<Entity> original) {
-        if (!Config.vsExplosionCompat || !tacztweaks$isModifyingExplosion) return original;
+        if (!Config.Compat.INSTANCE.vsExplosionCompat() || !tacztweaks$isModifyingExplosion) return original;
         return Collections.emptyList();
     }
 }

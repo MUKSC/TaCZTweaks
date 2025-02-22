@@ -68,6 +68,7 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+    maven("https://maven.isxander.dev/releases")
     maven("https://maven.valkyrienskies.org")
 }
 
@@ -84,6 +85,7 @@ dependencies {
     }
     annotationProcessor(variantOf(libs.org.spongepowered.mixin) { classifier("processor") })
 
+    implementation(fg.deobf(libs.dev.isxander.yacl.get()))
     implementation(fg.deobf(libs.modrinth.tacz.get()))
     implementation(fg.deobf(libs.modrinth.firstaid.get()))
     implementation(fg.deobf(libs.org.valkyrienskies.forge.get()))
@@ -160,6 +162,7 @@ publishMods {
         minecraftVersions.addAll(libs.versions.minecraft.list.get().split(','))
 
         requires("kotlin-for-forge")
+        requires("yacl")
         requires("timeless-and-classics-zero")
     }
 
@@ -172,6 +175,7 @@ publishMods {
         serverRequired = true
 
         requires("kotlin-for-forge")
+        requires("yacl")
         requires("timeless-and-classics-zero")
     }
 

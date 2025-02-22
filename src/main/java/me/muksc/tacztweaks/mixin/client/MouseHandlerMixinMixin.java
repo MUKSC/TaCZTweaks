@@ -22,7 +22,7 @@ public abstract class MouseHandlerMixinMixin {
     )
     @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = 25.0F))
     private static float modifyPitchUpperLimit(float original) {
-        return Config.crawlPitchUpperLimit;
+        return Config.Crawl.INSTANCE.pitchUpperLimit();
     }
 
     @Dynamic
@@ -32,10 +32,10 @@ public abstract class MouseHandlerMixinMixin {
     )
     @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = -10.0F))
     private static float modifyPitchLowerLimit(float original) {
-        if (!Config.dynamicCrawlPitchLimit) return Config.crawlPitchLowerLimit;
+        if (!Config.Crawl.INSTANCE.dynamicPitchLimit()) return Config.Crawl.INSTANCE.pitchLowerLimit();
 
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return Config.crawlPitchLowerLimit;
+        if (player == null) return Config.Crawl.INSTANCE.pitchLowerLimit();
         BlockHitResult result = player.clientLevel.clip(new ClipContext(
             player.getEyePosition(),
             player.getEyePosition().add(player.getLookAngle().scale(1.5)),
@@ -43,9 +43,9 @@ public abstract class MouseHandlerMixinMixin {
             ClipContext.Fluid.NONE,
             player
         ));
-        if (result.getType() == HitResult.Type.MISS) return Config.crawlPitchLowerLimit;
+        if (result.getType() == HitResult.Type.MISS) return Config.Crawl.INSTANCE.pitchLowerLimit();
 
         double distance = result.getLocation().distanceTo(player.getEyePosition());
-        return (float) Math.max(Math.acos(distance), Config.crawlPitchLowerLimit);
+        return (float) Math.max(Math.acos(distance), Config.Crawl.INSTANCE.pitchLowerLimit());
     }
 }
