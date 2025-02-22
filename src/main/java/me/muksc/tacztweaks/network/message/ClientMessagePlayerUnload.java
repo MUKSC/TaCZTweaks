@@ -29,7 +29,7 @@ public class ClientMessagePlayerUnload {
 
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player == null) return;
+            if (player == null || player.isCreative()) return;
             ShooterDataHolder data = ((ShooterDataHolderProvider) player).tacztweaks$getShooterDataHolder();
             if (data.currentGunItem == null) return;
             ItemStack gunStack = data.currentGunItem.get();
