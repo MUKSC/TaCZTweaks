@@ -27,7 +27,10 @@ private val GSON = GsonBuilder()
 
 object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_sounds") {
     private val LOGGER = LogUtils.getLogger()
+    private var error = false
     private var bulletSounds: Map<KClass<*>, Map<ResourceLocation, BulletSounds>> = emptyMap()
+
+    fun hasError(): Boolean = error
 
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletSounds> byType(): Map<ResourceLocation, T> =

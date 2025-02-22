@@ -65,11 +65,17 @@ public class TaCZTweaks {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
-        if (!BulletInteractionManager.INSTANCE.getError()) return;
-        MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
-            .append(Component.literal(" "))
-            .append(Component.translatable("tacztweaks.bullet_interactions.error").withStyle(ChatFormatting.RED));
-        e.getEntity().sendSystemMessage(text);
+        if (BulletInteractionManager.INSTANCE.hasError()) {
+            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
+                .append(Component.literal(" "))
+                .append(TaCZTweaks.translatable("bullet_interactions.error").withStyle(ChatFormatting.RED));
+            e.getEntity().sendSystemMessage(text);
+        } else if (BulletSoundsManager.INSTANCE.hasError()) {
+            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
+                .append(Component.literal(" "))
+                .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED));
+            e.getEntity().sendSystemMessage(text);
+        }
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MOD_ID, value = Dist.CLIENT)

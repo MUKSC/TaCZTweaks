@@ -13,6 +13,7 @@ import me.muksc.tacztweaks.BlockBreakingManager
 import me.muksc.tacztweaks.Context
 import me.muksc.tacztweaks.DestroySpeedModifierHolder
 import me.muksc.tacztweaks.EntityKineticBulletExtension
+import me.muksc.tacztweaks.data.old.convert
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
@@ -27,8 +28,10 @@ import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.common.util.FakePlayer
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.exp
 import kotlin.reflect.KClass
+import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction
 
 private val GSON = GsonBuilder()
     .setPrettyPrinting()
@@ -38,7 +41,10 @@ private val GSON = GsonBuilder()
 object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet_interactions") {
     private val LOGGER = LogUtils.getLogger()
     private val FAKE_PROFILE = GameProfile(UUID.fromString("BF8411E4-9730-4215-9AE8-1688EEDF9B72"), "[Minecraft]")
+    private var error = false
     private var bulletInteractions: Map<KClass<*>, Map<ResourceLocation, BulletInteraction>> = emptyMap()
+
+    fun hasError(): Boolean = error
 
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletInteraction> byType(): Map<ResourceLocation, T> =
@@ -65,8 +71,6 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         }
     }
 
-    var error: Boolean = false
-
     override fun apply(
         map: Map<ResourceLocation, JsonElement>,
         resourceManager: ResourceManager,
@@ -76,7 +80,13 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val bulletInteractions = mutableMapOf<KClass<*>, MutableMap<ResourceLocation, BulletInteraction>>()
         for ((resourceLocation, element) in map) {
             try {
-                val interaction = BulletInteraction.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
+                val interaction = try {
+                    BulletInteraction.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
+                } catch (e: RuntimeException) {
+                    OldBulletInteraction.CODEC.parse(JsonOps.INSTANCE, element)
+                        .resultOrPartial { /* Nothing */ }.getOrNull()
+                        ?.convert() ?: throw e
+                }
                 bulletInteractions.computeIfAbsent(interaction::class) { mutableMapOf() }[resourceLocation] = interaction
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet interaction $resourceLocation", e)
