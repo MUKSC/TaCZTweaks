@@ -37,8 +37,8 @@ object Config : JsonFileCodecConfig<Config>(
 
     object Crawl : CodecConfig<Crawl>() {
         val enabled by register(true, BOOL)
-        val pitchUpperLimit by register(90.0F, FLOAT)
-        val pitchLowerLimit by register(-90.0F, FLOAT)
+        val pitchUpperLimit by register(25.0F, FLOAT)
+        val pitchLowerLimit by register(-10.0F, FLOAT)
         val dynamicPitchLimit by register(false, BOOL)
         val visualTweak by register(true, BOOL)
 
