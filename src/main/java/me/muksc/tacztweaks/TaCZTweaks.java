@@ -71,7 +71,8 @@ public class TaCZTweaks {
                 .append(Component.literal(" "))
                 .append(TaCZTweaks.translatable("bullet_interactions.error").withStyle(ChatFormatting.RED));
             e.getEntity().sendSystemMessage(text);
-        } else if (BulletSoundsManager.INSTANCE.hasError()) {
+        }
+        if (BulletSoundsManager.INSTANCE.hasError()) {
             MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
                 .append(Component.literal(" "))
                 .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED));
