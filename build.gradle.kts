@@ -107,7 +107,8 @@ tasks.processResources {
         "forge_version_range" to "[${libs.versions.forge.asProvider().get().substringBefore('.')},)",
         "loader_version_range" to "[${libs.versions.forge.asProvider().get().substringBefore('.')},)",
         "tacz_version_range" to "(${libs.versions.tacz.previous.get()},${libs.versions.tacz.next.get()})",
-        "kotlinforforge_version_range" to "[${libs.versions.kotlinforforge.get().substringBeforeLast('.')},)"
+        "kotlinforforge_version_range" to "[${libs.versions.kotlinforforge.get().substringBeforeLast('.')},)",
+        "yacl_version_range" to "[${libs.versions.yacl.get().substringBeforeLast('.')},)"
     )
     inputs.properties(properties)
     filesMatching(listOf("META-INF/mods.toml", "pack.mcmeta")) { expand(properties) }
