@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.mixin.compat.vs;
+package me.muksc.tacztweaks.mixin.accessor;
 
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.shapes.CollisionContext;

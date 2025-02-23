@@ -16,11 +16,11 @@
     "LivingEntityShootMixin",
     "LivingEntitySprintMixin",
     "NetworkHandlerMixin",
+    "accessor.ClipContextAccessor",
     "accessor.EntityKineticBulletAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
     "compat.vs.BlockRayTraceMixin",
-    "compat.vs.ClipContextAccessor",
     "compat.vs.ClipContextMixin",
     "compat.vs.ExplosionMixin",
     "compat.vs.ProjectileExplosionMixin"

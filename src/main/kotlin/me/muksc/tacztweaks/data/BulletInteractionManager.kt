@@ -46,6 +46,8 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
 
     fun hasError(): Boolean = error
 
+    init { BulletInteraction }
+
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletInteraction> byType(): Map<ResourceLocation, T> =
         bulletInteractions.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
@@ -96,8 +98,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         this.bulletInteractions = ImmutableMap.copyOf(bulletInteractions)
     }
 
-    fun handleBlockInteraction(result: BlockHitResult, state: BlockState): InteractionResult {
-        val ammo = Context.ammo
+    fun handleBlockInteraction(ammo: EntityKineticBullet, result: BlockHitResult, state: BlockState): InteractionResult {
         val ext = ammo as EntityKineticBulletExtension
         val interaction = getBulletInteraction(ammo, result.location, BulletInteraction.Block::blocks) {
             it.test(state)
@@ -127,14 +128,13 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             }
         }
         if (breakBlock) level.destroyBlock(result.blockPos, interaction.blockBreak.drop, ammo.owner)
-        return InteractionResult(shouldPierce(result, interaction, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
+        return InteractionResult(shouldPierce(ammo, result, interaction, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
     }
 
-    fun handleEntityInteraction(result: TacHitResult, context: ClipContext): InteractionResult {
-        val entity = result.entity
-        val ammo = Context.ammo
+    fun handleEntityInteraction(ammo: EntityKineticBullet, result: TacHitResult, context: ClipContext): InteractionResult {
         val ext = ammo as EntityKineticBulletExtension
         val accessor = ammo as EntityKineticBulletAccessor
+        val entity = result.entity
         val interaction = getBulletInteraction(ammo, result.location, BulletInteraction.Entity::entities) {
             it.test(entity)
         } ?: BulletInteraction.Entity.DEFAULT
@@ -147,14 +147,13 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         }
         val isDead = !entity.isAlive
         if (accessor.explosion) return InteractionResult(false, isDead)
-        return InteractionResult(shouldPierce(result, interaction, isDead, ext::`tacztweaks$incrementEntityPierce`, ext::`tacztweaks$getEntityPierce`), isDead)
+        return InteractionResult(shouldPierce(ammo, result, interaction, isDead, ext::`tacztweaks$incrementEntityPierce`, ext::`tacztweaks$getEntityPierce`), isDead)
     }
 
     private fun shouldPierce(
-        result: HitResult, interaction: BulletInteraction, condition: Boolean,
+        ammo: EntityKineticBullet, result: HitResult, interaction: BulletInteraction, condition: Boolean,
         incrementCustomPierce: () -> Unit, getCustomPierce: () -> Int
     ): Boolean {
-        val ammo = Context.ammo
         val accessor = ammo as EntityKineticBulletAccessor
         val ext = ammo as EntityKineticBulletExtension
         if (interaction.gunPierce.consume) accessor.pierce -= 1

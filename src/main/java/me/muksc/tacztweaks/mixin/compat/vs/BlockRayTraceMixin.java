@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.mixin.compat.vs;
 import com.tacz.guns.util.block.BlockRayTrace;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.compat.vs.ClipContextExtension;
+import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
@@ -26,14 +27,20 @@ public abstract class BlockRayTraceMixin {
     @Unique
     private static BlockHitResult tacztweaks$result;
 
+    @Unique
+    private static Level level;
+
+    @Inject(method = "rayTraceBlocks", at = @At("HEAD"))
+    private static void rayTraceBlocks$storeLevel(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {
+        BlockRayTraceMixin.level = level;
+    }
+
     @Inject(method = "performRayTrace", at = @At("HEAD"), cancellable = true)
     private static <T> void performRayTrace$vsCollisionCompat(ClipContext context, BiFunction<ClipContext, BlockPos, T> hitFunction, Function<ClipContext, T> missFactory, CallbackInfoReturnable<T> cir) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
         ClipContextAccessor accessor = (ClipContextAccessor) context;
-        if (!(accessor.getCollisionContext() instanceof EntityCollisionContext entityCollisionContext)) return;
-        Entity entity = entityCollisionContext.getEntity();
-        if (entity == null) return;
-        Level level = entity.level();
+        Entity entity = null;
+        if (accessor.getCollisionContext() instanceof EntityCollisionContext entityCollisionContext) entity = entityCollisionContext.getEntity();
 
         ArrayList<BlockPos> ignores = new ArrayList<>();
         BlockHitResult result = tacztweaks$result = level.clip(context);

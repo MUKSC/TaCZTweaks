@@ -23,11 +23,11 @@ class BulletRayTracer(
     private val ext = entity as EntityKineticBulletExtension
     private var findEntitiesStart = context.from
 
-    fun handle(original: BlockHitResult, state: BlockState?): BlockHitResult? {
+    fun handle(ammo: EntityKineticBullet, original: BlockHitResult, state: BlockState?): BlockHitResult? {
         val entities = EntityUtil.findEntitiesOnPath(entity, findEntitiesStart, original.location)
         for (result in entities.sortedBy { findEntitiesStart.distanceTo(it.hitPos) }) {
             ext.`tacztweaks$setPosition`(result.hitPos)
-            val interactionResult = BulletInteractionManager.handleEntityInteraction(TacHitResult(result), context)
+            val interactionResult = BulletInteractionManager.handleEntityInteraction(ammo, TacHitResult(result), context)
             BulletSoundsManager.handleEntitySound(interactionResult.toEntitySoundType(), level, entity, result.hitPos, result.entity)
             if (interactionResult.pierce) continue
             entity.discard()
@@ -37,7 +37,7 @@ class BulletRayTracer(
         findEntitiesStart = original.location
 
         if (original.type == HitResult.Type.MISS || state == null) return original
-        val interactionResult = BulletInteractionManager.handleBlockInteraction(original, state)
+        val interactionResult = BulletInteractionManager.handleBlockInteraction(ammo, original, state)
         BulletSoundsManager.handleBlockSound(interactionResult.toBlockSoundType(), level, entity, original.location, state)
 
         if (interactionResult.pierce) return null

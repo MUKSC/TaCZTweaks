@@ -6,7 +6,6 @@ import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.TacHitResult;
-import me.muksc.tacztweaks.Context;
 import me.muksc.tacztweaks.EntityKineticBulletExtension;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
 import net.minecraft.resources.ResourceLocation;
@@ -119,11 +118,6 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
         Level level = instance.level();
         if (!(level instanceof ServerLevel serverLevel)) return;
         BulletSoundsManager.INSTANCE.handleSoundWhizz(serverLevel, instance, tacztweaks$hitPlayers);
-    }
-
-    @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;"))
-    private void setInstance(CallbackInfo ci) {
-        Context.ammo = EntityKineticBullet.class.cast(this);
     }
 
     @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;", shift = At.Shift.AFTER), cancellable = true)
