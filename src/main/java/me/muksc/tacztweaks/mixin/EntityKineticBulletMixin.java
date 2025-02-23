@@ -113,7 +113,7 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
         tacztweaks$hitPlayers.add(player);
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/EntityKineticBullet;onBulletTick()V", shift = At.Shift.AFTER))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/EntityKineticBullet;onBulletTick()V", shift = At.Shift.AFTER, remap = false), remap = true)
     private void whizz(CallbackInfo ci) {
         EntityKineticBullet instance = EntityKineticBullet.class.cast(this);
         Level level = instance.level();

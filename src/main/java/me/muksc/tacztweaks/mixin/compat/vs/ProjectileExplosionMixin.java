@@ -26,8 +26,6 @@ public abstract class ProjectileExplosionMixin {
     @Shadow @Final private float radius;
     @Shadow @Final private boolean knockback;
 
-    @Shadow(remap = true) public abstract void explode();
-
     @Unique
     private boolean tacztweaks$isModifyingExplosion = false;
 
@@ -53,7 +51,7 @@ public abstract class ProjectileExplosionMixin {
                 explosion.x = x;
                 explosion.y = y;
                 explosion.z = z;
-                this.explode();
+                explosion.explode();
             });
         } finally {
             this.x = origX;
