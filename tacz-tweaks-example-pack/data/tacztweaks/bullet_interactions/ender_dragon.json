@@ -1,0 +1,12 @@
+{
+  "type": "entity",
+  "entities": [
+    "minecraft:ender_dragon"
+  ],
+  "damage": {
+    "modifier": -10
+  },
+  "pierce": {
+    "type": "never"
+  }
+}
