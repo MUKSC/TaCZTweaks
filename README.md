@@ -1,93 +1,205 @@
 ## TaCZ Tweaks
-[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](ttps://modrinth.com/mod/tacz-tweaks/settings/description)
+[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/tacz-tweaks)
 [![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/tacz-tweaks)
 [![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg)](https://github.com/MUKSC/TaCZTweaks)
 
 TaCZ Tweaks is an addon for the [Timeless and Classics Zero](https://modrinth.com/mod/timeless-and-classics-zero) mod that adds random tweaks and features to enhance my experience with TaCZ.  
-**Requires [Kotlin for Forge](https://modrinth.com/mod/kotlin-for-forge).**
+**Requires [Kotlin for Forge](https://modrinth.com/mod/kotlin-for-forge) and [YACL](https://modrinth.com/mod/yacl).**
+
+If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > TaCZ Tweaks](https://discord.com/channels/1243278348399022252/1313570204000980992) channel.  
+Alternatively, you can use the [GitHub Discussions](https://github.com/MUKSC/TaCZTweaks/discussions) page or the [issues](https://github.com/MUKSC/TaCZTweaks/issues) page in general.
+
+## Example Pack
+You can download the example pack from the download page.  
+You can install it by putting the .zip file in the `.minecraft/tacz` directory, just like gun packs.  
+It contains:
+- Glass block piercing
+- Drip stone breaking
+- Whizzing sound
+- Metal hitting sound
 
 ## Features
-- Bullets can now break and/or pierce blocks. Fully customizable via data packs.
-- Options to enable compatibility with other mods; currently supports [FirstAid](https://modrinth.com/mod/firstaid) and [Valkyrien Skies](https://modrinth.com/mod/valkyrien-skies)
-- Options to allow: shoot while sprinting, sprint while reloading, reload while shooting.
-- Options to change upper and lower pitch limit while crawling.
-  - Additionally, an option to change pitch limits based on the hitbox of the blocks.
-- The Gun Smith Table now has pack filter and search functionality
-  - Additionally, recipes will be filtered according to the gun you're currently holding  
-  - Creative players can now craft items without requiring items
-- A new key config to unloading the gun.
-- A small visual tweak to the animation when transitioning into or out of the crawling state.
-- Option to completely disable TaCZ crawling for better mod compatibility.
-  
-## Customize Bullet Interactions
-Low effort documentation on how to customize bullet interactions using data packs.
+### Customizable Advanced Piercing
+Customizable via data packs.  
+Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Interactions) for more details.  
+![Piercing glass blocks](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/piercing.webp)
+![Conditional piercing](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/conditional-piercing.webp)
 
-Each bullet interactions is a json file located in `bullet_interactions` directory.  
-(e.g. `data/example/bullet_interactions/example_interaction.json`)  
-The data structure is as follows:
-```json
+### Customizable Bullet Sounds
+Customizable via data packs.  
+You can add various sounds to bullets, such as:
+- Whizzing
+- Block hit/pierce/break
+- Entity hit/pierce/kill
+
+Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Sounds) for more details.
+
+### FirstAid / Valkyrien Skies Compatibility
+FirstAid compat allows bullets to damage correct body parts on hit.  
+Valkyrien Skies compat is composed of 2 parts:
+- Collision compat allows bullets to properly collide with VS ships.
+- Explosion compat allows explosive bullets to damage and knockback VS ships.
+
+Valkyrien Skies compat is disabled by default as it modifies the existing behaviours.
+
+### Shoot / Reload While Sprinting
+Allows you to shoot and reload while sprinting.  
+Additionally, you can immediately start reloading after a shot.  
+![Shoot and reload while sprinting](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/sprint-shoot-reload.webp) 
+
+### Crawl Tweaks
+- Ability to completely disable the TaCZ crawl.
+  - This allows crawling feature from other mods to be functional.
+- Customizable upper and lower pitch limit.
+- Dynamic pitch limit based on block collisions.
+- Minor visual tweak.
+
+### Gun Unloading
+The new key bind is located under the TaCZ category.  
+Can be disabled on server side.
+
+### Search & Filter in the Gun Smith Table
+Adds new search bar and pack filtering.   
+Additionally in creative mode, you can craft items without cost.  
+![Advanced Gun Smith Table screen](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/gun-smith-table.webp)
+
+## Migrate to Bullet Interactions V2
+There has been a rework to the bullet interactions in v2.0.0.  
+Although you can still use the old format, here's how you can migrate to the new format.
+
+### What Changed
+- New `type` field, along with the new customizable entity piercing.
+- The `guns` field has been replaced by the new and more expressive `target` field.
+- The `pierce.condition` field has been simplified and replaced by the new `conditional` field.
+- The `pierce.require_gun_pierce` field has been replaced by the new `gunPierce` field.
+- The `drop` field has moved to the new `block_break.drop` field.
+
+### Instruction
+Add new `type` field.  
+```json5
 {
-  // A list of block IDs or block tags to which this interaction applies
+  "type": "block",
+  ...
+}
+```
+Add new `target` field and place the content of the `guns` field in there.
+```json5
+{
+  ...,
+  "guns": [
+    ... // Copy these
+  ],
+  "target": {
+    "type": "gun",
+    "value": [
+      ... // Paste in here
+    ],
+  },
+  ...
+}
+```
+Change the `pierce.condition` field to the new `pierce.conditional` field.
+```json5
+{
+  ...,
+  "pierce": {
+    ...,
+    "condition": "always",
+    // Change the above to the below
+    "conditional": false,
+    
+    "condition": "on_break",
+    // Change the above to the below
+    "conditional": true,
+    ...
+  },
+  ...
+}
+```
+Change the `pierce.require_gun_pierce` field to the new `gunPierce` field.
+```json5
+{
+  ...,
+  "pierce": {
+    ...,
+    "require_gun_pierce": ... // Copy this
+  },
+  "gunPierce": {
+    "required": ..., // Paste in here
+    "consume": false
+  }
+}
+```
+Move the `drop` field to the new `block_break.drop` field.
+```json5
+{
+  ...,
+  "block_break": {
+    ...,
+    "drop": ... // Paste here
+  },
+  ...,
+  "drop": ... // Copy this
+}
+```
+
+### Example
+Before:
+```json5
+{
   "blocks": [
     "minecraft:stone",
     "#forge:glass"
   ],
-  // A list of gun IDs to which this interaction applies
   "guns": [
     "tacz:m320"
   ],
-  // Specifies how blocks break
   "block_break": {
-    // The "never" type will never break the block
-    "type": "never",
-
-    // The "count" type will break the block after it's been hit a certain number of times
-    "type": "count",
-    "count": 2,
-
-    // The "fixed_damage" type will apply a fixed amount of damage to the block
-    // If "accumulate" is false, the only way to break the block is if the bullet can one-shot it
-    // The block's hardness and the gun's armor-piercing stat will be applied
-    "type": "fixed_damage",
-    "damage": 5,
-    "accumulate": true,
-
-    // The "dynamic_damage" type will apply a variable amount of damage to the block, based on the bullet's damage
-    // The "modifier" and "multiplier" properties will modify the damage against the block by a certain amount
-    // If "accumulate" is false, the only way to break the block is if the bullet can one-shot it
-    // The block's hardness and the gun's armor-piercing stat will be applied
     "type": "dynamic_damage",
     "modifier": 0,
     "multiplier": 1.0,
     "accumulate": true
   },
-  // Specifies the conditions for when a bullet will pierces through a block
   "pierce": {
-    // The "never" type will never pierces the block
-    "type": "never",
-
-    // The "count" type will pierces the bullet a fixed number of times
-    // The "condition" property defines additional conditions to determine whether to pierce the block
-    // The "damage_falloff" and "damage_multiplier" properties will modify the bullet's damage by a certain amount
-    // If "require_gun_pierce" is true, the gun's pierce stat will be applied
-    "type": "count",
-    "condition": "always / on_break",
-    "count": 3,
-    "damage_falloff": 5,
-    "damage_multiplier": 1.0,
-    "require_gun_pierce": false,
-
-    // The "damage" type will pierces the bullet as long as it has a damage of more than zero
-    // The "condition" property defines additional conditions to determine whether to pierce the block
-    // The "damage_falloff" and "damage_multiplier" properties will modify the bullet's damage by a certain amount
-    // If "require_gun_pierce" is true, the gun's pierce stat will be applied
     "type": "damage",
-    "condition": "always / on_break",
+    "condition": "on_break",
     "damage_falloff": 5,
     "damage_multiplier": 1.0,
     "require_gun_pierce": false
   },
-  // Determines whether the block drops as an item when broken
   "drop": false
+}
+```
+After:
+```json5
+{
+  "type": "block",
+  "target": {
+    "type": "gun",
+    "values": [
+      "tacz:m320"
+    ]
+  },
+  "blocks": [
+    "minecraft:stone",
+    "#forge:glass"
+  ],
+  "block_break": {
+    "type": "dynamic_damage",
+    "modifier": 0,
+    "multiplier": 1.0,
+    "accumulate": true,
+    "drop": false
+  },
+  "pierce": {
+    "type": "damage",
+    "conditional": true,
+    "damage_falloff": 5,
+    "damage_multiplier": 1.0
+  },
+  "gun_pierce": {
+    "required": false,
+    "consume": false
+  }
 }
 ```

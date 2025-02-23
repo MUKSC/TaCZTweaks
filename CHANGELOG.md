@@ -1,4 +1,11 @@
-- Added a new config option to disallow unloading a gun
-- Fixed the janky behaviour of `sprintWhileReloading` for the weapons with dynamic reload
-- Fixed the issue where bullet damage falloff was incorrectly applied in some cases
-- Fixed the issue where explosions weren't damaging entities if the Valkyrien Skies mod is present
+- Bullet interactions rework
+  - You can still use the old format, but migration guide is available on the main page
+  - Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Interactions) for more details
+- New bullet sounds
+  - Customizable whizzing, block and entity sounds
+  - Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Sounds) for more details
+- Config rework + config screen
+  - Now requires YACL as a dependency
+- Unbundled the default data pack
+  - If you still want the default pack, you can download the example pack from the download page
+  - More details on the main page
