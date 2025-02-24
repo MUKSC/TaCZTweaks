@@ -2,6 +2,7 @@ package me.muksc.tacztweaks.network.message;
 
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
+import me.muksc.tacztweaks.AbstractGunItemExtension;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.ShooterDataHolderProvider;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,12 +30,13 @@ public class ClientMessagePlayerUnload {
 
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player == null || player.isCreative()) return;
+            if (player == null) return;
             ShooterDataHolder data = ((ShooterDataHolderProvider) player).tacztweaks$getShooterDataHolder();
             if (data.currentGunItem == null) return;
             ItemStack gunStack = data.currentGunItem.get();
             IGun gun = IGun.getIGunOrNull(gunStack);
             if (gun == null) return;
+            if (gun instanceof AbstractGunItemExtension ext) ext.tacztweaks$setUnloading();
             gun.dropAllAmmo(player, gunStack);
         });
         context.setPacketHandled(true);

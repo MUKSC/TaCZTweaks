@@ -6,6 +6,7 @@
   "refmap": "tacztweaks.refmap.json",
   "plugin": "me.muksc.tacztweaks.ModMixinPlugin",
   "mixins": [
+    "AbstractGunItemMixin",
     "BlockBehaviourMixin",
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
