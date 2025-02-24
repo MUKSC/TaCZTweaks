@@ -18,9 +18,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 
 @Mod(TaCZTweaks.MOD_ID)
 public class TaCZTweaks {
@@ -34,10 +34,11 @@ public class TaCZTweaks {
         return Component.translatable("%s.%s".formatted(MOD_ID, key), args);
     }
 
-    public final FMLModContainer container;
+    public final ModContainer container;
 
-    public TaCZTweaks(FMLJavaModLoadingContext context) {
-        container = context.getContainer();
+    public TaCZTweaks() {
+        ModLoadingContext context = ModLoadingContext.get();
+        container = context.getActiveContainer();
         context.registerExtensionPoint(
             ConfigScreenHandler.ConfigScreenFactory.class,
             () -> new ConfigScreenHandler.ConfigScreenFactory(Config.INSTANCE::generateConfigScreen)
