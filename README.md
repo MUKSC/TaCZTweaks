@@ -10,7 +10,7 @@ If you have any questions, you can reach me on the [TaCZ Official Discord](https
 Alternatively, you can use the [GitHub Discussions](https://github.com/MUKSC/TaCZTweaks/discussions) page or the [issues](https://github.com/MUKSC/TaCZTweaks/issues) page in general.
 
 ## Example Pack
-You can download the example pack from the download page.  
+You can download the example pack from the download page on Modrinth or GitHub, but not available on CurseForge due to limitations.  
 You can install it by putting the .zip file in the `.minecraft/tacz` directory, just like gun packs.  
 It contains:
 - Glass block piercing

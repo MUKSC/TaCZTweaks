@@ -152,13 +152,13 @@ publishMods {
     displayName = "${project.findProperty("mod_name")} ${project.version}"
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
     file = tasks.jarJar.get().archiveFile
-    additionalFiles.from(packageExamplePack.get().archiveFile)
     type = STABLE
     modLoaders.add("forge")
 
     modrinth {
         projectId = project.findProperty("modrinth_id") as String
         projectDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText
+        additionalFiles.from(packageExamplePack.get().archiveFile)
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         minecraftVersions.addAll(libs.versions.minecraft.list.get().split(','))
 
@@ -182,6 +182,7 @@ publishMods {
 
     github {
         repository = project.findProperty("repository") as String
+        additionalFiles.from(packageExamplePack.get().archiveFile)
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
         commitish = "main"
         tagName = "v${project.version}"
