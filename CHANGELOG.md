@@ -1,11 +1,3 @@
-- Bullet interactions rework
-  - You can still use the old format, but migration guide is available on the main page
-  - Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Interactions) for more details
-- New bullet sounds
-  - Customizable whizzing, block and entity sounds
-  - Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Sounds) for more details
-- Config rework + config screen
-  - Now requires YACL as a dependency
-- Unbundled the default data pack
-  - If you still want the default pack, you can download the example pack from the download page
-  - More details on the main page
+- Fixed the startup crash when using specific Forge versions
+- Re-enabled gun unloading in creative mode
+- Added an action bar message when unloading a gun
