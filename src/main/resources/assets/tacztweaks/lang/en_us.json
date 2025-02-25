@@ -1,5 +1,6 @@
 {
   "key.tacztweaks.unload": "Unload",
+  "tacztweaks.unload.done": "Unloaded",
   "tacztweaks.search": "Search...",
   "tacztweaks.packs.filter": "Filter",
   "tacztweaks.bullet_interactions.error": "There was an error while loading bullet interactions\nCheck the logs for more detail",

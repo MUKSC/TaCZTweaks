@@ -5,6 +5,7 @@ import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import me.muksc.tacztweaks.AbstractGunItemExtension;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.ShooterDataHolderProvider;
+import me.muksc.tacztweaks.TaCZTweaks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +39,7 @@ public class ClientMessagePlayerUnload {
             if (gun == null) return;
             if (gun instanceof AbstractGunItemExtension ext) ext.tacztweaks$setUnloading();
             gun.dropAllAmmo(player, gunStack);
+            player.displayClientMessage(TaCZTweaks.translatable("unload.done"), true);
         });
         context.setPacketHandled(true);
     }
