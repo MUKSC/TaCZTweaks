@@ -1,3 +1,1 @@
-- Fixed the startup crash when using specific Forge versions
-- Re-enabled gun unloading in creative mode
-- Added an action bar message when unloading a gun
+- Fixed the crash on startup oops
