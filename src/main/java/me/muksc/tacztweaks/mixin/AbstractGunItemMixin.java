@@ -22,7 +22,7 @@ public abstract class AbstractGunItemMixin implements AbstractGunItemExtension {
         tacztweaks$unloading = true;
     }
 
-    @ModifyExpressionValue(method = "lambda$dropAllAmmo$3", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isCreative()Z"))
+    @ModifyExpressionValue(method = "lambda$dropAllAmmo$3", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isCreative()Z", remap = true))
     private boolean dropAllAmmo$unload(boolean original) {
         return !tacztweaks$unloading && original;
     }
