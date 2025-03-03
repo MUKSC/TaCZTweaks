@@ -21,6 +21,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod(TaCZTweaks.MOD_ID)
 public class TaCZTweaks {
@@ -37,12 +38,7 @@ public class TaCZTweaks {
     public final ModContainer container;
 
     public TaCZTweaks() {
-        ModLoadingContext context = ModLoadingContext.get();
-        container = context.getActiveContainer();
-        context.registerExtensionPoint(
-            ConfigScreenHandler.ConfigScreenFactory.class,
-            () -> new ConfigScreenHandler.ConfigScreenFactory(Config.INSTANCE::generateConfigScreen)
-        );
+        container = ModLoadingContext.get().getActiveContainer();
         Config.INSTANCE.touch();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -84,7 +80,15 @@ public class TaCZTweaks {
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MOD_ID, value = Dist.CLIENT)
     static class ClientModEvents {
         @SubscribeEvent
-        public static void onClientSetup(RegisterKeyMappingsEvent event) {
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            ModLoadingContext.get().registerExtensionPoint(
+                ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory((client, screen) -> Config.INSTANCE.generateConfigScreen(screen))
+            );
+        }
+
+        @SubscribeEvent
+        public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(UnloadKey.UNLOAD_KEY);
         }
     }
