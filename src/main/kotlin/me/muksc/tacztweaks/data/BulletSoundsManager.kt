@@ -121,6 +121,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         whizz.sound.play(player, position, entity)
     }
 
+    @Suppress("DEPRECATION")
     private fun BulletSounds.Sound.play(player: ServerPlayer, position: Vec3, entity: EntityKineticBullet) {
         val soundEvent = SoundEvent.createVariableRangeEvent(sound)
         player.connection.send(ClientboundSoundPacket(
