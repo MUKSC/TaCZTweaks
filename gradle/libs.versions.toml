@@ -21,6 +21,7 @@ tacz-previous = "1.1.3"
 tacz-next = "1.1.5"
 tacz-modrinth = "VIAwq0sR"
 firstaid-modrinth = "1.20.1-1.1"
+legendary-survival-overhaul-curseforge = "6268808"
 valkyrienskies = "2.5.0-beta.1+a13faa3390"
 valkyrienskies-core = "1.1.0+2a62e6a823"
 neat-modrinth = "1.20.1-41-forge"
@@ -37,6 +38,7 @@ org-spongepowered-mixin = { module = "org.spongepowered:mixin", version.ref = "m
 dev-isxander-yacl = { module = "dev.isxander:yet-another-config-lib", version.ref = "yacl" }
 modrinth-tacz = { module = "maven.modrinth:timeless-and-classics-zero", version.ref = "tacz-modrinth" }
 modrinth-firstaid = { module = "maven.modrinth:firstaid", version.ref = "firstaid-modrinth" }
+curseforge-legendary-survival-overhaul = { module = "curse.maven:legendary-survival-overhaul-840254", version.ref = "legendary-survival-overhaul-curseforge" }
 org-valkyrienskies-forge = { module = "org.valkyrienskies:valkyrienskies-120-forge", version.ref = "valkyrienskies" }
 org-valkyrienskies-core-api = { module = "org.valkyrienskies.core:api", version.ref = "valkyrienskies-core" }
 org-valkyrienskies-core-api-game = { module = "org.valkyrienskies.core:api-game", version.ref = "valkyrienskies-core" }

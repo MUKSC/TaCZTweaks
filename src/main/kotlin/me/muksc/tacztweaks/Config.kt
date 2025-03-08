@@ -51,10 +51,12 @@ object Config : JsonFileCodecConfig<Config>(
 
     object Compat : CodecConfig<Compat>() {
         val firstAidCompat by register(true, BOOL)
+        val lsoCompat by register(true, BOOL)
         val vsCollisionCompat by register(false, BOOL)
         val vsExplosionCompat by register(false, BOOL)
 
         fun firstAidCompat(): Boolean = firstAidCompat.value
+        fun lsoCompat(): Boolean = lsoCompat.value
         fun vsCollisionCompat(): Boolean = vsCollisionCompat.value
         fun vsExplosionCompat(): Boolean = vsExplosionCompat.value
     }
@@ -131,6 +133,12 @@ object Config : JsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.compat.firstAidCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.firstAidCompat.description")))
                     binding(Compat.firstAidCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.lsoCompat.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.lsoCompat.description")))
+                    binding(Compat.lsoCompat.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {

@@ -68,6 +68,18 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "CurseForge"
+                url = uri("https://cursemaven.com")
+            }
+        }
+        forRepositories(fg.repository)
+        filter {
+            includeGroup("curse.maven")
+        }
+    }
     maven("https://maven.isxander.dev/releases")
     maven("https://maven.valkyrienskies.org")
 }
@@ -88,6 +100,7 @@ dependencies {
     implementation(fg.deobf(libs.dev.isxander.yacl.get()))
     implementation(fg.deobf(libs.modrinth.tacz.get()))
     implementation(fg.deobf(libs.modrinth.firstaid.get()))
+    compileOnly(fg.deobf(libs.curseforge.legendary.survival.overhaul.get()))
     implementation(fg.deobf(libs.org.valkyrienskies.forge.get()))
     compileOnly(libs.org.valkyrienskies.core.api)
     compileOnly(libs.org.valkyrienskies.core.api.game)

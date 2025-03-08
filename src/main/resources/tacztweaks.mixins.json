@@ -21,6 +21,7 @@
     "accessor.EntityKineticBulletAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
+    "compat.lso.CommonForgeEventsMixin",
     "compat.vs.BlockRayTraceMixin",
     "compat.vs.ClipContextMixin",
     "compat.vs.ExplosionMixin",

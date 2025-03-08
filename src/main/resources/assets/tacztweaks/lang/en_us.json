@@ -29,6 +29,8 @@
   "tacztweaks.config.compat": "Compat",
   "tacztweaks.config.compat.firstAidCompat.name": "FirstAid Compat",
   "tacztweaks.config.compat.firstAidCompat.description": "Allows bullets to damage correct body parts",
+  "tacztweaks.config.compat.lsoCompat.name": "LSO Compat",
+  "tacztweaks.config.compat.lsoCompat.description": "Allows bullets to damage correct body parts when using the Legendary Survival Overhaul mod.",
   "tacztweaks.config.compat.vsCollisionCompat.name": "VS Collision Compat",
   "tacztweaks.config.compat.vsCollisionCompat.description": "Allows bullets to properly collide with Valkyrien Skies ships",
   "tacztweaks.config.compat.vsExplosionCompat.name": "VS Explosion Compat",
