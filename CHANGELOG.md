@@ -1,1 +1,3 @@
-- Fixed the crash on startup oops
+- Added a new config option to disable bullet culling
+- Added Legendary Survival Overhaul compat
+- Fixed a crash on NeoForge

@@ -34,9 +34,11 @@ You can add various sounds to bullets, such as:
 
 Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Sounds) for more details.
 
-### FirstAid / Valkyrien Skies Compatibility
-FirstAid compat allows bullets to damage correct body parts on hit.  
-Valkyrien Skies compat is composed of 2 parts:
+### Mod Compatibilities
+FirstAid / Legendary Survival Overhaul compat:
+- Allows bullets to damage correct body parts on hit.
+
+Valkyrien Skies compat:
 - Collision compat allows bullets to properly collide with VS ships.
 - Explosion compat allows explosive bullets to damage and knockback VS ships.
 
@@ -59,9 +61,15 @@ The new key bind is located under the TaCZ category.
 Can be disabled on server side.
 
 ### Search & Filter in the Gun Smith Table
-Adds new search bar and pack filtering.   
-Additionally in creative mode, you can craft items without cost.  
-![Advanced Gun Smith Table screen](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/gun-smith-table.webp)
+- Show only compatible attachments by interacting while holding a gun
+- New search bar and pack filter
+- Craft items without cost in creative mode
+
+![Filtering in the Gun Smith Table](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/gun-smith-table-filter.webp)
+
+### Disable Bullet Culling
+Improves the accuracy of bullet rendering at close range.  
+![Improved close-range bullet rendering](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/bullet-culling.webp)
 
 ## Migrate to Bullet Interactions V2
 There has been a rework to the bullet interactions in v2.0.0.  
