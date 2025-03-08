@@ -29,6 +29,7 @@
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",
+    "client.EntityBulletRendererMixin",
     "client.GunSmithTableScreenMixin",
     "client.LocalPlayerMixin",
     "client.LocalPlayerMixinMixin",

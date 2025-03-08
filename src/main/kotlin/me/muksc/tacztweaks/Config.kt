@@ -28,11 +28,13 @@ object Config : JsonFileCodecConfig<Config>(
         val sprintWhileReloading by register(true, BOOL)
         val reloadWhileShooting by register(true, BOOL)
         val allowUnload by register(true, BOOL)
+        val disableBulletCulling by register(false, BOOL)
 
         fun shootWhileSprinting(): Boolean = shootWhileSprinting.value
         fun sprintWhileReloading(): Boolean = sprintWhileReloading.value
         fun reloadWhileShooting(): Boolean = reloadWhileShooting.value
         fun allowUnload(): Boolean = allowUnload.value
+        fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
 
     object Crawl : CodecConfig<Crawl>() {
@@ -91,6 +93,12 @@ object Config : JsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.gun.allowUnload.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.allowUnload.description")))
                     binding(Gun.allowUnload.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.disableBulletCulling.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableBulletCulling.description")))
+                    binding(Gun.disableBulletCulling.asBinding())
                     controller(booleanController())
                 }.build())
             }.build())

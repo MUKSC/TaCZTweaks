@@ -15,6 +15,8 @@
   "tacztweaks.config.gun.reloadWhileShooting.description": "Allows reloading guns immediately after shooting",
   "tacztweaks.config.gun.allowUnload.name": "Allow Unload",
   "tacztweaks.config.gun.allowUnload.description": "Enables or disables the gun unload feature",
+  "tacztweaks.config.gun.disableBulletCulling.name": "Disable Bullet Culling",
+  "tacztweaks.config.gun.disableBulletCulling.description": "Improves the accuracy of bullet rendering at close range.\nPotentially impacts performance in intense scenarios, such as large-scale multiplayer gunfights.",
   "tacztweaks.config.crawl": "Crawl",
   "tacztweaks.config.crawl.enabled.name": "Enabled",
   "tacztweaks.config.crawl.enabled.description": "Enables or disables the TaCZ' crawling feature completely\nAllows other crawl mods to function properly with TaCZ",
