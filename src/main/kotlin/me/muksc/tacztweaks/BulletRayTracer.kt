@@ -4,6 +4,9 @@ import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.util.EntityUtil
 import com.tacz.guns.util.TacHitResult
 import me.muksc.tacztweaks.data.BulletInteractionManager
+import me.muksc.tacztweaks.data.BulletParticlesManager
+import me.muksc.tacztweaks.data.BulletParticlesManager.EBlockParticleType
+import me.muksc.tacztweaks.data.BulletParticlesManager.EEntityParticleType
 import me.muksc.tacztweaks.data.BulletSoundsManager
 import me.muksc.tacztweaks.data.BulletSoundsManager.EBlockSoundType
 import me.muksc.tacztweaks.data.BulletSoundsManager.EEntitySoundType
@@ -28,6 +31,7 @@ class BulletRayTracer(
         for (result in entities.sortedBy { findEntitiesStart.distanceTo(it.hitPos) }) {
             ext.`tacztweaks$setPosition`(result.hitPos)
             val interactionResult = BulletInteractionManager.handleEntityInteraction(ammo, TacHitResult(result), context)
+            BulletParticlesManager.handleEntityParticle(interactionResult.toEntityParticleType(), level, entity, result.hitPos, result.entity)
             BulletSoundsManager.handleEntitySound(interactionResult.toEntitySoundType(), level, entity, result.hitPos, result.entity)
             if (interactionResult.pierce) continue
             entity.discard()
@@ -38,11 +42,24 @@ class BulletRayTracer(
 
         if (original.type == HitResult.Type.MISS || state == null) return original
         val interactionResult = BulletInteractionManager.handleBlockInteraction(ammo, original, state)
+        BulletParticlesManager.handleBlockParticle(interactionResult.toBlockParticleType(), level, entity, original.location, state)
         BulletSoundsManager.handleBlockSound(interactionResult.toBlockSoundType(), level, entity, original.location, state)
 
         if (interactionResult.pierce) return null
         accessor.invokeOnHitBlock(original, context.from, context.to)
         return original
+    }
+
+    private fun BulletInteractionManager.InteractionResult.toBlockParticleType(): EBlockParticleType = when {
+        condition -> EBlockParticleType.BREAK
+        pierce -> EBlockParticleType.PIERCE
+        else -> EBlockParticleType.HIT
+    }
+
+    private fun BulletInteractionManager.InteractionResult.toEntityParticleType(): EEntityParticleType = when {
+        condition -> EEntityParticleType.KILL
+        pierce -> EEntityParticleType.PIERCE
+        else -> EEntityParticleType.HIT
     }
 
     private fun BulletInteractionManager.InteractionResult.toBlockSoundType(): EBlockSoundType = when {

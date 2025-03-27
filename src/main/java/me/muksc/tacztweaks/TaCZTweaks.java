@@ -2,6 +2,7 @@ package me.muksc.tacztweaks;
 
 import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.data.BulletInteractionManager;
+import me.muksc.tacztweaks.data.BulletParticlesManager;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -46,6 +47,7 @@ public class TaCZTweaks {
     @SubscribeEvent
     public void registerReloadListeners(AddReloadListenerEvent e) {
         e.addListener(BulletInteractionManager.INSTANCE);
+        e.addListener(BulletParticlesManager.INSTANCE);
         e.addListener(BulletSoundsManager.INSTANCE);
     }
 
@@ -67,6 +69,12 @@ public class TaCZTweaks {
             MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
                 .append(Component.literal(" "))
                 .append(TaCZTweaks.translatable("bullet_interactions.error").withStyle(ChatFormatting.RED));
+            e.getEntity().sendSystemMessage(text);
+        }
+        if (BulletParticlesManager.INSTANCE.hasError()) {
+            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
+                .append(Component.literal(" "))
+                .append(TaCZTweaks.translatable("bullet_particles.error").withStyle(ChatFormatting.RED));
             e.getEntity().sendSystemMessage(text);
         }
         if (BulletSoundsManager.INSTANCE.hasError()) {

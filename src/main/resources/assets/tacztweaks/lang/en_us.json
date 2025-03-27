@@ -4,6 +4,7 @@
   "tacztweaks.search": "Search...",
   "tacztweaks.packs.filter": "Filter",
   "tacztweaks.bullet_interactions.error": "There was an error while loading bullet interactions.\nCheck the logs for more detail.",
+  "tacztweaks.bullet_particles.error": "There was an error while loading bullet particles.\nCheck the logs for more detail.",
   "tacztweaks.bullet_sounds.error": "There was an error while loading bullet sounds.\nCheck the logs for more detail.",
   "tacztweaks.config.title": "TaCZ Tweaks",
   "tacztweaks.config.gun": "Gun",

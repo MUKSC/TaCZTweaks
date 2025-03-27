@@ -1,0 +1,19 @@
+{
+  "type": "entity",
+  "hit": {
+    "particle": "minecraft:block minecraft:redstone_block"
+  },
+  "pierce": {
+    "particle": "minecraft:block minecraft:redstone_block"
+  },
+  "kill": {
+    "particle": "minecraft:block minecraft:redstone_block",
+    "delta": {
+      "type": "absolute",
+      "x": 0.2,
+      "y": 0.2,
+      "z": 0.2
+    },
+    "count": 20
+  }
+}

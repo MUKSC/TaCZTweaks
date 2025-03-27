@@ -1,0 +1,6 @@
+{
+  "type": "block",
+  "hit": {
+    "particle": "minecraft:block %s"
+  }
+}
