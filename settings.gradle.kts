@@ -9,3 +9,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.name = "tacz-tweaks"
