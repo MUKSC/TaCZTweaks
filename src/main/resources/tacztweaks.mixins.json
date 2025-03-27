@@ -22,10 +22,13 @@
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
     "compat.lso.CommonForgeEventsMixin",
+    "compat.vs.BlockHitResultMixin",
     "compat.vs.BlockRayTraceMixin",
     "compat.vs.ClipContextMixin",
+    "compat.vs.EntityKineticBulletMixin",
     "compat.vs.ExplosionMixin",
-    "compat.vs.ProjectileExplosionMixin"
+    "compat.vs.ProjectileExplosionMixin",
+    "compat.vs.RaycastUtilsKtMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",
@@ -38,7 +41,10 @@
     "client.LocalPlayerSprintMixin",
     "client.MouseHandlerMixinMixin",
     "client.PlayerRendererMixin",
-    "client.TickAnimationEventMixin"
+    "client.TickAnimationEventMixin",
+    "compat.vs.client.BulletHoleParticleMixin",
+    "compat.vs.client.LevelRendererMixin",
+    "compat.vs.client.ParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
