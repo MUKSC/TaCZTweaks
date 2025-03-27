@@ -127,6 +127,7 @@ sealed class BulletInteraction(
                 override val codec: Codec<out BlockBreak>
             ) : DispatchCodec<BlockBreak> {
                 NEVER("never", Never.CODEC),
+                INSTANT("instant", Instant.CODEC),
                 COUNT("count", Count.CODEC),
                 FIXED_DAMAGE("fixed_damage", FixedDamage.CODEC),
                 DYNAMIC_DAMAGE("dynamic_damage", DynamicDamage.CODEC);
@@ -139,6 +140,16 @@ sealed class BulletInteraction(
 
             object Never : BlockBreak(EBlockBreakType.NEVER, false) {
                 val CODEC = Codec.unit(Never)
+            }
+
+            class Instant(
+                drop: Boolean
+            ) : BlockBreak(EBlockBreakType.INSTANT, drop) {
+                companion object {
+                    val CODEC = RecordCodecBuilder.create<Instant> { it.group(
+                        Codec.BOOL.optionalFieldOf("drop", false).forGetter(Instant::drop)
+                    ).apply(it, ::Instant) }
+                }
             }
 
             class Count(

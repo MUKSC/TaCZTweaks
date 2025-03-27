@@ -110,6 +110,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val armorIgnore = AttachmentDataUtils.getArmorIgnoreWithAttachment(gun.stack, gun.index?.gunData)
         val breakBlock = when (interaction.blockBreak) {
             is BulletInteraction.Block.BlockBreak.Never -> false
+            is BulletInteraction.Block.BlockBreak.Instant -> true
             is BulletInteraction.Block.BlockBreak.Count -> {
                 val delta = BlockBreakingManager.addCurrentProgress(level, blockPos, 1.0F / interaction.blockBreak.count)
                 delta >= 1.0F
