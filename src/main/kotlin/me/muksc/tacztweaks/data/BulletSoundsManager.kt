@@ -84,17 +84,21 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     }
 
     fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, location: Vec3, state: BlockState) {
-        val sound = getSound(entity, location, BulletSounds.Block::blocks) {
+        val sounds = getSound(entity, location, BulletSounds.Block::blocks) {
             it.test(state)
         }?.run(type.getSound) ?: return
-        sound.play(level, location, entity)
+        for (sound in sounds) {
+            sound.play(level, location, entity)
+        }
     }
 
     fun handleEntitySound(type: EEntitySoundType, level: ServerLevel, entity: EntityKineticBullet, location: Vec3, target: Entity) {
-        val sound = getSound(entity, location, BulletSounds.Entity::entities) {
+        val sounds = getSound(entity, location, BulletSounds.Entity::entities) {
             it.test(target)
         }?.run(type.getSound) ?: return
-        sound.play(level, location, entity)
+        for (sound in sounds) {
+            sound.play(level, location, entity)
+        }
     }
 
     fun handleSoundWhizz(level: ServerLevel, entity: EntityKineticBullet, ignores: List<ServerPlayer>) {
@@ -141,13 +145,13 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         level.playSound(null, position.x, position.y, position.z, soundEvent, entity.soundSource, volume, pitch)
     }
 
-    enum class EBlockSoundType(val getSound: (BulletSounds.Block) -> BulletSounds.Sound?) {
+    enum class EBlockSoundType(val getSound: (BulletSounds.Block) -> List<BulletSounds.Sound>) {
         HIT(BulletSounds.Block::hit),
         PIERCE(BulletSounds.Block::pierce),
         BREAK(BulletSounds.Block::`break`)
     }
 
-    enum class EEntitySoundType(val getSound: (BulletSounds.Entity) -> BulletSounds.Sound?) {
+    enum class EEntitySoundType(val getSound: (BulletSounds.Entity) -> List<BulletSounds.Sound>) {
         HIT(BulletSounds.Entity::hit),
         PIERCE(BulletSounds.Entity::pierce),
         KILL(BulletSounds.Entity::kill)

@@ -3,9 +3,8 @@ package me.muksc.tacztweaks.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.singleOrListCodec
 import net.minecraft.resources.ResourceLocation
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 sealed class BulletSounds(
     val type: EBulletSoundsType,
@@ -42,25 +41,17 @@ sealed class BulletSounds(
     class Block(
         target: Target<*>,
         val blocks: List<BlockOrBlockTag>,
-        val hit: Sound?,
-        val pierce: Sound?,
-        val `break`: Sound?
+        val hit: List<Sound>,
+        val pierce: List<Sound>,
+        val `break`: List<Sound>
     ) : BulletSounds(EBulletSoundsType.BLOCK, target) {
-        constructor(
-            target: Target<*>,
-            blocks: List<BlockOrBlockTag>,
-            hit: Optional<Sound>,
-            pierce: Optional<Sound>,
-            `break`: Optional<Sound>
-        ) : this(target, blocks, hit.getOrNull(), pierce.getOrNull(), `break`.getOrNull())
-
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
                 Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Block::target),
                 Codec.list(BlockOrBlockTag.CODEC).optionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
-                Sound.CODEC.optionalFieldOf("hit").forGetter { Optional.ofNullable(it.hit) },
-                Sound.CODEC.optionalFieldOf("pierce").forGetter { Optional.ofNullable(it.pierce) },
-                Sound.CODEC.optionalFieldOf("break").forGetter { Optional.ofNullable(it.`break`) }
+                singleOrListCodec(Sound.CODEC).optionalFieldOf("hit", emptyList()).forGetter(Block::hit),
+                singleOrListCodec(Sound.CODEC).optionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
+                singleOrListCodec(Sound.CODEC).optionalFieldOf("break", emptyList()).forGetter(Block::`break`)
             ).apply(it, ::Block) }
         }
     }
@@ -68,25 +59,17 @@ sealed class BulletSounds(
     class Entity(
         target: Target<*>,
         val entities: List<EntityOrEntityTag>,
-        val hit: Sound?,
-        val pierce: Sound?,
-        val kill: Sound?
+        val hit: List<Sound>,
+        val pierce: List<Sound>,
+        val kill: List<Sound>
     ) : BulletSounds(EBulletSoundsType.ENTITY, target) {
-        constructor(
-            target: Target<*>,
-            entities: List<EntityOrEntityTag>,
-            hit: Optional<Sound>,
-            pierce: Optional<Sound>,
-            kill: Optional<Sound>
-        ) : this(target, entities, hit.getOrNull(), pierce.getOrNull(), kill.getOrNull())
-
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
                 Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
                 Codec.list(EntityOrEntityTag.CODEC).fieldOf("entities").forGetter(Entity::entities),
-                Sound.CODEC.optionalFieldOf("hit").forGetter { Optional.ofNullable(it.hit) },
-                Sound.CODEC.optionalFieldOf("pierce").forGetter { Optional.ofNullable(it.pierce) },
-                Sound.CODEC.optionalFieldOf("kill").forGetter { Optional.ofNullable(it.kill) }
+                singleOrListCodec(Sound.CODEC).optionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
+                singleOrListCodec(Sound.CODEC).optionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
+                singleOrListCodec(Sound.CODEC).optionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
             ).apply(it, ::Entity) }
         }
     }
