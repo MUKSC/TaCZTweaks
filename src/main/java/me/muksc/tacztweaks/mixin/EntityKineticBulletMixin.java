@@ -93,12 +93,12 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/resource/pojo/data/gun/BulletData;)V", at = @At("RETURN"))
-    private void setGunStack(EntityType<? extends Projectile> type, Level worldIn, LivingEntity throwerIn, ItemStack gunItem, ResourceLocation ammoId, ResourceLocation gunId, ResourceLocation gunDisplayId, boolean isTracerAmmo, GunData gunData, BulletData bulletData, CallbackInfo ci) {
+    private void tacztweaks$init(EntityType<? extends Projectile> type, Level worldIn, LivingEntity throwerIn, ItemStack gunItem, ResourceLocation ammoId, ResourceLocation gunId, ResourceLocation gunDisplayId, boolean isTracerAmmo, GunData gunData, BulletData bulletData, CallbackInfo ci) {
         tacztweaks$gunStack = gunItem;
     }
 
     @ModifyExpressionValue(method = "getDamage", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/ExtraDamage$DistanceDamagePair;getDamage()F"))
-    private float applyDamageModifiers(float original, @Local double playerDistance) {
+    private float tacztweaks$getDamage$applyDamageModifiers(float original, @Local double playerDistance) {
         float damage = original;
         for (DamageModifier modifier : tacztweaks$damageModifiers) {
             damage = (damage + modifier.flat()) * modifier.multiplier();
@@ -107,13 +107,13 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     }
 
     @Inject(method = "onHitEntity", at = @At("HEAD"))
-    private void onHitPlayer(TacHitResult result, Vec3 startVec, Vec3 endVec, CallbackInfo ci) {
+    private void tacztweaks$onHitEntity$onHitPlayer(TacHitResult result, Vec3 startVec, Vec3 endVec, CallbackInfo ci) {
         if (!(result.getEntity() instanceof ServerPlayer player)) return;
         tacztweaks$hitPlayers.add(player);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/EntityKineticBullet;onBulletTick()V", shift = At.Shift.AFTER, remap = false), remap = true)
-    private void whizz(CallbackInfo ci) {
+    private void tacztweaks$tick$whizz(CallbackInfo ci) {
         EntityKineticBullet instance = EntityKineticBullet.class.cast(this);
         Level level = instance.level();
         if (!(level instanceof ServerLevel serverLevel)) return;
@@ -121,7 +121,7 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     }
 
     @Inject(method = "onBulletTick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/block/BlockRayTrace;rayTraceBlocks(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ClipContext;)Lnet/minecraft/world/phys/BlockHitResult;", shift = At.Shift.AFTER), cancellable = true)
-    private void finishRayTracing(CallbackInfo ci) {
+    private void tacztweaks$onBulletTick$finishRayTracing(CallbackInfo ci) {
         ci.cancel();
     }
 }

@@ -20,12 +20,12 @@ public abstract class LivingEntityShootMixin {
     @Shadow @Final private LivingEntity shooter;
 
     @ModifyExpressionValue(method = "shoot", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;sprintTimeS:F"))
-    private float shootWhileSprinting(float original) {
+    private float tacztweaks$shoot$shootWhileSprinting(float original) {
         return 0.0F;
     }
 
     @Inject(method = "shoot", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/network/NetworkHandler;sendToTrackingEntity(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;)V"))
-    private void stopSprintingOnShot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp, CallbackInfoReturnable<ShootResult> cir) {
+    private void tacztweaks$shoot$stopSprintingOnShot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp, CallbackInfoReturnable<ShootResult> cir) {
         if (Config.Gun.INSTANCE.shootWhileSprinting()) return;
         shooter.setSprinting(false);
     }

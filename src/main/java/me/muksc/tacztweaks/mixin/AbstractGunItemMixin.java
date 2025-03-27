@@ -23,17 +23,17 @@ public abstract class AbstractGunItemMixin implements AbstractGunItemExtension {
     }
 
     @ModifyExpressionValue(method = "lambda$dropAllAmmo$3", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isCreative()Z", remap = true))
-    private boolean dropAllAmmo$unload(boolean original) {
+    private boolean tacztweaks$dropAllAmmo$unload(boolean original) {
         return !tacztweaks$unloading && original;
     }
 
     @WrapWithCondition(method = "lambda$dropAllAmmo$2", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemHandlerHelper;giveItemToPlayer(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)V"))
-    private boolean dropAllAmmo$giveItemsOnlyIf(Player player, ItemStack stack) {
+    private boolean tacztweaks$dropAllAmmo$giveItemsOnlyIf(Player player, ItemStack stack) {
         return !player.isCreative();
     }
 
     @WrapMethod(method = "dropAllAmmo")
-    private void dropAllAmmo$resetUnloading(Player player, ItemStack gunItem, Operation<Void> original) {
+    private void tacztweaks$dropAllAmmo$resetUnloading(Player player, ItemStack gunItem, Operation<Void> original) {
         try {
             original.call(player, gunItem);
         } finally {

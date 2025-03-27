@@ -26,7 +26,7 @@ public abstract class LivingEntityMixinMixin implements ShooterDataHolderProvide
         name = "crawl"
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/shooter/LivingEntityCrawl;crawl(Z)V"))
-    private boolean disableCrawl(LivingEntityCrawl instance, boolean isCrawl) {
+    private boolean tacztweaks$crawl$disableCrawl(LivingEntityCrawl instance, boolean isCrawl) {
         return Config.Crawl.INSTANCE.enabled();
     }
 
@@ -36,7 +36,7 @@ public abstract class LivingEntityMixinMixin implements ShooterDataHolderProvide
         name = "onTickServerSide"
     )
     @WrapWithCondition(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/shooter/LivingEntityCrawl;tickCrawling()V"))
-    private boolean disableTickCrawling(LivingEntityCrawl instance) {
+    private boolean tacztweaks$onTickServerSide$disableTickCrawling(LivingEntityCrawl instance) {
         return Config.Crawl.INSTANCE.enabled();
     }
 }

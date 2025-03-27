@@ -29,13 +29,13 @@ public abstract class ClipContextMixin implements ClipContextExtension {
     }
 
     @Inject(method = "getBlockShape", at = @At("HEAD"), cancellable = true)
-    private void ignoreBlock(BlockState pBlockState, BlockGetter pLevel, BlockPos pPos, CallbackInfoReturnable<VoxelShape> cir) {
+    private void tacztweaks$getBlockShape$ignore(BlockState pBlockState, BlockGetter pLevel, BlockPos pPos, CallbackInfoReturnable<VoxelShape> cir) {
         if (!tacztweaks$ignores.contains(pPos)) return;
         cir.setReturnValue(Shapes.empty());
     }
 
     @Inject(method = "getFluidShape", at = @At("HEAD"), cancellable = true)
-    private void ignoreFluid(FluidState pState, BlockGetter pLevel, BlockPos pPos, CallbackInfoReturnable<VoxelShape> cir) {
+    private void tacztweaks$getFluidShape$ignore(FluidState pState, BlockGetter pLevel, BlockPos pPos, CallbackInfoReturnable<VoxelShape> cir) {
         if (!tacztweaks$ignores.contains(pPos)) return;
         cir.setReturnValue(Shapes.empty());
     }

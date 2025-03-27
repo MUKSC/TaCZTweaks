@@ -85,7 +85,7 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
     }
 
     @Inject(method = "init", at = @At("TAIL"), remap = true)
-    private void init$addWidgets(CallbackInfo ci) {
+    private void tacztweaks$init$addWidgets(CallbackInfo ci) {
         if (tacztweaks$searchBar == null) {
             tacztweaks$searchBar = new SearchWidget(font, 0, 0, 206, 18);
             tacztweaks$searchBar.setResponder(query -> init());
@@ -105,7 +105,7 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
     }
 
     @Inject(method = "init", at = @At("HEAD"), remap = true)
-    private void init$filterBySearchQuery(CallbackInfo ci) {
+    private void tacztweaks$init$filterBySearchQuery(CallbackInfo ci) {
         String query = tacztweaks$searchBar != null ? tacztweaks$searchBar.getValue().toLowerCase() : "";
         selectedRecipeList = recipes.get(selectedType).stream().filter(recipeId -> {
             MutableBoolean flag = new MutableBoolean(false);
@@ -133,14 +133,14 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
     }
 
     @ModifyExpressionValue(method = "lambda$addCraftButton$3", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/crafting/GunSmithTableRecipe;getInputs()Ljava/util/List;"))
-    private List<GunSmithTableIngredient> addCraftButton$creativeCraft(List<GunSmithTableIngredient> original) {
+    private List<GunSmithTableIngredient> tacztweaks$addCraftButton$creativeCraft(List<GunSmithTableIngredient> original) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || !player.isCreative()) return original;
         return Collections.emptyList();
     }
 
     @ModifyArg(method = "renderIngredient", at = @At(value = "INVOKE", target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"), index = 1)
-    private Object[] renderIngredient$creativeCraft$modifyDisplayCount(Object[] args) {
+    private Object[] tacztweaks$renderIngredient$creativeCraft$modifyDisplayCount(Object[] args) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || !player.isCreative()) return args;
         args[1] = 9999;
@@ -148,14 +148,14 @@ public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<G
     }
 
     @ModifyArg(method = "renderIngredient", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", remap = true), index = 4)
-    private int renderIngredient$creativeCraft$modifyColor(int color) {
+    private int tacztweaks$renderIngredient$creativeCraft$modifyColor(int color) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || !player.isCreative()) return color;
         return 16777215;
     }
 
     @ModifyExpressionValue(method = "classifyRecipes", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/crafting/RecipeManager;getAllRecipesFor(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/List;", remap = true))
-    private List<GunSmithTableRecipe> classifyRecipes$filterRecipes(List<GunSmithTableRecipe> original) {
+    private List<GunSmithTableRecipe> tacztweaks$classifyRecipes$filterRecipes(List<GunSmithTableRecipe> original) {
         Recipes recipes =  Recipes.Companion.getRecipes(original);
         tacztweaks$packs = recipes.getPacks();
         tacztweaks$idToPackId = recipes.getIdToPackId();

@@ -30,18 +30,18 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     private boolean tacztweaks$initialized = false;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void init(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, CallbackInfo ci) {
+    private void tacztweaks$init(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, CallbackInfo ci) {
         tacztweaks$initialized = true;
     }
 
     @Inject(method = "shouldRemove", at = @At("HEAD"), cancellable = true, remap = false)
-    private void shouldRemove$surviveUntilInitialization(CallbackInfoReturnable<Boolean> cir) {
+    private void tacztweaks$shouldRemove$surviveUntilInitialization(CallbackInfoReturnable<Boolean> cir) {
         if (tacztweaks$initialized) return;
         cir.setReturnValue(false);
     }
 
     @WrapOperation(method = "shouldRemove", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;intersects(DDDDDD)Z"), remap = false)
-    private boolean shouldRemove$transformToShip(AABB instance, double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2, Operation<Boolean> original) {
+    private boolean tacztweaks$shouldRemove$transformToShip(AABB instance, double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2, Operation<Boolean> original) {
         ParticleExtension ext = (ParticleExtension) this;
         Vector3d pos = ext.tacztweaks$getShipPos();
         if (pos == null) return original.call(instance, pX1, pY1, pZ1, pX2, pY2, pZ2);
@@ -49,7 +49,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/particle/BulletHoleParticle;shouldRemove()Z", remap = false))
-    private void tick$updatePosition(CallbackInfo ci) {
+    private void tacztweaks$tick$updatePosition(CallbackInfo ci) {
         ParticleExtension ext = (ParticleExtension) this;
         ClientShip ship = ext.tacztweaks$getShip();
         if (ship == null) return;
@@ -58,7 +58,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     }
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void render$updatePosition(VertexConsumer buffer, Camera renderInfo, float partialTicks, CallbackInfo ci) {
+    private void tacztweaks$render$updatePosition(VertexConsumer buffer, Camera renderInfo, float partialTicks, CallbackInfo ci) {
         ParticleExtension ext = (ParticleExtension) this;
         ClientShip ship = ext.tacztweaks$getShip();
         if (ship == null) return;
@@ -67,22 +67,22 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     }
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 0))
-    private double render$modifyX(double original) {
+    private double tacztweaks$render$modifyX(double original) {
         return this.x;
     }
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 1))
-    private double render$modifyY(double original) {
+    private double tacztweaks$render$modifyY(double original) {
         return this.y;
     }
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 2))
-    private double render$modifyZ(double original) {
+    private double tacztweaks$render$modifyZ(double original) {
         return this.z;
     }
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/Direction;getRotation()Lorg/joml/Quaternionf;"))
-    private Quaternionf render$rotate(Quaternionf original) {
+    private Quaternionf tacztweaks$render$rotate(Quaternionf original) {
         ParticleExtension ext = (ParticleExtension) this;
         ClientShip ship = ext.tacztweaks$getShip();
         if (ship == null) return original;

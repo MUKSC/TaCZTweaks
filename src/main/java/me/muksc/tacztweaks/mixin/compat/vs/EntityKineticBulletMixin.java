@@ -17,7 +17,7 @@ import org.valkyrienskies.core.api.ships.Ship;
 public abstract class EntityKineticBulletMixin {
     @SuppressWarnings("MixinExtrasOperationParameters")
     @WrapOperation(method = "onHitBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I", ordinal = 0))
-    private <T extends ParticleOptions> int onHitBlock$transformPosition(
+    private <T extends ParticleOptions> int tacztweaks$onHitBlock$transformPosition(
         ServerLevel instance, T pType,
         double pPosX, double pPosY, double pPosZ,
         int pParticleCount,

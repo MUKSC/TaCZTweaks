@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = EntityBulletRenderer.class, remap = false)
 public abstract class EntityBulletRendererMixin {
     @Inject(method = "shouldRender(Lcom/tacz/guns/entity/EntityKineticBullet;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z", at = @At("HEAD"), cancellable = true)
-    private void alwaysRender(EntityKineticBullet bullet, Frustum camera, double pCamX, double pCamY, double pCamZ, CallbackInfoReturnable<Boolean> cir) {
+    private void tacztweaks$shouldRender$always(EntityKineticBullet bullet, Frustum camera, double pCamX, double pCamY, double pCamZ, CallbackInfoReturnable<Boolean> cir) {
         if (!Config.Gun.INSTANCE.disableBulletCulling()) return;
         cir.setReturnValue(true);
     }

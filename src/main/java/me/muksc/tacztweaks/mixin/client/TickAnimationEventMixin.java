@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = TickAnimationEvent.class, remap = false)
 public abstract class TickAnimationEventMixin {
     @ModifyExpressionValue(method = "lambda$tickAnimation$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSprinting()Z", remap = true))
-    private static boolean stopSprintAnimationOnShot(boolean original, @Local(argsOnly = true) LocalPlayer player) {
+    private static boolean tacztweaks$tickAnimation$stopSprintAnimationOnShot(boolean original, @Local(argsOnly = true) LocalPlayer player) {
         if (!Config.Gun.INSTANCE.shootWhileSprinting()) return original;
         IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
         return original && operator.getClientShootCoolDown() <= 0;

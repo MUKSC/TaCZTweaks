@@ -28,7 +28,7 @@ public abstract class BlockRayTraceMixin {
     private static BulletRayTracer tacztweaks$rayTracer;
 
     @Inject(method = "rayTraceBlocks", at = @At("HEAD"))
-    private static void initRayTracer(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {
+    private static void tacztweaks$rayTraceBlocks$initRayTracer(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {
         tacztweaks$rayTracer = null;
         if (!(level instanceof ServerLevel serverLevel)) return;
         ClipContextAccessor accessor = (ClipContextAccessor) context;
@@ -38,7 +38,7 @@ public abstract class BlockRayTraceMixin {
     }
 
     @ModifyReturnValue(method = "lambda$rayTraceBlocks$1", at = @At("RETURN"))
-    private static BlockHitResult handle(
+    private static BlockHitResult tacztweaks$rayTraceBlocks$handle(
         @Nullable BlockHitResult original,
         @Local(argsOnly = true) ClipContext context,
         @Local(argsOnly = true) BlockPos blockPos,
@@ -51,7 +51,7 @@ public abstract class BlockRayTraceMixin {
     }
 
     @ModifyReturnValue(method = "lambda$rayTraceBlocks$2", at = @At("RETURN"))
-    private static BlockHitResult handleMiss(BlockHitResult original) {
+    private static BlockHitResult tacztweaks$rayTraceBlocks$handleMiss(BlockHitResult original) {
         if (tacztweaks$rayTracer == null) return original;
         return tacztweaks$rayTracer.handle(tacztweaks$rayTracer.getEntity(), original, null);
     }

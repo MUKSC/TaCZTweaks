@@ -21,13 +21,13 @@ import java.util.List;
 @Mixin(value = CommonForgeEvents.class, remap = false)
 public abstract class CommonForgeEventsMixin {
     @ModifyExpressionValue(method = "onEntityHurtDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z", remap = true))
-    private static boolean onEntityHurtDamage$treatBulletsAsProjectile(boolean original, @Local DamageSource source) {
+    private static boolean tacztweaks$onEntityHurtDamage$treatBulletsAsProjectile(boolean original, @Local DamageSource source) {
         if (!Config.Compat.INSTANCE.lsoCompat()) return original;
         return original || source.getDirectEntity() instanceof EntityKineticBullet;
     }
 
     @WrapOperation(method = "onEntityHurtDamage", at = @At(value = "INVOKE", target = "Lsfiomn/legendarysurvivaloverhaul/util/PlayerModelUtil;getPreciseEntityImpact(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/player/Player;)Ljava/util/List;"))
-    private static List<BodyPartEnum> onEntityHurtDamage$correctPosition(Entity hitEntity, Player player, Operation<List<BodyPartEnum>> original) {
+    private static List<BodyPartEnum> tacztweaks$onEntityHurtDamage$correctPosition(Entity hitEntity, Player player, Operation<List<BodyPartEnum>> original) {
         if (!Config.Compat.INSTANCE.lsoCompat()) return original.call(hitEntity, player);
         if (!(hitEntity instanceof EntityKineticBullet bullet)) return original.call(hitEntity, player);
         Vec3 originalPosition = bullet.position();

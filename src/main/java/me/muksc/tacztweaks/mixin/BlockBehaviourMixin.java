@@ -18,7 +18,7 @@ public abstract class BlockBehaviourMixin implements DestroySpeedModifierHolder 
     }
 
     @ModifyExpressionValue(method = "getDestroyProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getDestroySpeed(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F"))
-    private float applyDestroySpeedModifier(float original) {
+    private float tacztweaks$getDestroyProgress$applyDestroySpeedModifier(float original) {
         return original * tacztweaks$destroySpeedMultiplier;
     }
 }

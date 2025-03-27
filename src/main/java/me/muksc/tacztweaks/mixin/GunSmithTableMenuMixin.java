@@ -14,7 +14,7 @@ import java.util.List;
 @Mixin(value = GunSmithTableMenu.class, remap = false)
 public abstract class GunSmithTableMenuMixin {
     @ModifyExpressionValue(method = "lambda$doCraft$1", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/crafting/GunSmithTableRecipe;getInputs()Ljava/util/List;"))
-    private List<GunSmithTableIngredient> creativeCraft(List<GunSmithTableIngredient> original, @Local(argsOnly = true) Player player) {
+    private List<GunSmithTableIngredient> tacztweaks$doCraft$creativeCraft(List<GunSmithTableIngredient> original, @Local(argsOnly = true) Player player) {
         if (!player.isCreative()) return original;
         return Collections.emptyList();
     }

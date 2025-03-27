@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = EventHandler.class, remap = false)
 public abstract class EventHandlerMixin {
     @ModifyExpressionValue(method = "onLivingHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z", remap = true))
-    private static boolean bulletsAreProjectile(boolean original, @Local DamageSource source) {
+    private static boolean tacztweaks$onLivingHurt$bulletsAreProjectile(boolean original, @Local DamageSource source) {
         if (!Config.Compat.INSTANCE.firstAidCompat()) return original;
         return original || source.is(ModDamageTypes.BULLETS_TAG);
     }

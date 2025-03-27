@@ -20,7 +20,7 @@ public abstract class LevelRendererMixin {
         name = "spawnParticleInWorld"
     )
     @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;addParticleInternal(Lnet/minecraft/core/particles/ParticleOptions;ZZDDDDDD)Lnet/minecraft/client/particle/Particle;"))
-    private Particle spawnParticleInWorld$setShip(
+    private Particle tacztweaks$spawnParticleInWorld$setShip(
         Particle original,
         @Local(argsOnly = true, ordinal = 0) double x,
         @Local(argsOnly = true, ordinal = 1) double y,

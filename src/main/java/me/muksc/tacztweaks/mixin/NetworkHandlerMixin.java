@@ -18,7 +18,7 @@ public abstract class NetworkHandlerMixin {
     @Shadow @Final private static AtomicInteger ID_COUNT;
 
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/network/NetworkHandler;registerAcknowledge()V"))
-    private static void init(CallbackInfo ci) {
+    private static void tacztweaks$init(CallbackInfo ci) {
         CHANNEL.registerMessage(ID_COUNT.getAndIncrement(), ClientMessagePlayerUnload.class, ClientMessagePlayerUnload::encode, ClientMessagePlayerUnload::decode, ClientMessagePlayerUnload::handle);
     }
 }

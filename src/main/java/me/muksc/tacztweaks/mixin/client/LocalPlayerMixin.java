@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
     @ModifyReturnValue(method = "canStartSprinting", at = @At("RETURN"))
-    private boolean preventSprintingWhileShootCooldown(boolean original) {
+    private boolean tacztweaks$canStartSprinting$preventSprintingWhileShootCooldown(boolean original) {
         if (Config.Gun.INSTANCE.shootWhileSprinting()) return original;
-        IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer((LocalPlayer)(Object) this);
+        IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(LocalPlayer.class.cast(this));
         return original && operator.getClientShootCoolDown() <= 0L;
     }
 }

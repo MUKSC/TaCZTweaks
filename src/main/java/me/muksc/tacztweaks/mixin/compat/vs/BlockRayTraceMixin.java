@@ -28,22 +28,22 @@ public abstract class BlockRayTraceMixin {
     private static BlockHitResult tacztweaks$result;
 
     @Unique
-    private static Level level;
+    private static Level tacztweaks$level;
 
     @Inject(method = "rayTraceBlocks", at = @At("HEAD"))
-    private static void rayTraceBlocks$storeLevel(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {
-        BlockRayTraceMixin.level = level;
+    private static void tacztweaks$rayTraceBlocks$storeLevel(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {
+        BlockRayTraceMixin.tacztweaks$level = level;
     }
 
     @Inject(method = "performRayTrace", at = @At("HEAD"), cancellable = true)
-    private static <T> void performRayTrace$vsCollisionCompat(ClipContext context, BiFunction<ClipContext, BlockPos, T> hitFunction, Function<ClipContext, T> missFactory, CallbackInfoReturnable<T> cir) {
+    private static <T> void tacztweaks$performRayTrace$vsCollisionCompat(ClipContext context, BiFunction<ClipContext, BlockPos, T> hitFunction, Function<ClipContext, T> missFactory, CallbackInfoReturnable<T> cir) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
         ClipContextAccessor accessor = (ClipContextAccessor) context;
         Entity entity = null;
         if (accessor.getCollisionContext() instanceof EntityCollisionContext entityCollisionContext) entity = entityCollisionContext.getEntity();
 
         ArrayList<BlockPos> ignores = new ArrayList<>();
-        BlockHitResult result = tacztweaks$result = level.clip(context);
+        BlockHitResult result = tacztweaks$result = tacztweaks$level.clip(context);
         while (result.getType() != HitResult.Type.MISS) {
             ignores.add(result.getBlockPos());
             T t = hitFunction.apply(context, result.getBlockPos());
@@ -54,13 +54,13 @@ public abstract class BlockRayTraceMixin {
 
             ClipContext context2 = new ClipContext(result.getLocation(), context.getTo(), accessor.getBlock(), accessor.getFluid(), entity);
             ((ClipContextExtension) context2).tacztweaks$setIgnores(ignores);
-            result = tacztweaks$result = level.clip(context2);
+            result = tacztweaks$result = tacztweaks$level.clip(context2);
         }
         cir.setReturnValue(missFactory.apply(context));
     }
 
     @Inject(method = "getBlockHitResult", at = @At("HEAD"), cancellable = true)
-    private static void getBlockHitResult$vsCollisionCompat(Level level, ClipContext rayTraceContext, BlockPos blockPos, BlockState blockState, CallbackInfoReturnable<BlockHitResult> cir) {
+    private static void tacztweaks$getBlockHitResult$vsCollisionCompat(Level level, ClipContext rayTraceContext, BlockPos blockPos, BlockState blockState, CallbackInfoReturnable<BlockHitResult> cir) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
         cir.setReturnValue(tacztweaks$result);
     }
