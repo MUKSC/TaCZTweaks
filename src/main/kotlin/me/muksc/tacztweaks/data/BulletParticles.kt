@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.singleOrListCodec
+import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.resources.ResourceLocation
 
 sealed class BulletParticles(
@@ -44,9 +45,9 @@ sealed class BulletParticles(
             ) : Coordinates(ECoordinatesType.ABSOLUTE, x, y, z) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Absolute> { it.group(
-                        Codec.DOUBLE.optionalFieldOf("x", 0.0).forGetter(Absolute::x),
-                        Codec.DOUBLE.optionalFieldOf("y", 0.0).forGetter(Absolute::y),
-                        Codec.DOUBLE.optionalFieldOf("z", 0.0).forGetter(Absolute::z)
+                        Codec.DOUBLE.strictOptionalFieldOf("x", 0.0).forGetter(Absolute::x),
+                        Codec.DOUBLE.strictOptionalFieldOf("y", 0.0).forGetter(Absolute::y),
+                        Codec.DOUBLE.strictOptionalFieldOf("z", 0.0).forGetter(Absolute::z)
                     ).apply(it, ::Absolute) }
                 }
             }
@@ -58,9 +59,9 @@ sealed class BulletParticles(
             ) : Coordinates(ECoordinatesType.RELATIVE, x, y, z) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Relative> { it.group(
-                        Codec.DOUBLE.optionalFieldOf("x", 0.0).forGetter(Relative::x),
-                        Codec.DOUBLE.optionalFieldOf("y", 0.0).forGetter(Relative::y),
-                        Codec.DOUBLE.optionalFieldOf("z", 0.0).forGetter(Relative::z)
+                        Codec.DOUBLE.strictOptionalFieldOf("x", 0.0).forGetter(Relative::x),
+                        Codec.DOUBLE.strictOptionalFieldOf("y", 0.0).forGetter(Relative::y),
+                        Codec.DOUBLE.strictOptionalFieldOf("z", 0.0).forGetter(Relative::z)
                     ).apply(it, ::Relative) }
                 }
             }
@@ -72,9 +73,9 @@ sealed class BulletParticles(
             ) : Coordinates(ECoordinatesType.LOCAL, x, y, z) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Local> { it.group(
-                        Codec.DOUBLE.optionalFieldOf("x", 0.0).forGetter(Local::x),
-                        Codec.DOUBLE.optionalFieldOf("y", 0.0).forGetter(Local::y),
-                        Codec.DOUBLE.optionalFieldOf("z", 0.0).forGetter(Local::z)
+                        Codec.DOUBLE.strictOptionalFieldOf("x", 0.0).forGetter(Local::x),
+                        Codec.DOUBLE.strictOptionalFieldOf("y", 0.0).forGetter(Local::y),
+                        Codec.DOUBLE.strictOptionalFieldOf("z", 0.0).forGetter(Local::z)
                     ).apply(it, ::Local) }
                 }
             }
@@ -87,10 +88,10 @@ sealed class BulletParticles(
         companion object {
             val CODEC = RecordCodecBuilder.create<Particle> { it.group(
                 Codec.STRING.fieldOf("particle").forGetter(Particle::particle),
-                Coordinates.CODEC.optionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(Particle::position),
-                Coordinates.CODEC.optionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(Particle::delta),
-                Codec.DOUBLE.optionalFieldOf("speed", 0.0).forGetter(Particle::speed),
-                Codec.INT.optionalFieldOf("count", 1).forGetter(Particle::count)
+                Coordinates.CODEC.strictOptionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(Particle::position),
+                Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(Particle::delta),
+                Codec.DOUBLE.strictOptionalFieldOf("speed", 0.0).forGetter(Particle::speed),
+                Codec.INT.strictOptionalFieldOf("count", 1).forGetter(Particle::count)
             ).apply(it, ::Particle) }
         }
     }
@@ -117,11 +118,11 @@ sealed class BulletParticles(
     ) : BulletParticles(EBulletParticlesType.BLOCK, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
-                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Block::target),
-                Codec.list(BlockOrBlockTag.CODEC).optionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
-                singleOrListCodec(Particle.CODEC).optionalFieldOf("hit", emptyList()).forGetter(Block::hit),
-                singleOrListCodec(Particle.CODEC).optionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
-                singleOrListCodec(Particle.CODEC).optionalFieldOf("break", emptyList()).forGetter(Block::`break`)
+                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Block::target),
+                Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`)
             ).apply(it, ::Block) }
         }
     }
@@ -135,11 +136,11 @@ sealed class BulletParticles(
     ) : BulletParticles(EBulletParticlesType.BLOCK, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
-                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
-                Codec.list(EntityOrEntityTag.CODEC).optionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
-                singleOrListCodec(Particle.CODEC).optionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
-                singleOrListCodec(Particle.CODEC).optionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
-                singleOrListCodec(Particle.CODEC).optionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
+                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
+                Codec.list(EntityOrEntityTag.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
             ).apply(it, ::Entity) }
         }
     }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
+import me.muksc.tacztweaks.strictOptionalFieldOf
 
 sealed class BulletInteraction(
     val type: EBulletInteractionType,
@@ -56,9 +57,9 @@ sealed class BulletInteraction(
         ) : Pierce(EPierceType.DEFAULT, conditional, damageFalloff, damageMultiplier) {
             companion object {
                 val CODEC = RecordCodecBuilder.create<Default> { it.group(
-                    Codec.BOOL.optionalFieldOf("conditional", false).forGetter(Default::conditional),
-                    Codec.FLOAT.optionalFieldOf("damageFalloff", 0.0F).forGetter(Default::damageFalloff),
-                    Codec.FLOAT.optionalFieldOf("damageMultiplier", 1.0F).forGetter(Default::damageMultiplier)
+                    Codec.BOOL.strictOptionalFieldOf("conditional", false).forGetter(Default::conditional),
+                    Codec.FLOAT.strictOptionalFieldOf("damageFalloff", 0.0F).forGetter(Default::damageFalloff),
+                    Codec.FLOAT.strictOptionalFieldOf("damageMultiplier", 1.0F).forGetter(Default::damageMultiplier)
                 ).apply(it, ::Default) }
             }
         }
@@ -72,9 +73,9 @@ sealed class BulletInteraction(
             companion object {
                 val CODEC = RecordCodecBuilder.create<Count> { it.group(
                     Codec.INT.fieldOf("count").forGetter(Count::count),
-                    Codec.BOOL.optionalFieldOf("conditional", false).forGetter(Count::conditional),
-                    Codec.FLOAT.optionalFieldOf("damage_falloff", 0.0F).forGetter(Count::damageFalloff),
-                    Codec.FLOAT.optionalFieldOf("damage_multiplier", 1.0F).forGetter(Count::damageMultiplier)
+                    Codec.BOOL.strictOptionalFieldOf("conditional", false).forGetter(Count::conditional),
+                    Codec.FLOAT.strictOptionalFieldOf("damage_falloff", 0.0F).forGetter(Count::damageFalloff),
+                    Codec.FLOAT.strictOptionalFieldOf("damage_multiplier", 1.0F).forGetter(Count::damageMultiplier)
                 ).apply(it, ::Count) }
             }
         }
@@ -86,9 +87,9 @@ sealed class BulletInteraction(
         ) : Pierce(EPierceType.DAMAGE, conditional, damageFalloff, damageMultiplier) {
             companion object {
                 val CODEC = RecordCodecBuilder.create<Damage> { it.group(
-                    Codec.BOOL.optionalFieldOf("conditional", false).forGetter(Damage::conditional),
-                    Codec.FLOAT.optionalFieldOf("damage_falloff", 0.0F).forGetter(Damage::damageFalloff),
-                    Codec.FLOAT.optionalFieldOf("damage_multiplier", 1.0F).forGetter(Damage::damageMultiplier)
+                    Codec.BOOL.strictOptionalFieldOf("conditional", false).forGetter(Damage::conditional),
+                    Codec.FLOAT.strictOptionalFieldOf("damage_falloff", 0.0F).forGetter(Damage::damageFalloff),
+                    Codec.FLOAT.strictOptionalFieldOf("damage_multiplier", 1.0F).forGetter(Damage::damageMultiplier)
                 ).apply(it, ::Damage) }
             }
         }
@@ -105,8 +106,8 @@ sealed class BulletInteraction(
         companion object {
             fun codec(default: Boolean): Codec<GunPierce> =
                 RecordCodecBuilder.create<GunPierce> { it.group(
-                    Codec.BOOL.optionalFieldOf("required", default).forGetter(GunPierce::required),
-                    Codec.BOOL.optionalFieldOf("consume", default).forGetter(GunPierce::consume)
+                    Codec.BOOL.strictOptionalFieldOf("required", default).forGetter(GunPierce::required),
+                    Codec.BOOL.strictOptionalFieldOf("consume", default).forGetter(GunPierce::consume)
                 ).apply(it, ::GunPierce) }
         }
     }
@@ -147,7 +148,7 @@ sealed class BulletInteraction(
             ) : BlockBreak(EBlockBreakType.INSTANT, drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Instant> { it.group(
-                        Codec.BOOL.optionalFieldOf("drop", false).forGetter(Instant::drop)
+                        Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(Instant::drop)
                     ).apply(it, ::Instant) }
                 }
             }
@@ -159,7 +160,7 @@ sealed class BulletInteraction(
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Count> { it.group(
                         Codec.INT.fieldOf("count").forGetter(Count::count),
-                        Codec.BOOL.optionalFieldOf("drop", false).forGetter(Count::drop)
+                        Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(Count::drop)
                     ).apply(it, ::Count) }
                 }
             }
@@ -172,8 +173,8 @@ sealed class BulletInteraction(
                 companion object {
                     val CODEC = RecordCodecBuilder.create<FixedDamage> { it.group(
                         Codec.FLOAT.fieldOf("damage").forGetter(FixedDamage::damage),
-                        Codec.BOOL.optionalFieldOf("accumulate", true).forGetter(FixedDamage::accumulate),
-                        Codec.BOOL.optionalFieldOf("drop", false).forGetter(FixedDamage::drop)
+                        Codec.BOOL.strictOptionalFieldOf("accumulate", true).forGetter(FixedDamage::accumulate),
+                        Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(FixedDamage::drop)
                     ).apply(it, ::FixedDamage) }
                 }
             }
@@ -186,10 +187,10 @@ sealed class BulletInteraction(
             ) : BlockBreak(EBlockBreakType.DYNAMIC_DAMAGE, drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<DynamicDamage> { it.group(
-                        Codec.FLOAT.optionalFieldOf("modifier", 0.0F).forGetter(DynamicDamage::modifier),
-                        Codec.FLOAT.optionalFieldOf("multiplier", 1.0F).forGetter(DynamicDamage::multiplier),
-                        Codec.BOOL.optionalFieldOf("accumulate", true).forGetter(DynamicDamage::accumulate),
-                        Codec.BOOL.optionalFieldOf("drop", false).forGetter(DynamicDamage::drop)
+                        Codec.FLOAT.strictOptionalFieldOf("modifier", 0.0F).forGetter(DynamicDamage::modifier),
+                        Codec.FLOAT.strictOptionalFieldOf("multiplier", 1.0F).forGetter(DynamicDamage::multiplier),
+                        Codec.BOOL.strictOptionalFieldOf("accumulate", true).forGetter(DynamicDamage::accumulate),
+                        Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(DynamicDamage::drop)
                     ).apply(it, ::DynamicDamage) }
                 }
             }
@@ -202,11 +203,11 @@ sealed class BulletInteraction(
         companion object {
             val DEFAULT = Block(Target.Fallback, emptyList(), BlockBreak.Never, Pierce.Never, GunPierce(false, false))
             val CODEC = RecordCodecBuilder.create { it.group(
-                Target.CODEC.optionalFieldOf("target", DEFAULT.target).forGetter(Block::target),
-                Codec.list(BlockOrBlockTag.CODEC).optionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
-                BlockBreak.CODEC.optionalFieldOf("block_break", DEFAULT.blockBreak).forGetter(Block::blockBreak),
-                Pierce.CODEC.optionalFieldOf("pierce", DEFAULT.pierce).forGetter(Block::pierce),
-                GunPierce.codec(false).optionalFieldOf("gunPierce", DEFAULT.gunPierce).forGetter(Block::gunPierce)
+                Target.CODEC.strictOptionalFieldOf("target", DEFAULT.target).forGetter(Block::target),
+                Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
+                BlockBreak.CODEC.strictOptionalFieldOf("block_break", DEFAULT.blockBreak).forGetter(Block::blockBreak),
+                Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Block::pierce),
+                GunPierce.codec(false).strictOptionalFieldOf("gunPierce", DEFAULT.gunPierce).forGetter(Block::gunPierce)
             ).apply(it, ::Block) }
         }
     }
@@ -224,8 +225,8 @@ sealed class BulletInteraction(
         ) {
             companion object {
                 val CODEC = RecordCodecBuilder.create<EntityDamage> { it.group(
-                    Codec.FLOAT.optionalFieldOf("modifier", 0.0F).forGetter(EntityDamage::modifier),
-                    Codec.FLOAT.optionalFieldOf("multiplier", 1.0F).forGetter(EntityDamage::multiplier)
+                    Codec.FLOAT.strictOptionalFieldOf("modifier", 0.0F).forGetter(EntityDamage::modifier),
+                    Codec.FLOAT.strictOptionalFieldOf("multiplier", 1.0F).forGetter(EntityDamage::multiplier)
                 ).apply(it, ::EntityDamage) }
             }
         }
@@ -233,11 +234,11 @@ sealed class BulletInteraction(
         companion object {
             val DEFAULT = Entity(Target.Fallback, emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true))
             val CODEC = RecordCodecBuilder.create { it.group(
-                Target.CODEC.optionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
-                Codec.list(EntityOrEntityTag.CODEC).optionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
-                EntityDamage.CODEC.optionalFieldOf("damage", DEFAULT.damage).forGetter(Entity::damage),
-                Pierce.CODEC.optionalFieldOf("pierce", DEFAULT.pierce).forGetter(Entity::pierce),
-                GunPierce.codec(true).optionalFieldOf("gunPierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce)
+                Target.CODEC.strictOptionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
+                Codec.list(EntityOrEntityTag.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
+                EntityDamage.CODEC.strictOptionalFieldOf("damage", DEFAULT.damage).forGetter(Entity::damage),
+                Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Entity::pierce),
+                GunPierce.codec(true).strictOptionalFieldOf("gunPierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce)
             ).apply(it, ::Entity) }
         }
     }

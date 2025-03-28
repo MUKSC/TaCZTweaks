@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.singleOrListCodec
+import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.resources.ResourceLocation
 
 sealed class BulletSounds(
@@ -18,8 +19,8 @@ sealed class BulletSounds(
         companion object {
             val CODEC = RecordCodecBuilder.create<Sound> { it.group(
                 ResourceLocation.CODEC.fieldOf("sound").forGetter(Sound::sound),
-                Codec.FLOAT.optionalFieldOf("volume", 1.0F).forGetter(Sound::volume),
-                Codec.FLOAT.optionalFieldOf("pitch", 1.0F).forGetter(Sound::pitch),
+                Codec.FLOAT.strictOptionalFieldOf("volume", 1.0F).forGetter(Sound::volume),
+                Codec.FLOAT.strictOptionalFieldOf("pitch", 1.0F).forGetter(Sound::pitch),
             ).apply(it, ::Sound) }
         }
     }
@@ -47,11 +48,11 @@ sealed class BulletSounds(
     ) : BulletSounds(EBulletSoundsType.BLOCK, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
-                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Block::target),
-                Codec.list(BlockOrBlockTag.CODEC).optionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
-                singleOrListCodec(Sound.CODEC).optionalFieldOf("hit", emptyList()).forGetter(Block::hit),
-                singleOrListCodec(Sound.CODEC).optionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
-                singleOrListCodec(Sound.CODEC).optionalFieldOf("break", emptyList()).forGetter(Block::`break`)
+                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Block::target),
+                Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`)
             ).apply(it, ::Block) }
         }
     }
@@ -65,11 +66,11 @@ sealed class BulletSounds(
     ) : BulletSounds(EBulletSoundsType.ENTITY, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
-                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
+                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
                 Codec.list(EntityOrEntityTag.CODEC).fieldOf("entities").forGetter(Entity::entities),
-                singleOrListCodec(Sound.CODEC).optionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
-                singleOrListCodec(Sound.CODEC).optionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
-                singleOrListCodec(Sound.CODEC).optionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
             ).apply(it, ::Entity) }
         }
     }
@@ -92,8 +93,8 @@ sealed class BulletSounds(
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Whizz> { it.group(
-                Target.CODEC.optionalFieldOf("target", Target.Fallback).forGetter(Whizz::target),
-                Codec.list(DistanceSound.CODEC).optionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds)
+                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Whizz::target),
+                Codec.list(DistanceSound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds)
             ).apply(it, ::Whizz) }
         }
     }

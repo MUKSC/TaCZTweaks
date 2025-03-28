@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.phys.Vec3
 
@@ -19,8 +20,8 @@ sealed class Target<T>(
     ) : ClosedFloatingPointRange<Double> by min..max {
         companion object {
             val CODEC = RecordCodecBuilder.create<ValueRange> { it.group(
-                Codec.DOUBLE.optionalFieldOf("min", Double.MIN_VALUE).forGetter(ValueRange::min),
-                Codec.DOUBLE.optionalFieldOf("max", Double.MAX_VALUE).forGetter(ValueRange::max)
+                Codec.DOUBLE.strictOptionalFieldOf("min", Double.MIN_VALUE).forGetter(ValueRange::min),
+                Codec.DOUBLE.strictOptionalFieldOf("max", Double.MAX_VALUE).forGetter(ValueRange::max)
             ).apply(it, ::ValueRange) }
         }
     }
@@ -53,7 +54,7 @@ sealed class Target<T>(
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Gun> { it.group(
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf("values", emptyList()).forGetter(Gun::values)
+                Codec.list(ResourceLocation.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Gun::values)
             ).apply(it, ::Gun) }
         }
     }
@@ -64,7 +65,7 @@ sealed class Target<T>(
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Ammo> { it.group(
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf("values", emptyList()).forGetter(Ammo::values)
+                Codec.list(ResourceLocation.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Ammo::values)
             ).apply(it, ::Ammo) }
         }
     }
@@ -75,7 +76,7 @@ sealed class Target<T>(
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Damage> { it.group(
-                Codec.list(ValueRange.CODEC).optionalFieldOf("values", emptyList()).forGetter(Damage::values)
+                Codec.list(ValueRange.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Damage::values)
             ).apply(it, ::Damage) }
         }
     }
@@ -86,7 +87,7 @@ sealed class Target<T>(
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Speed> { it.group(
-                Codec.list(ValueRange.CODEC).optionalFieldOf("values", emptyList()).forGetter(Speed::values)
+                Codec.list(ValueRange.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Speed::values)
             ).apply(it, ::Speed) }
         }
     }
