@@ -84,6 +84,7 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
                 bulletParticles.computeIfAbsent(particles::class) { mutableMapOf() }[resourceLocation] = particles
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet particles $resourceLocation $e")
+                error = true
             }
         }
         this.bulletParticles = bulletParticles

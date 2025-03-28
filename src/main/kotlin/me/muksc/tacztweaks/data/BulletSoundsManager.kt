@@ -78,6 +78,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
                 bulletSounds.computeIfAbsent(sounds::class) { mutableMapOf() }[resourceLocation] = sounds
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet sounds $resourceLocation $e")
+                error = true
             }
         }
         this.bulletSounds = bulletSounds
