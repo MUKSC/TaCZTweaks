@@ -25,6 +25,10 @@ Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Interactions) f
 ![Piercing glass blocks](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/piercing.webp)
 ![Conditional piercing](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/conditional-piercing.webp)
 
+### Customizable Bullet Particles
+Customizable via data packs.  
+Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Bullet-Particles) for more details.
+
 ### Customizable Bullet Sounds
 Customizable via data packs.  
 You can add various sounds to bullets, such as:
@@ -41,8 +45,10 @@ FirstAid / Legendary Survival Overhaul compat:
 Valkyrien Skies compat:
 - Collision compat allows bullets to properly collide with VS ships.
 - Explosion compat allows explosive bullets to damage and knockback VS ships.
+- Disabled by default as it modifies the existing behaviours.
 
-Valkyrien Skies compat is disabled by default as it modifies the existing behaviours.
+Potential fix for Essential or any other LAN server hosting mod:
+- `Disable Desync Check` option might fix the issue.
 
 ### Shoot / Reload While Sprinting
 Allows you to shoot and reload while sprinting.  
