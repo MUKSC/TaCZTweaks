@@ -40,7 +40,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
         cir.setReturnValue(false);
     }
 
-    @WrapOperation(method = "shouldRemove", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;intersects(DDDDDD)Z"), remap = false)
+    @WrapOperation(method = "shouldRemove", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;intersects(DDDDDD)Z", remap = true), remap = false)
     private boolean tacztweaks$shouldRemove$transformToShip(AABB instance, double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2, Operation<Boolean> original) {
         ParticleExtension ext = (ParticleExtension) this;
         Vector3d pos = ext.tacztweaks$getShipPos();

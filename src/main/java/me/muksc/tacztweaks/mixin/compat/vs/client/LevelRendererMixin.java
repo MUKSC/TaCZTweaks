@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.valkyrienskies.core.api.ships.ClientShip;
 
-@Mixin(value = LevelRenderer.class, remap = false, priority = 1500)
+@Mixin(value = LevelRenderer.class, priority = 1500, remap = false)
 public abstract class LevelRendererMixin {
     @Dynamic
     @TargetHandler(
         mixin = "org.valkyrienskies.mod.mixin.feature.transform_particles.MixinLevelRenderer",
         name = "spawnParticleInWorld"
     )
-    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;addParticleInternal(Lnet/minecraft/core/particles/ParticleOptions;ZZDDDDDD)Lnet/minecraft/client/particle/Particle;"))
+    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;addParticleInternal(Lnet/minecraft/core/particles/ParticleOptions;ZZDDDDDD)Lnet/minecraft/client/particle/Particle;", remap = true))
     private Particle tacztweaks$spawnParticleInWorld$setShip(
         Particle original,
         @Local(argsOnly = true, ordinal = 0) double x,
