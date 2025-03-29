@@ -10,7 +10,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Supplier;
@@ -28,5 +30,23 @@ public abstract class LivingEntityShootMixin {
     private void tacztweaks$shoot$stopSprintingOnShot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp, CallbackInfoReturnable<ShootResult> cir) {
         if (Config.Gun.INSTANCE.shootWhileSprinting()) return;
         shooter.setSprinting(false);
+    }
+
+    @ModifyConstant(method = "shoot", constant = @Constant(longValue = -300L))
+    private long tacztweaks$shoot$disableDesyncCheck$min(long constant) {
+        if (!Config.Compat.INSTANCE.disableDesyncCheck()) return constant;
+        return Long.MIN_VALUE;
+    }
+
+    @ModifyConstant(method = "shoot", constant = @Constant(doubleValue = 300.0))
+    private double tacztweaks$shoot$disableDesyncCheck$max(double constant) {
+        if (!Config.Compat.INSTANCE.disableDesyncCheck()) return constant;
+        return Long.MAX_VALUE;
+    }
+
+    @ModifyConstant(method = "shoot", constant = @Constant(doubleValue = 2.0))
+    private double tacztweaks$shoot$disableDesyncCheck$preventOverflow(double constant) {
+        if (!Config.Compat.INSTANCE.disableDesyncCheck()) return constant;
+        return 0.0;
     }
 }

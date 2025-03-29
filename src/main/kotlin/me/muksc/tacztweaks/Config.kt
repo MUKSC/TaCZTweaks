@@ -56,11 +56,13 @@ object Config : JsonFileCodecConfig<Config>(
         val lsoCompat by register(true, BOOL)
         val vsCollisionCompat by register(false, BOOL)
         val vsExplosionCompat by register(false, BOOL)
+        val disableDesyncCheck by register(false, BOOL)
 
         fun firstAidCompat(): Boolean = firstAidCompat.value
         fun lsoCompat(): Boolean = lsoCompat.value
         fun vsCollisionCompat(): Boolean = vsCollisionCompat.value
         fun vsExplosionCompat(): Boolean = vsExplosionCompat.value
+        fun disableDesyncCheck(): Boolean = disableDesyncCheck.value
     }
 
     fun generateConfigScreen(parent: Screen?): Screen = YetAnotherConfigLib.createBuilder().apply {
@@ -159,6 +161,12 @@ object Config : JsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.compat.vsExplosionCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsExplosionCompat.description")))
                     binding(Compat.vsExplosionCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.disableDesyncCheck.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.disableDesyncCheck.description")))
+                    binding(Compat.disableDesyncCheck.asBinding())
                     controller(booleanController())
                 }.build())
             }.build())
