@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.mixin.compat.vs.client;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.compat.vs.ParticleExtension;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -27,6 +28,7 @@ public abstract class LevelRendererMixin {
         @Local(argsOnly = true, ordinal = 2) double z,
         @Local ClientShip ship
     ) {
+        if (!Config.Compat.INSTANCE.vsCollisionCompat()) return original;
         if (original == null) return original;
         ParticleExtension ext = (ParticleExtension) original;
         ext.tacztweaks$setShip(ship);
