@@ -25,10 +25,10 @@ import java.util.function.Function;
 @Mixin(value = BlockRayTrace.class, remap = false)
 public abstract class BlockRayTraceMixin {
     @Unique
-    private static BlockHitResult tacztweaks$result;
+    private static BlockHitResult tacztweaks$result = null;
 
     @Unique
-    private static Level tacztweaks$level;
+    private static Level tacztweaks$level = null;
 
     @Inject(method = "rayTraceBlocks", at = @At("HEAD"))
     private static void tacztweaks$rayTraceBlocks$storeLevel(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {

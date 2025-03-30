@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 @Mixin(value = BlockRayTrace.class, remap = false)
 public abstract class BlockRayTraceMixin {
     @Unique
-    private static BulletRayTracer tacztweaks$rayTracer;
+    private static BulletRayTracer tacztweaks$rayTracer = null;
 
     @Inject(method = "rayTraceBlocks", at = @At("HEAD"))
     private static void tacztweaks$rayTraceBlocks$initRayTracer(Level level, ClipContext context, CallbackInfoReturnable<BlockHitResult> cir) {
