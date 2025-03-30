@@ -27,6 +27,7 @@ public abstract class LevelRendererMixin {
         @Local(argsOnly = true, ordinal = 2) double z,
         @Local ClientShip ship
     ) {
+        if (original == null) return original;
         ParticleExtension ext = (ParticleExtension) original;
         ext.tacztweaks$setShip(ship);
         ext.tacztweaks$setShipPos(new Vector3d(x, y, z));
