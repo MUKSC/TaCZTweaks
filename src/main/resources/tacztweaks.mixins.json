@@ -43,7 +43,7 @@
     "client.PlayerRendererMixin",
     "client.TickAnimationEventMixin",
     "compat.vs.client.BulletHoleParticleMixin",
-    "compat.vs.client.LevelRendererMixin",
+    "compat.vs.client.MixinLevelRendererMixin",
     "compat.vs.client.ParticleMixin"
   ],
   "injectors": {

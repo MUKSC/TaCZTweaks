@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.valkyrienskies.core.api.ships.ClientShip;
 
 @Mixin(value = LevelRenderer.class, priority = 1500, remap = false)
-public abstract class LevelRendererMixin {
+public abstract class MixinLevelRendererMixin {
     @Dynamic
     @TargetHandler(
         mixin = "org.valkyrienskies.mod.mixin.feature.transform_particles.MixinLevelRenderer",
