@@ -82,6 +82,9 @@ repositories {
     }
     maven("https://maven.isxander.dev/releases")
     maven("https://maven.valkyrienskies.org")
+    flatDir {
+        dir("libs")
+    }
 }
 
 dependencies {
@@ -106,6 +109,7 @@ dependencies {
     compileOnly(libs.org.valkyrienskies.core.api.game)
     compileOnly(libs.org.valkyrienskies.core.util)
     compileOnly(libs.org.valkyrienskies.core.impl)
+    compileOnly(fg.deobf("libs:vs_addition:1.20.1-0.0.10+bfee7aaede"))
     runtimeOnly(fg.deobf(libs.modrinth.neat.get()))
 }
 
