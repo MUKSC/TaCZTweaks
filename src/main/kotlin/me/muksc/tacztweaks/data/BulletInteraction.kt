@@ -228,7 +228,7 @@ sealed class BulletInteraction(
                 Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
                 BlockBreak.CODEC.strictOptionalFieldOf("block_break", DEFAULT.blockBreak).forGetter(Block::blockBreak),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Block::pierce),
-                GunPierce.codec(false).strictOptionalFieldOf("gunPierce", DEFAULT.gunPierce).forGetter(Block::gunPierce)
+                GunPierce.codec(false).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Block::gunPierce)
             ).apply(it, ::Block) }
         }
     }
@@ -259,7 +259,7 @@ sealed class BulletInteraction(
                 Codec.list(EntityOrEntityTag.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
                 EntityDamage.CODEC.strictOptionalFieldOf("damage", DEFAULT.damage).forGetter(Entity::damage),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Entity::pierce),
-                GunPierce.codec(true).strictOptionalFieldOf("gunPierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce)
+                GunPierce.codec(true).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce)
             ).apply(it, ::Entity) }
         }
     }
