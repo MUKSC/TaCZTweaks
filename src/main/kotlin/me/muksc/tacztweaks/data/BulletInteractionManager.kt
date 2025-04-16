@@ -21,11 +21,13 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.world.item.Tier
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import net.minecraftforge.common.TierSortingRegistry
 import net.minecraftforge.common.util.FakePlayer
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -106,26 +108,36 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
 
         val level = ammo.level() as ServerLevel
         val blockPos = BlockPos(result.blockPos)
-        val gun = Context.Gun(ext.`tacztweaks$getGunStack`())
-        val armorIgnore = AttachmentDataUtils.getArmorIgnoreWithAttachment(gun.stack, gun.index?.gunData)
-        val breakBlock = when (interaction.blockBreak) {
-            is BulletInteraction.Block.BlockBreak.Never -> false
-            is BulletInteraction.Block.BlockBreak.Instant -> true
-            is BulletInteraction.Block.BlockBreak.Count -> {
-                val delta = BlockBreakingManager.addCurrentProgress(level, blockPos, 1.0F / interaction.blockBreak.count)
-                delta >= 1.0F
+        val breakBlock = run {
+            val hardness = state.getDestroySpeed(level, blockPos)
+            if (hardness !in interaction.blockBreak.hardness) return@run false
+            val isCorrectToolForDrops = when (interaction.blockBreak.tier) {
+                null -> false
+                else -> TierSortingRegistry.isCorrectTierForDrops(interaction.blockBreak.tier, state)
             }
-            is BulletInteraction.Block.BlockBreak.FixedDamage -> {
-                val damage = interaction.blockBreak.damage
-                var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, blockPos)
-                if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, blockPos, delta)
-                delta >= 1.0F
-            }
-            is BulletInteraction.Block.BlockBreak.DynamicDamage -> {
-                val damage = interaction.blockBreak.run { (ammo.getDamage(result.location) + modifier) * multiplier }
-                var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, blockPos)
-                if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, blockPos, delta)
-                delta >= 1.0F
+            if (!isCorrectToolForDrops) return@run false
+
+            val gun = Context.Gun(ext.`tacztweaks$getGunStack`())
+            val armorIgnore = AttachmentDataUtils.getArmorIgnoreWithAttachment(gun.stack, gun.index?.gunData)
+            when (interaction.blockBreak) {
+                is BulletInteraction.Block.BlockBreak.Never -> false
+                is BulletInteraction.Block.BlockBreak.Instant -> true
+                is BulletInteraction.Block.BlockBreak.Count -> {
+                    val delta = BlockBreakingManager.addCurrentProgress(level, blockPos, 1.0F / interaction.blockBreak.count)
+                    delta >= 1.0F
+                }
+                is BulletInteraction.Block.BlockBreak.FixedDamage -> {
+                    val damage = interaction.blockBreak.damage
+                    var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, blockPos)
+                    if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, blockPos, delta)
+                    delta >= 1.0F
+                }
+                is BulletInteraction.Block.BlockBreak.DynamicDamage -> {
+                    val damage = interaction.blockBreak.run { (ammo.getDamage(result.location) + modifier) * multiplier }
+                    var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, blockPos)
+                    if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, blockPos, delta)
+                    delta >= 1.0F
+                }
             }
         }
         if (breakBlock) level.destroyBlock(result.blockPos, interaction.blockBreak.drop, ammo.owner)

@@ -14,18 +14,6 @@ sealed class Target<T>(
 ) {
     abstract fun test(entity: EntityKineticBullet, location: Vec3): Boolean
 
-    class ValueRange(
-        val min: Double,
-        val max: Double
-    ) : ClosedFloatingPointRange<Double> by min..max {
-        companion object {
-            val CODEC = RecordCodecBuilder.create<ValueRange> { it.group(
-                Codec.DOUBLE.strictOptionalFieldOf("min", Double.MIN_VALUE).forGetter(ValueRange::min),
-                Codec.DOUBLE.strictOptionalFieldOf("max", Double.MAX_VALUE).forGetter(ValueRange::max)
-            ).apply(it, ::ValueRange) }
-        }
-    }
-
     enum class EType(
         override val key: String,
         override val codec: Codec<out Target<*>>

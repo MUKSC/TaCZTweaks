@@ -1,0 +1,17 @@
+{
+  "type": "block",
+  "target": {
+    "type": "ammo",
+    "values": [
+      "tacz:50bmg"
+    ]
+  },
+  "block_break": {
+    "type": "dynamic_damage",
+    "tier": "minecraft:netherite"
+  },
+  "pierce": {
+    "type": "count",
+    "count": 4
+  }
+}

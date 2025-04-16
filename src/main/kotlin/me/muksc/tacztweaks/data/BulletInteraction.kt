@@ -5,6 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
 import me.muksc.tacztweaks.strictOptionalFieldOf
+import net.minecraft.world.item.Tier
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 sealed class BulletInteraction(
     val type: EBulletInteractionType,
@@ -121,6 +124,8 @@ sealed class BulletInteraction(
     ) : BulletInteraction(EBulletInteractionType.BLOCK, target, pierce, gunPierce) {
         sealed class BlockBreak(
             val type: EBlockBreakType,
+            val hardness: ValueRange,
+            val tier: Tier?,
             val drop: Boolean
         ) {
             enum class EBlockBreakType(
@@ -139,15 +144,19 @@ sealed class BulletInteraction(
                 }
             }
 
-            object Never : BlockBreak(EBlockBreakType.NEVER, false) {
+            object Never : BlockBreak(EBlockBreakType.NEVER, ValueRange.DEFAULT, null, false) {
                 val CODEC = Codec.unit(Never)
             }
 
             class Instant(
+                hardness: ValueRange,
+                tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.INSTANT, drop) {
+            ) : BlockBreak(EBlockBreakType.INSTANT, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Instant> { it.group(
+                        ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(Instant::hardness),
+                        TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(Instant::drop)
                     ).apply(it, ::Instant) }
                 }
@@ -155,11 +164,15 @@ sealed class BulletInteraction(
 
             class Count(
                 val count: Int,
+                hardness: ValueRange,
+                tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.COUNT, drop) {
+            ) : BlockBreak(EBlockBreakType.COUNT, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Count> { it.group(
                         Codec.INT.fieldOf("count").forGetter(Count::count),
+                        ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(Count::hardness),
+                        TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(Count::drop)
                     ).apply(it, ::Count) }
                 }
@@ -168,12 +181,16 @@ sealed class BulletInteraction(
             class FixedDamage(
                 val damage: Float,
                 val accumulate: Boolean,
+                hardness: ValueRange,
+                tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.FIXED_DAMAGE, drop) {
+            ) : BlockBreak(EBlockBreakType.FIXED_DAMAGE, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<FixedDamage> { it.group(
                         Codec.FLOAT.fieldOf("damage").forGetter(FixedDamage::damage),
                         Codec.BOOL.strictOptionalFieldOf("accumulate", true).forGetter(FixedDamage::accumulate),
+                        ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(FixedDamage::hardness),
+                        TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(FixedDamage::drop)
                     ).apply(it, ::FixedDamage) }
                 }
@@ -183,13 +200,17 @@ sealed class BulletInteraction(
                 val modifier: Float,
                 val multiplier: Float,
                 val accumulate: Boolean,
+                hardness: ValueRange,
+                tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.DYNAMIC_DAMAGE, drop) {
+            ) : BlockBreak(EBlockBreakType.DYNAMIC_DAMAGE, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<DynamicDamage> { it.group(
                         Codec.FLOAT.strictOptionalFieldOf("modifier", 0.0F).forGetter(DynamicDamage::modifier),
                         Codec.FLOAT.strictOptionalFieldOf("multiplier", 1.0F).forGetter(DynamicDamage::multiplier),
                         Codec.BOOL.strictOptionalFieldOf("accumulate", true).forGetter(DynamicDamage::accumulate),
+                        ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(DynamicDamage::hardness),
+                        TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(DynamicDamage::drop)
                     ).apply(it, ::DynamicDamage) }
                 }

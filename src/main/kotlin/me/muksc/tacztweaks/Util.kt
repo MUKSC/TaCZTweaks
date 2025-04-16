@@ -17,6 +17,9 @@ fun ItemStack.getTaCZId(): ResourceLocation? =
         ?: IAttachment.getIAttachmentOrNull(this)?.getAttachmentId(this)
         ?: IGun.getIGunOrNull(this)?.getGunId(this)
 
+fun <T : Any> Codec<T>.strictOptionalFieldOf(name: String): MapCodec<Optional<T>> =
+    StrictOptionalFieldCodec(name, this)
+
 fun <T : Any> Codec<T>.strictOptionalFieldOf(name: String, defaultValue: T): MapCodec<T> =
     StrictOptionalFieldCodec(name, this).xmap(
         { it.orElse(defaultValue) },

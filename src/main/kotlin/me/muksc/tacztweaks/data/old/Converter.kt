@@ -2,6 +2,8 @@ package me.muksc.tacztweaks.data.old
 
 import me.muksc.tacztweaks.data.Target
 import me.muksc.tacztweaks.data.BulletInteraction
+import me.muksc.tacztweaks.data.ValueRange
+import java.util.Optional
 import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction
 
 fun OldBulletInteraction.convert() = BulletInteraction.Block(
@@ -11,17 +13,23 @@ fun OldBulletInteraction.convert() = BulletInteraction.Block(
         is OldBulletInteraction.BlockBreak.Never -> BulletInteraction.Block.BlockBreak.Never
         is OldBulletInteraction.BlockBreak.Count -> BulletInteraction.Block.BlockBreak.Count(
             count = blockBreak.count,
+            hardness = ValueRange.DEFAULT,
+            tier = Optional.empty(),
             drop = drop
         )
         is OldBulletInteraction.BlockBreak.FixedDamage -> BulletInteraction.Block.BlockBreak.FixedDamage(
             damage = blockBreak.damage,
             accumulate = blockBreak.accumulate,
+            hardness = ValueRange.DEFAULT,
+            tier = Optional.empty(),
             drop = drop
         )
         is OldBulletInteraction.BlockBreak.DynamicDamage -> BulletInteraction.Block.BlockBreak.DynamicDamage(
             modifier = blockBreak.modifier,
             multiplier = blockBreak.multiplier,
             accumulate = blockBreak.accumulate,
+            hardness = ValueRange.DEFAULT,
+            tier = Optional.empty(),
             drop = drop
         )
     },
