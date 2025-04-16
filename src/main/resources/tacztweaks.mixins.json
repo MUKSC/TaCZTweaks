@@ -22,6 +22,7 @@
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
     "compat.lso.CommonForgeEventsMixin",
+    "compat.mts.EntityUtilMixin",
     "compat.vs.BlockHitResultMixin",
     "compat.vs.BlockRayTraceMixin",
     "compat.vs.ClipContextMixin",

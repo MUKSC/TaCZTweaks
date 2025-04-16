@@ -12,6 +12,8 @@ import dev.isxander.yacl3.platform.YACLPlatform
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
 import dev.isxander.yacl3.dsl.ControllerBuilderFactory
+import dev.isxander.yacl3.dsl.binding
+import dev.isxander.yacl3.dsl.controller
 import dev.isxander.yacl3.dsl.slider
 import net.minecraft.client.gui.screens.Screen
 
@@ -56,12 +58,14 @@ object Config : JsonFileCodecConfig<Config>(
         val lsoCompat by register(true, BOOL)
         val vsCollisionCompat by register(false, BOOL)
         val vsExplosionCompat by register(false, BOOL)
+        val mtsFix by register(true, BOOL)
         val disableDesyncCheck by register(false, BOOL)
 
         fun firstAidCompat(): Boolean = firstAidCompat.value
         fun lsoCompat(): Boolean = lsoCompat.value
         fun vsCollisionCompat(): Boolean = vsCollisionCompat.value
         fun vsExplosionCompat(): Boolean = vsExplosionCompat.value
+        fun mtsFix(): Boolean = mtsFix.value
         fun disableDesyncCheck(): Boolean = disableDesyncCheck.value
     }
 
@@ -161,6 +165,12 @@ object Config : JsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.compat.vsExplosionCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsExplosionCompat.description")))
                     binding(Compat.vsExplosionCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.mtsFix.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.mtsFix.description")))
+                    binding(Compat.mtsFix.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {

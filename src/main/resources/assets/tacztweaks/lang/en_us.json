@@ -38,6 +38,8 @@
   "tacztweaks.config.compat.vsCollisionCompat.description": "Allows bullets to properly collide with Valkyrien Skies ships.",
   "tacztweaks.config.compat.vsExplosionCompat.name": "VS Explosion Compat",
   "tacztweaks.config.compat.vsExplosionCompat.description": "Allows explosive bullets to damage and knockback Valkyrien Skies ships.",
+  "tacztweaks.config.compat.mtsFix.name": "IV Fix",
+  "tacztweaks.config.compat.mtsFix.description": "Fixes bullet collision on vehicle entities from the Immersive Vehicles mod",
   "tacztweaks.config.compat.disableDesyncCheck.name": "Disable Desync Check",
   "tacztweaks.config.compat.disableDesyncCheck.description": "Potentially fixes the issue with Essential or any other LAN server hosting mod.\n\nTaCZ tries to detect desync between server and client, and discards any \"invalid\" shots.\nThis system is seemingly broken on LAN servers, and is causing issues for some people.\n\nThis option tries to fix the issue by disabling the check entirely.",
   "tacztweaks.config.label.enabled": "Enabled",

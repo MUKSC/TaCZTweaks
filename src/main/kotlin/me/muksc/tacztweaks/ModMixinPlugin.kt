@@ -14,6 +14,7 @@ class ModMixinPlugin : IMixinConfigPlugin {
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean = when {
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.firstaid.") -> isModLoaded("firstaid")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lso.") -> isModLoaded("legendarysurvivaloverhaul")
+        mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.mts.") -> isModLoaded("mts")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs.") -> isModLoaded("valkyrienskies") && when (mixinClassName) {
             "me.muksc.tacztweaks.mixin.compat.vs.client.MixinLevelRendererMixin" -> !isModLoaded("vs_addition")
             else -> true
