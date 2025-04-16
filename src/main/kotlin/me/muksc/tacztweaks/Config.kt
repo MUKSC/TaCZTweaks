@@ -12,8 +12,6 @@ import dev.isxander.yacl3.platform.YACLPlatform
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
 import dev.isxander.yacl3.dsl.ControllerBuilderFactory
-import dev.isxander.yacl3.dsl.binding
-import dev.isxander.yacl3.dsl.controller
 import dev.isxander.yacl3.dsl.slider
 import net.minecraft.client.gui.screens.Screen
 
@@ -53,6 +51,18 @@ object Config : JsonFileCodecConfig<Config>(
         fun visualTweak(): Boolean = visualTweak.value
     }
 
+    object Tweaks : CodecConfig<Tweaks>() {
+        val suppressHeadHitSounds by register(false, BOOL)
+        val suppressFleshHitSounds by register(false, BOOL)
+        val suppressKillSounds by register(false, BOOL)
+        val hideHitMarkers by register(false, BOOL)
+
+        fun suppressHeadHitSounds() = suppressHeadHitSounds.value
+        fun suppressFleshHitSounds() = suppressFleshHitSounds.value
+        fun suppressKillSounds() = suppressKillSounds.value
+        fun hideHitMarkers() = hideHitMarkers.value
+    }
+
     object Compat : CodecConfig<Compat>() {
         val firstAidCompat by register(true, BOOL)
         val lsoCompat by register(true, BOOL)
@@ -74,7 +84,7 @@ object Config : JsonFileCodecConfig<Config>(
         save(::saveToFile)
 
         category(ConfigCategory.createBuilder().apply {
-            name(TaCZTweaks.translatable("config.title"))
+            name(TaCZTweaks.translatable("config.category.general"))
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.gun"))
                 option(Option.createBuilder<Boolean>().apply {
@@ -101,6 +111,51 @@ object Config : JsonFileCodecConfig<Config>(
                     binding(Gun.allowUnload.asBinding())
                     controller(booleanController())
                 }.build())
+            }.build())
+            group(OptionGroup.createBuilder().apply {
+                name(TaCZTweaks.translatable("config.compat"))
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.firstAidCompat.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.firstAidCompat.description")))
+                    binding(Compat.firstAidCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.lsoCompat.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.lsoCompat.description")))
+                    binding(Compat.lsoCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.vsCollisionCompat.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsCollisionCompat.description")))
+                    binding(Compat.vsCollisionCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.vsExplosionCompat.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsExplosionCompat.description")))
+                    binding(Compat.vsExplosionCompat.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.mtsFix.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.mtsFix.description")))
+                    binding(Compat.mtsFix.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.compat.disableDesyncCheck.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.disableDesyncCheck.description")))
+                    binding(Compat.disableDesyncCheck.asBinding())
+                    controller(booleanController())
+                }.build())
+            }.build())
+        }.build())
+        category(ConfigCategory.createBuilder().apply {
+            name(TaCZTweaks.translatable("config.category.client"))
+            group(OptionGroup.createBuilder().apply {
+                name(TaCZTweaks.translatable("config.gun"))
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.disableBulletCulling.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableBulletCulling.description")))
@@ -142,41 +197,29 @@ object Config : JsonFileCodecConfig<Config>(
                 }.build())
             }.build())
             group(OptionGroup.createBuilder().apply {
-                name(TaCZTweaks.translatable("config.compat"))
+                name(TaCZTweaks.translatable("config.tweaks"))
                 option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.firstAidCompat.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.firstAidCompat.description")))
-                    binding(Compat.firstAidCompat.asBinding())
+                    name(TaCZTweaks.translatable("config.tweaks.suppressHeadHitSounds.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.suppressHeadHitSounds.description")))
+                    binding(Tweaks.suppressHeadHitSounds.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.lsoCompat.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.lsoCompat.description")))
-                    binding(Compat.lsoCompat.asBinding())
+                    name(TaCZTweaks.translatable("config.tweaks.suppressFleshHitSounds.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.suppressFleshHitSounds.description")))
+                    binding(Tweaks.suppressFleshHitSounds.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.vsCollisionCompat.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsCollisionCompat.description")))
-                    binding(Compat.vsCollisionCompat.asBinding())
+                    name(TaCZTweaks.translatable("config.tweaks.suppressKillSounds.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.suppressKillSounds.description")))
+                    binding(Tweaks.suppressKillSounds.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.vsExplosionCompat.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsExplosionCompat.description")))
-                    binding(Compat.vsExplosionCompat.asBinding())
-                    controller(booleanController())
-                }.build())
-                option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.mtsFix.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.mtsFix.description")))
-                    binding(Compat.mtsFix.asBinding())
-                    controller(booleanController())
-                }.build())
-                option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.disableDesyncCheck.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.disableDesyncCheck.description")))
-                    binding(Compat.disableDesyncCheck.asBinding())
+                    name(TaCZTweaks.translatable("config.tweaks.hideHitMarkers.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.hideHitMarkers.description")))
+                    binding(Tweaks.hideHitMarkers.asBinding())
                     controller(booleanController())
                 }.build())
             }.build())
