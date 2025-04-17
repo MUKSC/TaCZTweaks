@@ -47,6 +47,9 @@ Valkyrien Skies compat:
 - Explosion compat allows explosive bullets to damage and knockback VS ships.
 - Disabled by default as it modifies the existing behaviours.
 
+Immersive Vehicles compat:
+- Fixes bullet collision on vehicle entities.
+
 Potential fix for Essential or any other LAN server hosting mod:
 - `Disable Desync Check` option might fix the issue.
 
@@ -76,6 +79,10 @@ Can be disabled on server side.
 ### Disable Bullet Culling
 Improves the accuracy of bullet rendering at close range.  
 ![Improved close-range bullet rendering](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/bullet-culling.webp)
+
+### Gameplay Tweaks
+- Ability to disable certain sounds: headshot sounds, bodyshot sounds and kill sounds
+- Ability to hide hit markers
 
 ## Migrate to Bullet Interactions V2
 There has been a rework to the bullet interactions in v2.0.0.  
