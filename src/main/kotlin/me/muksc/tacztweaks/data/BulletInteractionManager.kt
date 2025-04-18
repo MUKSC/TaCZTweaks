@@ -112,7 +112,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             val hardness = state.getDestroySpeed(level, blockPos)
             if (hardness !in interaction.blockBreak.hardness) return@run false
             val isCorrectToolForDrops = when (interaction.blockBreak.tier) {
-                null -> false
+                null -> true
                 else -> TierSortingRegistry.isCorrectTierForDrops(interaction.blockBreak.tier, state)
             }
             if (!isCorrectToolForDrops) return@run false
