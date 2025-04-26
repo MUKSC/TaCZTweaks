@@ -1,1 +1,1 @@
-- Fixed block interactions with no `tier` specified are unable to break blocks
+- Fixed the issue where enabling the `hideHitMarkers` option prevents hit sounds from playing
