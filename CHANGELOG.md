@@ -1,1 +1,1 @@
-- Fixed the issue where enabling the `hideHitMarkers` option prevents hit sounds from playing
+- Fixed the `Tweaks` section of the config not being saved
