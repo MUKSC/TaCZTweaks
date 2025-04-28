@@ -22,6 +22,7 @@ object Config : JsonFileCodecConfig<Config>(
     val gun by register(Gun, Gun)
     val crawl by register(Crawl, Crawl)
     val compat by register(Compat, Compat)
+    val tweaks by register(Tweaks, Tweaks)
 
     object Gun : CodecConfig<Gun>() {
         val shootWhileSprinting by register(true, BOOL)
