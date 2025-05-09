@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.singleOrListCodec
 import me.muksc.tacztweaks.strictOptionalFieldOf
-import net.minecraft.resources.ResourceLocation
 
 sealed class BulletParticles(
     val type: EBulletParticlesType,
@@ -16,7 +15,8 @@ sealed class BulletParticles(
         val position: Coordinates,
         val delta: Coordinates,
         val speed: Double,
-        val count: Int
+        val count: Int,
+        val force: Boolean
     ) {
         sealed class Coordinates(
             val type: ECoordinatesType,
@@ -91,7 +91,8 @@ sealed class BulletParticles(
                 Coordinates.CODEC.strictOptionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(Particle::position),
                 Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(Particle::delta),
                 Codec.DOUBLE.strictOptionalFieldOf("speed", 0.0).forGetter(Particle::speed),
-                Codec.INT.strictOptionalFieldOf("count", 1).forGetter(Particle::count)
+                Codec.INT.strictOptionalFieldOf("count", 1).forGetter(Particle::count),
+                Codec.BOOL.strictOptionalFieldOf("force", false).forGetter(Particle::force)
             ).apply(it, ::Particle) }
         }
     }

@@ -7,7 +7,6 @@ import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.EntityKineticBulletExtension
-import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate
@@ -16,7 +15,6 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
@@ -41,15 +39,6 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletParticles> byType(): Map<ResourceLocation, T> =
         bulletParticles.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
-
-    private inline fun <reified T : BulletParticles> getParticle(
-        entity: EntityKineticBullet,
-        location: Vec3
-    ): T? = byType<T>().values.run {
-        firstOrNull { particles ->
-            particles.target.test(entity, location)
-        } ?: firstOrNull { particles -> particles.target is Target.Fallback }
-    }
 
     private inline fun <reified T : BulletParticles, E> getParticle(
         entity: EntityKineticBullet,
@@ -151,17 +140,21 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
                 delta.z
             )
         }.getPosition(source)
-        level.sendParticles(
-            particleOptions,
-            coordinates.x,
-            coordinates.y,
-            coordinates.z,
-            count,
-            deltaCoordinates.x,
-            deltaCoordinates.y,
-            deltaCoordinates.z,
-            speed
-        )
+        for (player in level.players()) {
+            level.sendParticles(
+                player,
+                particleOptions,
+                force,
+                coordinates.x,
+                coordinates.y,
+                coordinates.z,
+                count,
+                deltaCoordinates.x,
+                deltaCoordinates.y,
+                deltaCoordinates.z,
+                speed
+            )
+        }
     }
 
     enum class EBlockParticleType(val getParticle: (BulletParticles.Block) -> List<BulletParticles.Particle>) {
