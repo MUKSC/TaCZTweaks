@@ -166,7 +166,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 publishMods {
-    displayName = "${project.findProperty("mod_name")} ${project.version}"
+    displayName = "${project.findProperty("mod_name")} ${project.version} for TaCZ ${libs.versions.tacz.target.get()}"
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
     file = tasks.jarJar.get().archiveFile
     type = STABLE
