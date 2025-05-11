@@ -18,7 +18,7 @@ public abstract class MouseHandlerMixinMixin {
         mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",
         name = "getCrawlPitch"
     )
-    @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = 25.0F))
+    @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = 45.0F))
     private static float tacztweaks$getCrawlPitch$modifyPitchUpperLimit(float original) {
         return Config.Crawl.INSTANCE.pitchUpperLimit();
     }
@@ -27,7 +27,7 @@ public abstract class MouseHandlerMixinMixin {
         mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",
         name = "getCrawlPitch"
     )
-    @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = -10.0F))
+    @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = -30.0F))
     private static float tacztweaks$getCrawlPitch$modifyPitchLowerLimit(float original) {
         if (!Config.Crawl.INSTANCE.dynamicPitchLimit()) return Config.Crawl.INSTANCE.pitchLowerLimit();
 

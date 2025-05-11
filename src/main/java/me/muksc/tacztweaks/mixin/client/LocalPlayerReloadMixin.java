@@ -29,16 +29,16 @@ public abstract class LocalPlayerReloadMixin {
     @Shadow @Final private LocalPlayerDataHolder data;
 
     @Inject(method = "doReload", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;stopPlayGunSound()V"))
-    private void tacztweaks$doReload$setNoAmmo(IGun iGun, GunDisplayInstance display, GunData gunData, ItemStack mainhandItem, CallbackInfo ci, @Local Bolt boltType, @Local LocalBooleanRef noAmmoRef) {
+    private void tacztweaks$doReload$setNoAmmo(IGun iGun, GunDisplayInstance display, GunData gunData, ItemStack mainHandItem, CallbackInfo ci, @Local Bolt boltType, @Local LocalBooleanRef noAmmoRef) {
         if (!Config.Gun.INSTANCE.reloadWhileShooting()) return;
-        int ammoCount = iGun.getCurrentAmmoCount(mainhandItem) + (iGun.hasBulletInBarrel(mainhandItem) && boltType != Bolt.OPEN_BOLT ? 1 : 0);
+        int ammoCount = iGun.getCurrentAmmoCount(mainHandItem) + (iGun.hasBulletInBarrel(mainHandItem) && boltType != Bolt.OPEN_BOLT ? 1 : 0);
         noAmmoRef.set(ammoCount <= 0);
     }
 
     @ModifyExpressionValue(method = "lambda$reload$2", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/client/gameplay/LocalPlayerDataHolder;clientStateLock:Z"))
-    private boolean tacztweaks$reload$allowReloadWhileShoot(boolean original, @Local(argsOnly = true) ItemStack mainhandItem, @Local(argsOnly = true) AbstractGunItem gunItem) {
+    private boolean tacztweaks$reload$allowReloadWhileShoot(boolean original, @Local(argsOnly = true) ItemStack mainHandItem, @Local(argsOnly = true) AbstractGunItem gunItem) {
         if (!Config.Gun.INSTANCE.reloadWhileShooting()) return original;
-        if (IGunOperator.fromLivingEntity(player).needCheckAmmo() && !gunItem.canReload(player, mainhandItem)) return original;
+        if (IGunOperator.fromLivingEntity(player).needCheckAmmo() && !gunItem.canReload(player, mainHandItem)) return original;
 
         IGunOperator operator = IGunOperator.fromLivingEntity(player);
         if (data.lockedCondition == LocalPlayerShootAccessor.getShootLockedCondition()) return false;

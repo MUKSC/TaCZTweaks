@@ -53,11 +53,13 @@ object Config : JsonFileCodecConfig<Config>(
     }
 
     object Tweaks : CodecConfig<Tweaks>() {
+        val alwaysFilterByHand by register(true, BOOL)
         val suppressHeadHitSounds by register(false, BOOL)
         val suppressFleshHitSounds by register(false, BOOL)
         val suppressKillSounds by register(false, BOOL)
         val hideHitMarkers by register(false, BOOL)
 
+        fun alwaysFilterByHand() = alwaysFilterByHand.value
         fun suppressHeadHitSounds() = suppressHeadHitSounds.value
         fun suppressFleshHitSounds() = suppressFleshHitSounds.value
         fun suppressKillSounds() = suppressKillSounds.value
@@ -70,14 +72,12 @@ object Config : JsonFileCodecConfig<Config>(
         val vsCollisionCompat by register(false, BOOL)
         val vsExplosionCompat by register(false, BOOL)
         val mtsFix by register(true, BOOL)
-        val disableDesyncCheck by register(false, BOOL)
 
         fun firstAidCompat(): Boolean = firstAidCompat.value
         fun lsoCompat(): Boolean = lsoCompat.value
         fun vsCollisionCompat(): Boolean = vsCollisionCompat.value
         fun vsExplosionCompat(): Boolean = vsExplosionCompat.value
         fun mtsFix(): Boolean = mtsFix.value
-        fun disableDesyncCheck(): Boolean = disableDesyncCheck.value
     }
 
     fun generateConfigScreen(parent: Screen?): Screen = YetAnotherConfigLib.createBuilder().apply {
@@ -145,12 +145,6 @@ object Config : JsonFileCodecConfig<Config>(
                     binding(Compat.mtsFix.asBinding())
                     controller(booleanController())
                 }.build())
-                option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.compat.disableDesyncCheck.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.compat.disableDesyncCheck.description")))
-                    binding(Compat.disableDesyncCheck.asBinding())
-                    controller(booleanController())
-                }.build())
             }.build())
         }.build())
         category(ConfigCategory.createBuilder().apply {
@@ -199,6 +193,12 @@ object Config : JsonFileCodecConfig<Config>(
             }.build())
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.tweaks"))
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.tweaks.alwaysFilterByHand.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.alwaysFilterByHand.description")))
+                    binding(Tweaks.alwaysFilterByHand.asBinding())
+                    controller(booleanController())
+                }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.tweaks.suppressHeadHitSounds.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.suppressHeadHitSounds.description")))

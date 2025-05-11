@@ -1,8 +1,6 @@
 package me.muksc.tacztweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.entity.shooter.LivingEntitySprint;
 import me.muksc.tacztweaks.Config;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,11 +12,5 @@ public abstract class LivingEntitySprintMixin {
     private boolean tacztweaks$getProcessedSprintStatus$sprintWhileReloading(boolean original) {
         if (!Config.Gun.INSTANCE.sprintWhileReloading()) return original;
         return false;
-    }
-
-    @ModifyExpressionValue(method = "getProcessedSprintStatus", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/IGunOperator;getSynIsAiming()Z"))
-    private boolean tacztweaks$getProcessedSprintStatus$stopSprintingOnShot(boolean original, @Local IGunOperator operator) {
-        if (Config.Gun.INSTANCE.shootWhileSprinting()) return original;
-        return original || operator.getSynShootCoolDown() > 0L;
     }
 }

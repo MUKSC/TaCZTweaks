@@ -10,7 +10,6 @@
     "BlockBehaviourMixin",
     "BlockRayTraceMixin",
     "EntityKineticBulletMixin",
-    "GunSmithTableMenuMixin",
     "LivingEntityAimMixin",
     "LivingEntityMixinMixin",
     "LivingEntityReloadMixin",
@@ -34,8 +33,8 @@
   "client": [
     "accessor.LocalPlayerShootAccessor",
     "client.EntityBulletRendererMixin",
+    "client.GunPackListMixin",
     "client.GunSmithTableScreenMixin",
-    "client.LocalPlayerMixin",
     "client.LocalPlayerMixinMixin",
     "client.LocalPlayerReloadMixin",
     "client.LocalPlayerShootMixin",
