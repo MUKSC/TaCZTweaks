@@ -6,6 +6,8 @@
 TaCZ Tweaks is an addon for the [Timeless and Classics Zero](https://modrinth.com/mod/timeless-and-classics-zero) mod that adds random tweaks and features to enhance my experience with TaCZ.  
 **Requires [Kotlin for Forge](https://modrinth.com/mod/kotlin-for-forge) and [YACL](https://modrinth.com/mod/yacl).**
 
+Many features are customizable via the in-game config screen, which can be accessed from the mod list.
+
 If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > TaCZ Tweaks](https://discord.com/channels/1243278348399022252/1313570204000980992) channel.  
 Alternatively, you can use the [GitHub Discussions](https://github.com/MUKSC/TaCZTweaks/discussions) page or the [issues](https://github.com/MUKSC/TaCZTweaks/issues) page in general.
 
@@ -50,9 +52,6 @@ Valkyrien Skies compat:
 Immersive Vehicles compat:
 - Fixes bullet collision on vehicle entities.
 
-Potential fix for Essential or any other LAN server hosting mod:
-- `Disable Desync Check` option might fix the issue.
-
 ### Shoot / Reload While Sprinting
 Allows you to shoot and reload while sprinting.  
 Additionally, you can immediately start reloading after a shot.  
@@ -68,13 +67,6 @@ Additionally, you can immediately start reloading after a shot.
 ### Gun Unloading
 The new key bind is located under the TaCZ category.  
 Can be disabled on server side.
-
-### Search & Filter in the Gun Smith Table
-- Show only compatible attachments by interacting while holding a gun
-- New search bar and pack filter
-- Craft items without cost in creative mode
-
-![Filtering in the Gun Smith Table](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/gun-smith-table-filter.webp)
 
 ### Disable Bullet Culling
 Improves the accuracy of bullet rendering at close range.  
