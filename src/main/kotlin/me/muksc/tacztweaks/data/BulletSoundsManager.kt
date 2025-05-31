@@ -6,7 +6,6 @@ import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.EntityKineticBulletExtension
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -18,6 +17,7 @@ import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
+import net.minecraftforge.registries.ForgeRegistries
 import kotlin.reflect.KClass
 
 private val GSON = GsonBuilder()
@@ -126,11 +126,10 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         whizz.sound.play(player, position, entity)
     }
 
-    @Suppress("DEPRECATION")
     private fun BulletSounds.Sound.play(player: ServerPlayer, position: Vec3, entity: EntityKineticBullet) {
         val soundEvent = SoundEvent.createVariableRangeEvent(sound)
         player.connection.send(ClientboundSoundPacket(
-            BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
+            ForgeRegistries.SOUND_EVENTS.getHolder(soundEvent).get(),
             entity.soundSource,
             position.x,
             position.y,
