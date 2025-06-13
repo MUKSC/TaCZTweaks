@@ -18,6 +18,8 @@ import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.level.ServerPlayerGameMode
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.TierSortingRegistry
 import net.minecraftforge.common.util.FakePlayer
 import java.util.*
@@ -140,7 +143,14 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 }
             }
         }
-        if (breakBlock) level.destroyBlock(result.blockPos, interaction.blockBreak.drop, ammo.owner)
+        if (breakBlock) run {
+            val owner = ammo.owner
+            if (owner is ServerPlayer) {
+                val exp = ForgeHooks.onBlockBreakEvent(level, owner.gameMode.gameModeForPlayer, owner, result.blockPos)
+                if (exp == -1) return@run
+            }
+            level.destroyBlock(result.blockPos, interaction.blockBreak.drop, ammo.owner)
+        }
         return InteractionResult(shouldPierce(ammo, result, interaction, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
     }
 
