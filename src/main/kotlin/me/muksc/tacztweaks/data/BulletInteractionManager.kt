@@ -110,9 +110,8 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         } ?: BulletInteraction.Block.DEFAULT
 
         val level = ammo.level() as ServerLevel
-        val blockPos = BlockPos(result.blockPos)
         val breakBlock = run {
-            val hardness = state.getDestroySpeed(level, blockPos)
+            val hardness = state.getDestroySpeed(level, result.blockPos)
             if (hardness !in interaction.blockBreak.hardness) return@run false
             val isCorrectToolForDrops = when (interaction.blockBreak.tier) {
                 null -> true
@@ -126,19 +125,19 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 is BulletInteraction.Block.BlockBreak.Never -> false
                 is BulletInteraction.Block.BlockBreak.Instant -> true
                 is BulletInteraction.Block.BlockBreak.Count -> {
-                    val delta = BlockBreakingManager.addCurrentProgress(level, blockPos, 1.0F / interaction.blockBreak.count)
+                    val delta = BlockBreakingManager.addCurrentProgress(level, result.blockPos, 1.0F / interaction.blockBreak.count)
                     delta >= 1.0F
                 }
                 is BulletInteraction.Block.BlockBreak.FixedDamage -> {
                     val damage = interaction.blockBreak.damage
-                    var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, blockPos)
-                    if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, blockPos, delta)
+                    var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, result.blockPos)
+                    if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, result.blockPos, delta)
                     delta >= 1.0F
                 }
                 is BulletInteraction.Block.BlockBreak.DynamicDamage -> {
                     val damage = interaction.blockBreak.run { (ammo.getDamage(result.location) + modifier) * multiplier }
-                    var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, blockPos)
-                    if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, blockPos, delta)
+                    var delta = calcBlockBreakingDelta(damage, armorIgnore, state, level, result.blockPos)
+                    if (interaction.blockBreak.accumulate) delta = BlockBreakingManager.addCurrentProgress(level, result.blockPos, delta)
                     delta >= 1.0F
                 }
             }
