@@ -59,11 +59,11 @@ object Config : JsonFileCodecConfig<Config>(
         val suppressKillSounds by register(false, BOOL)
         val hideHitMarkers by register(false, BOOL)
 
-        fun alwaysFilterByHand() = alwaysFilterByHand.value
-        fun suppressHeadHitSounds() = suppressHeadHitSounds.value
-        fun suppressFleshHitSounds() = suppressFleshHitSounds.value
-        fun suppressKillSounds() = suppressKillSounds.value
-        fun hideHitMarkers() = hideHitMarkers.value
+        fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
+        fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
+        fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
+        fun suppressKillSounds(): Boolean = suppressKillSounds.value
+        fun hideHitMarkers(): Boolean = hideHitMarkers.value
     }
 
     object Compat : CodecConfig<Compat>() {
@@ -114,6 +114,15 @@ object Config : JsonFileCodecConfig<Config>(
                 }.build())
             }.build())
             group(OptionGroup.createBuilder().apply {
+                name(TaCZTweaks.translatable("config.crawl"))
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.crawl.enabled.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.enabled.description")))
+                    binding(Crawl.enabled.asBinding())
+                    controller(booleanController())
+                }.build())
+            }.build())
+            group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.compat"))
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.compat.firstAidCompat.name"))
@@ -160,12 +169,6 @@ object Config : JsonFileCodecConfig<Config>(
             }.build())
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.crawl"))
-                option(Option.createBuilder<Boolean>().apply {
-                    name(TaCZTweaks.translatable("config.crawl.enabled.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.enabled.description")))
-                    binding(Crawl.enabled.asBinding())
-                    controller(booleanController())
-                }.build())
                 option(Option.createBuilder<Float>().apply {
                     name(TaCZTweaks.translatable("config.crawl.pitchUpperLimit.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.pitchUpperLimit.description")))
