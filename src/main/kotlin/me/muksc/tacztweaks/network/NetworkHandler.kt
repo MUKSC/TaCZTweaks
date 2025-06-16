@@ -12,15 +12,17 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.network.NetworkDirection
 import net.minecraftforge.network.NetworkRegistry
 import net.minecraftforge.network.PacketDistributor
+import java.util.Optional
 import java.util.concurrent.atomic.AtomicInteger
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TaCZTweaks.MOD_ID)
 object NetworkHandler {
     private var server: MinecraftServer? = null
+    private val version = "1"
     private val channel = NetworkRegistry.ChannelBuilder.named(TaCZTweaks.id("channel"))
-        .networkProtocolVersion { "0" }
-        .clientAcceptedVersions { true }
-        .serverAcceptedVersions { true }
+        .networkProtocolVersion(::version)
+        .clientAcceptedVersions(version::equals)
+        .serverAcceptedVersions(version::equals)
         .simpleChannel()
     private val counter = AtomicInteger()
 

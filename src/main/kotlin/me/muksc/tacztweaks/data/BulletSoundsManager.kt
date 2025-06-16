@@ -18,7 +18,6 @@ import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
-import net.minecraftforge.registries.ForgeRegistries
 import kotlin.reflect.KClass
 
 private val GSON = GsonBuilder()

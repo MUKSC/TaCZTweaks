@@ -134,7 +134,7 @@ sealed class BulletParticles(
         val hit: List<Particle>,
         val pierce: List<Particle>,
         val kill: List<Particle>
-    ) : BulletParticles(EBulletParticlesType.BLOCK, target) {
+    ) : BulletParticles(EBulletParticlesType.ENTITY, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
                 Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
