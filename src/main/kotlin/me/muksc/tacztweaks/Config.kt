@@ -52,20 +52,6 @@ object Config : JsonFileCodecConfig<Config>(
         fun visualTweak(): Boolean = visualTweak.value
     }
 
-    object Tweaks : CodecConfig<Tweaks>() {
-        val alwaysFilterByHand by register(true, BOOL)
-        val suppressHeadHitSounds by register(false, BOOL)
-        val suppressFleshHitSounds by register(false, BOOL)
-        val suppressKillSounds by register(false, BOOL)
-        val hideHitMarkers by register(false, BOOL)
-
-        fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
-        fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
-        fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
-        fun suppressKillSounds(): Boolean = suppressKillSounds.value
-        fun hideHitMarkers(): Boolean = hideHitMarkers.value
-    }
-
     object Compat : CodecConfig<Compat>() {
         val firstAidCompat by register(true, BOOL)
         val lsoCompat by register(true, BOOL)
@@ -78,6 +64,20 @@ object Config : JsonFileCodecConfig<Config>(
         fun vsCollisionCompat(): Boolean = vsCollisionCompat.value
         fun vsExplosionCompat(): Boolean = vsExplosionCompat.value
         fun mtsFix(): Boolean = mtsFix.value
+    }
+
+    object Tweaks : CodecConfig<Tweaks>() {
+        val alwaysFilterByHand by register(true, BOOL)
+        val suppressHeadHitSounds by register(false, BOOL)
+        val suppressFleshHitSounds by register(false, BOOL)
+        val suppressKillSounds by register(false, BOOL)
+        val hideHitMarkers by register(false, BOOL)
+
+        fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
+        fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
+        fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
+        fun suppressKillSounds(): Boolean = suppressKillSounds.value
+        fun hideHitMarkers(): Boolean = hideHitMarkers.value
     }
 
     fun generateConfigScreen(parent: Screen?): Screen = YetAnotherConfigLib.createBuilder().apply {
