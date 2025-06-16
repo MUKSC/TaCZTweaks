@@ -4,6 +4,7 @@ import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.data.BulletInteractionManager;
 import me.muksc.tacztweaks.data.BulletParticlesManager;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
+import me.muksc.tacztweaks.network.NetworkHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -41,6 +42,7 @@ public class TaCZTweaks {
     public TaCZTweaks() {
         container = ModLoadingContext.get().getActiveContainer();
         Config.INSTANCE.touch();
+        NetworkHandler.INSTANCE.register();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
