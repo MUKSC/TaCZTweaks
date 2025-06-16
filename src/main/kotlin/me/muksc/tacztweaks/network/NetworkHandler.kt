@@ -56,25 +56,23 @@ object NetworkHandler {
         registerC2S(T::class.java, type, codec, handler)
 
     fun <T : CustomPacketPayload> registerC2S(clazz: Class<T>, type: CustomPacketPayload.Type<T>, codec: StreamCodec<T>, handler: ServerHandler<T>) {
-        channel.registerMessage(counter.getAndIncrement(), clazz, codec::encode, codec::decode) { packet, supplier ->
+        channel.registerMessage(counter.getAndIncrement(), clazz, codec::encode, codec::decode, { packet, supplier ->
             val context = supplier.get()
-            if (context.direction != NetworkDirection.PLAY_TO_SERVER) return@registerMessage
             val player = context.sender
             handler.handle(packet, server ?: return@registerMessage, player)
             context.packetHandled = true
-        }
+        }, Optional.of(NetworkDirection.PLAY_TO_SERVER))
     }
 
     inline fun <reified T : CustomPacketPayload> registerS2C(type: CustomPacketPayload.Type<T>, codec: StreamCodec<T>, handler: ClientHandler<T>) =
         registerS2C(T::class.java, type, codec, handler)
 
     fun <T : CustomPacketPayload> registerS2C(clazz: Class<T>, type: CustomPacketPayload.Type<T>, codec: StreamCodec<T>, handler: ClientHandler<T>) {
-        channel.registerMessage(counter.getAndIncrement(), clazz, codec::encode, codec::decode) { packet, supplier ->
+        channel.registerMessage(counter.getAndIncrement(), clazz, codec::encode, codec::decode, { packet, supplier ->
             val context = supplier.get()
-            if (context.direction != NetworkDirection.PLAY_TO_SERVER) return@registerMessage
             handler.handle(packet, Minecraft.getInstance())
             context.packetHandled = true
-        }
+        }, Optional.of(NetworkDirection.PLAY_TO_CLIENT))
     }
 
     fun interface ClientHandler<T : CustomPacketPayload> {
