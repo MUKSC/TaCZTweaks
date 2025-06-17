@@ -1,69 +1,126 @@
 package me.muksc.tacztweaks
 
 import dev.isxander.yacl3.api.ConfigCategory
+import dev.isxander.yacl3.api.LabelOption
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionGroup
 import dev.isxander.yacl3.api.YetAnotherConfigLib
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.config.v3.CodecConfig
-import dev.isxander.yacl3.config.v3.JsonFileCodecConfig
-import dev.isxander.yacl3.platform.YACLPlatform
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
 import dev.isxander.yacl3.dsl.ControllerBuilderFactory
 import dev.isxander.yacl3.dsl.slider
+import dev.isxander.yacl3.platform.YACLPlatform
+import me.muksc.tacztweaks.config.ConfigManager
+import me.muksc.tacztweaks.config.ESyncDirection
+import me.muksc.tacztweaks.config.SyncableCodecConfig
+import me.muksc.tacztweaks.config.SyncableJsonFileCodecConfig
+import me.muksc.tacztweaks.network.NetworkHandler
+import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
+import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.screens.Screen
 
 @Suppress("UnstableApiUsage")
-object Config : JsonFileCodecConfig<Config>(
+object Config : SyncableJsonFileCodecConfig<Config>(
     YACLPlatform.getConfigDir().resolve("${TaCZTweaks.MOD_ID}.json")
 ) {
-    val gun by register(Gun, Gun)
-    val crawl by register(Crawl, Crawl)
-    val compat by register(Compat, Compat)
+    val gun by registerSyncable(Gun)
+    val crawl by registerSyncable(Crawl)
+    val compat by registerSyncable(Compat)
     val tweaks by register(Tweaks, Tweaks)
 
-    object Gun : CodecConfig<Gun>() {
-        val shootWhileSprinting by register(true, BOOL)
-        val sprintWhileReloading by register(true, BOOL)
-        val reloadWhileShooting by register(true, BOOL)
-        val allowUnload by register(true, BOOL)
+    object Gun : SyncableCodecConfig<Gun>() {
+        val shootWhileSprinting by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val sprintWhileReloading by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val reloadWhileShooting by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val allowUnload by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val disableBulletCulling by register(false, BOOL)
 
-        fun shootWhileSprinting(): Boolean = shootWhileSprinting.value
-        fun sprintWhileReloading(): Boolean = sprintWhileReloading.value
-        fun reloadWhileShooting(): Boolean = reloadWhileShooting.value
-        fun allowUnload(): Boolean = allowUnload.value
+        fun shootWhileSprinting(): Boolean = shootWhileSprinting.syncedValue
+        fun sprintWhileReloading(): Boolean = sprintWhileReloading.syncedValue
+        fun reloadWhileShooting(): Boolean = reloadWhileShooting.syncedValue
+        fun allowUnload(): Boolean = allowUnload.syncedValue
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
 
-    object Crawl : CodecConfig<Crawl>() {
-        val enabled by register(true, BOOL)
+    object Crawl : SyncableCodecConfig<Crawl>() {
+        val enabled by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val pitchUpperLimit by register(25.0F, FLOAT)
         val pitchLowerLimit by register(-10.0F, FLOAT)
         val dynamicPitchLimit by register(false, BOOL)
         val visualTweak by register(true, BOOL)
 
-        fun enabled(): Boolean = enabled.value
+        fun enabled(): Boolean = enabled.syncedValue
         fun pitchUpperLimit(): Float = pitchUpperLimit.value
         fun pitchLowerLimit(): Float = pitchLowerLimit.value
         fun dynamicPitchLimit(): Boolean = dynamicPitchLimit.value
         fun visualTweak(): Boolean = visualTweak.value
     }
 
-    object Compat : CodecConfig<Compat>() {
-        val firstAidCompat by register(true, BOOL)
-        val lsoCompat by register(true, BOOL)
-        val vsCollisionCompat by register(false, BOOL)
-        val vsExplosionCompat by register(false, BOOL)
-        val mtsFix by register(true, BOOL)
+    object Compat : SyncableCodecConfig<Compat>() {
+        val firstAidCompat by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val lsoCompat by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val vsCollisionCompat by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val vsExplosionCompat by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val mtsFix by registerSyncable(
+            default = true,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
 
-        fun firstAidCompat(): Boolean = firstAidCompat.value
-        fun lsoCompat(): Boolean = lsoCompat.value
-        fun vsCollisionCompat(): Boolean = vsCollisionCompat.value
-        fun vsExplosionCompat(): Boolean = vsExplosionCompat.value
-        fun mtsFix(): Boolean = mtsFix.value
+        fun firstAidCompat(): Boolean = firstAidCompat.syncedValue
+        fun lsoCompat(): Boolean = lsoCompat.syncedValue
+        fun vsCollisionCompat(): Boolean = vsCollisionCompat.syncedValue
+        fun vsExplosionCompat(): Boolean = vsExplosionCompat.syncedValue
+        fun mtsFix(): Boolean = mtsFix.syncedValue
     }
 
     object Tweaks : CodecConfig<Tweaks>() {
@@ -82,35 +139,59 @@ object Config : JsonFileCodecConfig<Config>(
 
     fun generateConfigScreen(parent: Screen?): Screen = YetAnotherConfigLib.createBuilder().apply {
         title(TaCZTweaks.translatable("config.title"))
-        save(::saveToFile)
+        save {
+            if (ConfigManager.syncedWithServer && ConfigManager.canUpdateServerConfig()) {
+                NetworkHandler.sendC2S(ClientMessageSyncConfig())
+            } else {
+                sync(ESyncDirection.NONE)
+            }
+            runAsSaving(::saveToFile)
+        }
 
         category(ConfigCategory.createBuilder().apply {
             name(TaCZTweaks.translatable("config.category.general"))
+            var canUpdateServerConfig = true
+            if (ConfigManager.syncedWithServer) {
+                canUpdateServerConfig = ConfigManager.canUpdateServerConfig()
+                option(LabelOption.createBuilder().apply {
+                    line(TaCZTweaks.translatable("config.label.displayingServerConfigNotice").withStyle(ChatFormatting.BOLD))
+                    val key = if (canUpdateServerConfig) {
+                        "config.label.configSyncNotice"
+                    } else {
+                        "config.label.insufficientPermissionNotice"
+                    }
+                    line(TaCZTweaks.translatable(key))
+                }.build())
+            }
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.gun"))
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.shootWhileSprinting.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.shootWhileSprinting.description")))
-                    binding(Gun.shootWhileSprinting.asBinding())
+                    binding(Gun.shootWhileSprinting.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.sprintWhileReloading.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.sprintWhileReloading.description")))
-                    binding(Gun.sprintWhileReloading.asBinding())
+                    binding(Gun.sprintWhileReloading.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.reloadWhileShooting.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.reloadWhileShooting.description")))
-                    binding(Gun.reloadWhileShooting.asBinding())
+                    binding(Gun.reloadWhileShooting.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.allowUnload.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.allowUnload.description")))
-                    binding(Gun.allowUnload.asBinding())
+                    binding(Gun.allowUnload.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
             }.build())
             group(OptionGroup.createBuilder().apply {
@@ -118,8 +199,9 @@ object Config : JsonFileCodecConfig<Config>(
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.crawl.enabled.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.enabled.description")))
-                    binding(Crawl.enabled.asBinding())
+                    binding(Crawl.enabled.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
             }.build())
             group(OptionGroup.createBuilder().apply {
@@ -127,32 +209,37 @@ object Config : JsonFileCodecConfig<Config>(
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.compat.firstAidCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.firstAidCompat.description")))
-                    binding(Compat.firstAidCompat.asBinding())
+                    binding(Compat.firstAidCompat.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.compat.lsoCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.lsoCompat.description")))
-                    binding(Compat.lsoCompat.asBinding())
+                    binding(Compat.lsoCompat.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.compat.vsCollisionCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsCollisionCompat.description")))
-                    binding(Compat.vsCollisionCompat.asBinding())
+                    binding(Compat.vsCollisionCompat.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.compat.vsExplosionCompat.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.vsExplosionCompat.description")))
-                    binding(Compat.vsExplosionCompat.asBinding())
+                    binding(Compat.vsExplosionCompat.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.compat.mtsFix.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.compat.mtsFix.description")))
-                    binding(Compat.mtsFix.asBinding())
+                    binding(Compat.mtsFix.asSyncedBinding())
                     controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
             }.build())
         }.build())

@@ -2,6 +2,9 @@ package me.muksc.tacztweaks.network
 
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.network.message.ClientMessagePlayerUnload
+import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
+import me.muksc.tacztweaks.network.message.LoginIndexedMessage
+import me.muksc.tacztweaks.network.message.ServerMessageSyncConfig
 import net.minecraft.client.Minecraft
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -14,6 +17,7 @@ import net.minecraftforge.network.NetworkRegistry
 import net.minecraftforge.network.PacketDistributor
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.BiConsumer
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TaCZTweaks.MOD_ID)
 object NetworkHandler {
@@ -24,7 +28,13 @@ object NetworkHandler {
         .clientAcceptedVersions(version::equals)
         .serverAcceptedVersions(version::equals)
         .simpleChannel()
+    private val handshake = NetworkRegistry.ChannelBuilder.named(TaCZTweaks.id("handshake"))
+        .networkProtocolVersion(::version)
+        .clientAcceptedVersions(version::equals)
+        .serverAcceptedVersions(version::equals)
+        .simpleChannel()
     private val counter = AtomicInteger()
+    private val handshakeCounter = AtomicInteger()
 
     @JvmStatic
     @SubscribeEvent
@@ -40,6 +50,9 @@ object NetworkHandler {
 
     fun register() {
         registerC2S(ClientMessagePlayerUnload.TYPE, ClientMessagePlayerUnload.STREAM_CODEC, ClientMessagePlayerUnload::handle)
+        registerC2S(ClientMessageSyncConfig.TYPE, ClientMessageSyncConfig.STREAM_CODEC, ClientMessageSyncConfig::handle)
+        registerS2C(ServerMessageSyncConfig.TYPE, ServerMessageSyncConfig.STREAM_CODEC, ServerMessageSyncConfig::handle)
+        registerLoginS2C(ServerMessageSyncConfig.TYPE, ServerMessageSyncConfig.STREAM_CODEC, ServerMessageSyncConfig::handleLogin)
     }
 
     fun <T : CustomPacketPayload> sendC2S(packet: T) {
@@ -75,6 +88,25 @@ object NetworkHandler {
             handler.handle(packet, Minecraft.getInstance())
             context.packetHandled = true
         }, Optional.of(NetworkDirection.PLAY_TO_CLIENT))
+    }
+
+    inline fun <reified T> registerLoginS2C(type: CustomPacketPayload.Type<T>, codec: StreamCodec<T>, handler: ClientHandler<T>) where T : LoginIndexedMessage, T : CustomPacketPayload =
+        registerLoginS2C(T::class.java, type, codec, handler)
+
+    fun <T> registerLoginS2C(clazz: Class<T>, type: CustomPacketPayload.Type<T>, codec: StreamCodec<T>, handler: ClientHandler<T>) where T : LoginIndexedMessage, T : CustomPacketPayload {
+        handshake.messageBuilder(clazz, handshakeCounter.getAndIncrement(), NetworkDirection.LOGIN_TO_CLIENT)
+            .loginIndex(LoginIndexedMessage::loginIndex, LoginIndexedMessage::loginIndex::set)
+            .encoder(codec::encode)
+            .decoder(codec::decode)
+            .consumerNetworkThread(BiConsumer { packet, supplier ->
+                val context = supplier.get()
+                if (context.direction != NetworkDirection.LOGIN_TO_CLIENT) return@BiConsumer
+                handler.handle(packet, Minecraft.getInstance())
+                context.packetHandled = true
+            })
+            .noResponse()
+            .markAsLoginPacket()
+            .add()
     }
 
     fun interface ClientHandler<T : CustomPacketPayload> {

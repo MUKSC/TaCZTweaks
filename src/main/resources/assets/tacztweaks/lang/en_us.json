@@ -53,6 +53,9 @@
   "tacztweaks.config.tweaks.suppressKillSounds.description": "Suppresses the sound that plays when you kill an entity with a gun.",
   "tacztweaks.config.tweaks.hideHitMarkers.name": "Hide Hit Markers",
   "tacztweaks.config.tweaks.hideHitMarkers.description": "Hides the hit markers that display when you land a shot.",
+  "tacztweaks.config.label.displayingServerConfigNotice": "Displaying server-side config",
+  "tacztweaks.config.label.configSyncNotice": "It will update the config on the server",
+  "tacztweaks.config.label.insufficientPermissionNotice": "You don't have enough permission to update it",
   "tacztweaks.config.label.enabled": "Enabled",
   "tacztweaks.config.label.disabled": "Disabled",
   "tacztweaks.config.label.degree": "%.1f°"
