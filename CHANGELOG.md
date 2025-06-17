@@ -1,1 +1,8 @@
-- Target TaCZ 1.1.6
+- Implemented config sync between server and client
+  - Server-side options are now synced to clients to prevent desync issues
+  - Players with operator status can update the config on the server from GUI 
+- Block interactions now fire the Forge block break event
+  - This allows mods/plugins like WorldGuard to properly prevent blocks from breaking when necessary
+- Fixed the `crawl.enabled` option being incorrectly located under the client config
+- Fixed the bullet whizzing feature stopped working since 2.5.1
+- Fixed some ghost block issues
