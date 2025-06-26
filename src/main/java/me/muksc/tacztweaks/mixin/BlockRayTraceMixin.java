@@ -47,7 +47,7 @@ public abstract class BlockRayTraceMixin {
         if (tacztweaks$rayTracer == null) return original;
         if (original == null || original.getType() == HitResult.Type.MISS) return original;
         if (blockState == null || blockState.isAir()) return original;
-        return tacztweaks$rayTracer.handle(original.withPosition(new BlockPos(original.getBlockPos())), blockState);
+        return tacztweaks$rayTracer.handle(original, blockState);
     }
 
     @ModifyReturnValue(method = "lambda$rayTraceBlocks$2", at = @At("RETURN"))
