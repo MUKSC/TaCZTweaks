@@ -1,0 +1,15 @@
+{
+  "type": "constant",
+  "target": {
+    "type": "ammo",
+    "values": [
+      "tacz:rpg_rocket"
+    ]
+  },
+  "interval": 2,
+  "sounds": [
+    {
+      "sound": "minecraft:item.firecharge.use"
+    }
+  ]
+}

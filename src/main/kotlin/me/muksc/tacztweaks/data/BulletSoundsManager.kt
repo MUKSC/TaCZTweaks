@@ -102,6 +102,15 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         }
     }
 
+    fun handleConstant(level: ServerLevel, entity: EntityKineticBullet) {
+        val location = entity.position()
+        val sounds = getSound<BulletSounds.Constant>(entity, location) ?: return
+        if (entity.tickCount % sounds.interval != 0) return
+        for (sound in sounds.sounds) {
+            sound.play(level, location, entity)
+        }
+    }
+
     fun handleSoundWhizz(level: ServerLevel, entity: EntityKineticBullet, ignores: List<ServerPlayer>) {
         for (player in level.server.playerList.players) {
             if (entity.owner == player || player in ignores) continue

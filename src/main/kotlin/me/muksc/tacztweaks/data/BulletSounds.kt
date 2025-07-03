@@ -31,6 +31,7 @@ sealed class BulletSounds(
     ) : DispatchCodec<BulletSounds> {
         BLOCK("block", Block.CODEC),
         ENTITY("entity", Entity.CODEC),
+        CONSTANT("constant", Constant.CODEC),
         WHIZZ("whizz", Whizz.CODEC);
 
         companion object {
@@ -72,6 +73,20 @@ sealed class BulletSounds(
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
             ).apply(it, ::Entity) }
+        }
+    }
+
+    class Constant(
+        target: Target<*>,
+        val interval: Int,
+        val sounds: List<Sound>
+    ) : BulletSounds(EBulletSoundsType.CONSTANT, target) {
+        companion object {
+            val CODEC = RecordCodecBuilder.create<Constant> { it.group(
+                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Constant::target),
+                Codec.INT.fieldOf("interval").forGetter(Constant::interval),
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Constant::sounds)
+            ).apply(it, ::Constant) }
         }
     }
 
