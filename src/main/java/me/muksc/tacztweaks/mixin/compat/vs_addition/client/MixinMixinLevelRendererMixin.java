@@ -4,7 +4,7 @@ import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.muksc.tacztweaks.Config;
-import me.muksc.tacztweaks.compat.vs.ParticleExtension;
+import me.muksc.tacztweaks.mixininterface.compat.vs.ParticleWithShip;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.LevelRenderer;
 import org.joml.Vector3d;
@@ -28,7 +28,7 @@ public abstract class MixinMixinLevelRendererMixin {
     ) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return original;
         if (!(original instanceof Particle)) return original;
-        ParticleExtension ext = (ParticleExtension) original;
+        ParticleWithShip ext = (ParticleWithShip) original;
         ext.tacztweaks$setShip(ship);
         ext.tacztweaks$setShipPos(new Vector3d(x, y, z));
         return original;

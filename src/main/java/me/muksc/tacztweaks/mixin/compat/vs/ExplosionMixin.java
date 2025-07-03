@@ -1,6 +1,6 @@
 package me.muksc.tacztweaks.mixin.compat.vs;
 
-import me.muksc.tacztweaks.compat.vs.ExplosionInvoker;
+import me.muksc.tacztweaks.mixininterface.compat.vs.ExplosionInvoker;
 import net.minecraft.world.level.Explosion;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;

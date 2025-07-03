@@ -1,10 +1,10 @@
 package me.muksc.tacztweaks.network.message
 
 import com.tacz.guns.api.item.IGun
-import me.muksc.tacztweaks.AbstractGunItemExtension
 import me.muksc.tacztweaks.Config
-import me.muksc.tacztweaks.ShooterDataHolderProvider
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.mixininterface.gun.unload.ShooterDataHolderProvider
+import me.muksc.tacztweaks.mixininterface.gun.unload.UnloadableAbstractGunItem
 import me.muksc.tacztweaks.network.CustomPacketPayload
 import me.muksc.tacztweaks.network.StreamCodec
 import net.minecraft.server.MinecraftServer
@@ -27,7 +27,7 @@ object ClientMessagePlayerUnload : CustomPacketPayload {
             val data = (player as ShooterDataHolderProvider).`tacztweaks$getShooterDataHolder`()
             val gunStack = data.currentGunItem?.get() ?: return@execute
             val gun = IGun.getIGunOrNull(gunStack) ?: return@execute
-            val ext = gun as? AbstractGunItemExtension ?: return@execute
+            val ext = gun as? UnloadableAbstractGunItem ?: return@execute
             ext.`tacztweaks$setUnloading`()
             LogicalSidedProvider.WORKQUEUE
             gun.dropAllAmmo(player, gunStack)

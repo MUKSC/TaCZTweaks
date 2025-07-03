@@ -11,6 +11,7 @@ import me.muksc.tacztweaks.data.BulletSoundsManager
 import me.muksc.tacztweaks.data.BulletSoundsManager.EBlockSoundType
 import me.muksc.tacztweaks.data.BulletSoundsManager.EEntitySoundType
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
+import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.state.BlockState

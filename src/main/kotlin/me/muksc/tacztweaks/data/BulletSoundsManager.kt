@@ -5,7 +5,7 @@ import com.google.gson.JsonElement
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.EntityKineticBulletExtension
+import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.resources.ResourceLocation

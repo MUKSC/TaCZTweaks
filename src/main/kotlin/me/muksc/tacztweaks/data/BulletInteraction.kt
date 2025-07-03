@@ -6,7 +6,7 @@ import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.world.item.Tier
-import java.util.Optional
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 sealed class BulletInteraction(

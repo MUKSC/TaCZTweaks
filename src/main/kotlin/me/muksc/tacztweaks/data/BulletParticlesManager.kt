@@ -6,7 +6,7 @@ import com.mojang.brigadier.StringReader
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.EntityKineticBulletExtension
+import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate

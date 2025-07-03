@@ -11,10 +11,10 @@ import com.tacz.guns.util.AttachmentDataUtils
 import com.tacz.guns.util.TacHitResult
 import me.muksc.tacztweaks.BlockBreakingManager
 import me.muksc.tacztweaks.Context
-import me.muksc.tacztweaks.DestroySpeedModifierHolder
-import me.muksc.tacztweaks.EntityKineticBulletExtension
 import me.muksc.tacztweaks.data.old.convert
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
+import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
+import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.DestroySpeedModifierHolder
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -199,7 +199,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
     private fun calcBlockBreakingDelta(damage: Float, armorIgnore: Double, state: BlockState, level: ServerLevel, pos: BlockPos): Float {
         val player = object : FakePlayer(level, FAKE_PROFILE) {
             override fun getDigSpeed(state: BlockState, pos: BlockPos?): Float =
-                (super.getDigSpeed(state, pos) + damage).toFloat()
+                super.getDigSpeed(state, pos) + damage
 
             override fun hasCorrectToolForDrops(pState: BlockState): Boolean = true
         }

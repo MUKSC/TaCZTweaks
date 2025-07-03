@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.tacz.guns.client.particle.BulletHoleParticle;
 import me.muksc.tacztweaks.Config;
-import me.muksc.tacztweaks.compat.vs.ParticleExtension;
+import me.muksc.tacztweaks.mixininterface.compat.vs.ParticleWithShip;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TextureSheetParticle;
@@ -15,8 +15,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.core.api.ships.ClientShip;
@@ -44,7 +46,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     @WrapOperation(method = "shouldRemove", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;intersects(DDDDDD)Z", remap = true), remap = false)
     private boolean tacztweaks$shouldRemove$transformToShip(AABB instance, double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2, Operation<Boolean> original) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return original.call(instance, pX1, pY1, pZ1, pX2, pY2, pZ2);
-        ParticleExtension ext = (ParticleExtension) this;
+        ParticleWithShip ext = (ParticleWithShip) this;
         Vector3d pos = ext.tacztweaks$getShipPos();
         if (pos == null) return original.call(instance, pX1, pY1, pZ1, pX2, pY2, pZ2);
         return original.call(instance, pos.x - 0.1, pos.y - 0.1, pos.z - 0.1, pos.x + 0.1, pos.y + 0.1, pos.z + 0.1);
@@ -53,7 +55,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/particle/BulletHoleParticle;shouldRemove()Z", remap = false))
     private void tacztweaks$tick$updatePosition(CallbackInfo ci) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
-        ParticleExtension ext = (ParticleExtension) this;
+        ParticleWithShip ext = (ParticleWithShip) this;
         ClientShip ship = ext.tacztweaks$getShip();
         if (ship == null) return;
         Vector3d worldPos = ship.getRenderTransform().getShipToWorld().transformPosition(ext.tacztweaks$getShipPos(), new Vector3d());
@@ -63,7 +65,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     @Inject(method = "render", at = @At("HEAD"))
     private void tacztweaks$render$updatePosition(VertexConsumer buffer, Camera renderInfo, float partialTicks, CallbackInfo ci) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return;
-        ParticleExtension ext = (ParticleExtension) this;
+        ParticleWithShip ext = (ParticleWithShip) this;
         ClientShip ship = ext.tacztweaks$getShip();
         if (ship == null) return;
         Vector3d worldPos = ship.getRenderTransform().getShipToWorld().transformPosition(ext.tacztweaks$getShipPos(), new Vector3d());
@@ -91,7 +93,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/Direction;getRotation()Lorg/joml/Quaternionf;"))
     private Quaternionf tacztweaks$render$rotate(Quaternionf original) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return original;
-        ParticleExtension ext = (ParticleExtension) this;
+        ParticleWithShip ext = (ParticleWithShip) this;
         ClientShip ship = ext.tacztweaks$getShip();
         if (ship == null) return original;
         Quaternionf quaternion = ship.getRenderTransform().getShipToWorldRotation().get(new Quaternionf());

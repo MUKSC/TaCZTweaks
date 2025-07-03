@@ -1,6 +1,6 @@
 package me.muksc.tacztweaks.mixin.compat.vs.client;
 
-import me.muksc.tacztweaks.compat.vs.ParticleExtension;
+import me.muksc.tacztweaks.mixininterface.compat.vs.ParticleWithShip;
 import net.minecraft.client.particle.Particle;
 import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.valkyrienskies.core.api.ships.ClientShip;
 import javax.annotation.Nullable;
 
 @Mixin(Particle.class)
-public abstract class ParticleMixin implements ParticleExtension {
+public abstract class ParticleMixin implements ParticleWithShip {
     @Unique
     private ClientShip tacztweaks$ship = null;
 

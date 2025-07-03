@@ -1,6 +1,6 @@
 package me.muksc.tacztweaks.mixin.compat.vs;
 
-import me.muksc.tacztweaks.compat.vs.ClipContextExtension;
+import me.muksc.tacztweaks.mixininterface.compat.vs.ClipContextExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;

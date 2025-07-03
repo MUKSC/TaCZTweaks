@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks
 
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager
+import com.tacz.guns.resource.pojo.data.attachment.Modifier
 import dev.isxander.yacl3.api.*
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.config.v3.CodecConfig
@@ -22,7 +23,6 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import java.text.DecimalFormat
-import com.tacz.guns.resource.pojo.data.attachment.Modifier as TaCZModifier
 
 @Suppress("UnstableApiUsage")
 object Config : SyncableJsonFileCodecConfig<Config>(
@@ -68,7 +68,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
 
-    class Modifier : SyncableCodecConfig<Modifier>() {
+    class ModifierConfig : SyncableCodecConfig<ModifierConfig>() {
         val addend by registerSyncable(
             default = 0.0F,
             codec = FLOAT,
@@ -88,10 +88,10 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             decoder = { buf -> buf.readUtf() }
         )
 
-        fun toTaCZ(): TaCZModifier = TaCZModifier().apply {
+        fun toTaCZ(): Modifier = Modifier().apply {
             val instance = this
-            val config = this@Modifier
-            TaCZModifier::class.java.run {
+            val config = this@ModifierConfig
+            Modifier::class.java.run {
                 setPrivateField(instance, "addend", config.addend.syncedValue)
                 setPrivateField(instance, "multiplier", config.multiplier.syncedValue)
                 setPrivateField(instance, "function", config.function.syncedValue.takeIf { it.isNotEmpty() })
@@ -100,31 +100,31 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     }
 
     object Modifiers : SyncableCodecConfig<Modifiers>() {
-        val damage by registerSyncable( Modifier())
-        val playerDamage by registerSyncable(Modifier())
-        val headshot by registerSyncable(Modifier())
-        val armorIgnore by registerSyncable(Modifier())
-        val speed by registerSyncable(Modifier())
-        val gravity by registerSyncable(Modifier())
-        val friction by registerSyncable(Modifier())
-        val inaccuracy by registerSyncable(Modifier())
-        val aimInaccuracy by registerSyncable(Modifier())
-        val rpm by registerSyncable(Modifier())
-        val verticalRecoil by registerSyncable(Modifier())
-        val horizontalRecoil by registerSyncable(Modifier())
+        val damage by registerSyncable(ModifierConfig())
+        val playerDamage by registerSyncable(ModifierConfig())
+        val headshot by registerSyncable(ModifierConfig())
+        val armorIgnore by registerSyncable(ModifierConfig())
+        val speed by registerSyncable(ModifierConfig())
+        val gravity by registerSyncable(ModifierConfig())
+        val friction by registerSyncable(ModifierConfig())
+        val inaccuracy by registerSyncable(ModifierConfig())
+        val aimInaccuracy by registerSyncable(ModifierConfig())
+        val rpm by registerSyncable(ModifierConfig())
+        val verticalRecoil by registerSyncable(ModifierConfig())
+        val horizontalRecoil by registerSyncable(ModifierConfig())
 
-        fun damage(): TaCZModifier = damage.syncedValue.toTaCZ()
-        fun playerDamage(): TaCZModifier = playerDamage.syncedValue.toTaCZ()
-        fun headshot(): TaCZModifier = headshot.syncedValue.toTaCZ()
-        fun armorIgnore(): TaCZModifier = armorIgnore.syncedValue.toTaCZ()
-        fun speed(): TaCZModifier = speed.syncedValue.toTaCZ()
-        fun gravity(): TaCZModifier = gravity.syncedValue.toTaCZ()
-        fun friction(): TaCZModifier = friction.syncedValue.toTaCZ()
-        fun inaccuracy(): TaCZModifier = inaccuracy.syncedValue.toTaCZ()
-        fun aimInaccuracy(): TaCZModifier = aimInaccuracy.syncedValue.toTaCZ()
-        fun rpm(): TaCZModifier = rpm.syncedValue.toTaCZ()
-        fun verticalRecoil(): TaCZModifier = verticalRecoil.syncedValue.toTaCZ()
-        fun horizontalRecoil(): TaCZModifier = horizontalRecoil.syncedValue.toTaCZ()
+        fun damage(): Modifier = damage.syncedValue.toTaCZ()
+        fun playerDamage(): Modifier = playerDamage.syncedValue.toTaCZ()
+        fun headshot(): Modifier = headshot.syncedValue.toTaCZ()
+        fun armorIgnore(): Modifier = armorIgnore.syncedValue.toTaCZ()
+        fun speed(): Modifier = speed.syncedValue.toTaCZ()
+        fun gravity(): Modifier = gravity.syncedValue.toTaCZ()
+        fun friction(): Modifier = friction.syncedValue.toTaCZ()
+        fun inaccuracy(): Modifier = inaccuracy.syncedValue.toTaCZ()
+        fun aimInaccuracy(): Modifier = aimInaccuracy.syncedValue.toTaCZ()
+        fun rpm(): Modifier = rpm.syncedValue.toTaCZ()
+        fun verticalRecoil(): Modifier = verticalRecoil.syncedValue.toTaCZ()
+        fun horizontalRecoil(): Modifier = horizontalRecoil.syncedValue.toTaCZ()
     }
 
     object Crawl : SyncableCodecConfig<Crawl>() {
@@ -377,13 +377,17 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.crawl.pitchUpperLimit.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.pitchUpperLimit.description")))
                     binding(Crawl.pitchUpperLimit.asBinding())
-                    controller(slider(range = 0.0F..90.0F, step = 1.0F) { TaCZTweaks.translatable("config.label.degree", "%.1f".format(it)) })
+                    controller(slider(range = 0.0F..90.0F, step = 1.0F) {
+                        TaCZTweaks.translatable("config.label.degree", "%.1f".format(it))
+                    })
                 }.build())
                 option(Option.createBuilder<Float>().apply {
                     name(TaCZTweaks.translatable("config.crawl.pitchLowerLimit.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.pitchLowerLimit.description")))
                     binding(Crawl.pitchLowerLimit.asBinding())
-                    controller(slider(range = -90.0F..0.0F, step = 1.0F) { TaCZTweaks.translatable("config.label.degree", "%.1f".format(it)) })
+                    controller(slider(range = -90.0F..0.0F, step = 1.0F) {
+                        TaCZTweaks.translatable("config.label.degree", "%.1f".format(it))
+                    })
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.crawl.dynamicPitchLimit.name"))
@@ -417,14 +421,18 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                         nameSynced(TaCZTweaks.translatable("config.modifier.addend.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.addend.description")))
                         binding(modifier.syncedValue.addend.asSyncedBinding())
-                        controller(slider(range = -100.0F..100.0F, step = 0.1F) { Component.literal(DecimalFormat("+#.#;-#.#").format(it)) })
+                        controller(slider(range = -100.0F..100.0F, step = 0.1F) {
+                            Component.literal(DecimalFormat("+#.#;-#.#").format(it))
+                        })
                         available(canUpdateServerConfig)
                     }.build())
                     option(Option.createBuilder<Float>().apply {
                         nameSynced(TaCZTweaks.translatable("config.modifier.multiplier.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.multiplier.description")))
                         binding(modifier.syncedValue.multiplier.asSyncedBinding())
-                        controller(slider(range = -100.0F..100.0F, step = 0.1F) { Component.literal("%.1f".format(it)) })
+                        controller(slider(range = -100.0F..100.0F, step = 0.1F) {
+                            Component.literal("%.1f".format(it))
+                        })
                         available(canUpdateServerConfig)
                     }.build())
                     option(Option.createBuilder<String>().apply {

@@ -1,13 +1,7 @@
 package me.muksc.tacztweaks.data
 
-import com.mojang.serialization.Codec
-import com.mojang.serialization.DataResult
-import com.mojang.serialization.DynamicOps
-import com.mojang.serialization.MapCodec
-import com.mojang.serialization.MapLike
-import com.mojang.serialization.RecordBuilder
-import java.util.Objects
-import java.util.Optional
+import com.mojang.serialization.*
+import java.util.*
 import java.util.stream.Stream
 
 class StrictOptionalFieldCodec<A : Any>(

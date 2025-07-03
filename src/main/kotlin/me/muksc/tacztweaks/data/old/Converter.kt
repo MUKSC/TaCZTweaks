@@ -1,9 +1,9 @@
 package me.muksc.tacztweaks.data.old
 
-import me.muksc.tacztweaks.data.Target
 import me.muksc.tacztweaks.data.BulletInteraction
+import me.muksc.tacztweaks.data.Target
 import me.muksc.tacztweaks.data.ValueRange
-import java.util.Optional
+import java.util.*
 import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction
 
 fun OldBulletInteraction.convert() = BulletInteraction.Block(
