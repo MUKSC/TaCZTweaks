@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks.network.message
 
+import com.tacz.guns.resource.modifier.AttachmentPropertyManager
 import io.netty.buffer.Unpooled
 import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.TaCZTweaks
@@ -32,6 +33,9 @@ class ServerMessageSyncConfig(
         fun handle(packet: ServerMessageSyncConfig, minecraft: Minecraft) {
             Config.decode(packet.buf)
             Config.sync(ESyncDirection.SERVER_TO_CLIENT)
+            minecraft.player?.also { player ->
+                AttachmentPropertyManager.postChangeEvent(player, player.mainHandItem)
+            }
         }
 
         fun handleLogin(packet: ServerMessageSyncConfig, minecraft: Minecraft) {

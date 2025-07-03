@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks.network.message
 
+import com.tacz.guns.resource.modifier.AttachmentPropertyManager
 import io.netty.buffer.Unpooled
 import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.TaCZTweaks
@@ -39,6 +40,7 @@ class ClientMessageSyncConfig(
             Config.sync(ESyncDirection.CLIENT_TO_SERVER)
             Config.saveToFile()
 
+            AttachmentPropertyManager.postChangeEvent(player, player.mainHandItem)
             NetworkHandler.sendS2C(ServerMessageSyncConfig())
         }
     }

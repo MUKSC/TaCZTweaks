@@ -46,6 +46,7 @@ minecraft {
             args("--username", "Dev2")
         }
         create("server") {
+            workingDirectory(project.file("run/server"))
             args("--nogui")
         }
     }
@@ -102,6 +103,7 @@ dependencies {
 
     implementation(fg.deobf(libs.dev.isxander.yacl.get()))
     implementation(fg.deobf(libs.modrinth.tacz.get()))
+    compileOnly("org.apache.commons:commons-math3:3.6.1")
     implementation(fg.deobf(libs.modrinth.firstaid.get()))
     compileOnly(fg.deobf(libs.curseforge.legendary.survival.overhaul.get()))
     implementation(fg.deobf(libs.org.valkyrienskies.forge.get()))

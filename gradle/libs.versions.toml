@@ -12,7 +12,7 @@ librarian = "1.2.0"
 mixin = "0.8.5"
 mixin-gradle = "0.7-SNAPSHOT"
 mixinsquared = "0.2.0"
-mixinextras = "0.4.1"
+mixinextras = "0.5.0-rc.2"
 mod-publish = "0.8.4"
 
 yacl = "3.6.1+1.20.1-forge"

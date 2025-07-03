@@ -7,6 +7,13 @@ import me.muksc.tacztweaks.data.StrictOptionalFieldCodec
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
+fun <T> Class<T>.setPrivateField(instance: T, name: String, value: Any?) {
+    getDeclaredField(name).run {
+        isAccessible = true
+        set(instance, value)
+    }
+}
+
 fun <T : Any> Codec<T>.strictOptionalFieldOf(name: String): MapCodec<Optional<T>> =
     StrictOptionalFieldCodec(name, this)
 
