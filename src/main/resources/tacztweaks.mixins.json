@@ -44,7 +44,9 @@
     "modifiers.InaccuracyModifierMixin",
     "modifiers.ProjectileExplosionMixin",
     "modifiers.RecoilModifierMixin",
-    "modifiers.RPMModifierMixin"
+    "modifiers.RPMModifierMixin",
+    "tweaks.EnderManMixin",
+    "tweaks.EntityKineticBulletMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",

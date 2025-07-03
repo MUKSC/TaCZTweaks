@@ -74,6 +74,8 @@
   "tacztweaks.config.crawl.visualTweak.name": "Visual Tweak",
   "tacztweaks.config.crawl.visualTweak.description": "Tweaks the crawling animation to look more natural.",
   "tacztweaks.config.tweaks": "Tweaks",
+  "tacztweaks.config.tweaks.endermenEvadeBullets.name": "Endermen Evade Bullets",
+  "tacztweaks.config.tweaks.endermenEvadeBullets.description": "Makes endermen teleport away from bullets, avoiding getting hit.",
   "tacztweaks.config.tweaks.alwaysFilterByHand.name": "Always Filter by Hand",
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "Always enable filter by hand option in the gun smith table",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "Suppress Head Hit Sounds",

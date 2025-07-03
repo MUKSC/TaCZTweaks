@@ -186,12 +186,19 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     }
 
     object Tweaks : CodecConfig<Tweaks>() {
+        val endermenEvadeBullets by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val alwaysFilterByHand by register(true, BOOL)
         val suppressHeadHitSounds by register(false, BOOL)
         val suppressFleshHitSounds by register(false, BOOL)
         val suppressKillSounds by register(false, BOOL)
         val hideHitMarkers by register(false, BOOL)
 
+        fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
         fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
@@ -394,6 +401,16 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.dynamicPitchLimit.description")))
                     binding(Crawl.dynamicPitchLimit.asBinding())
                     controller(booleanController())
+                }.build())
+            }.build())
+            group(OptionGroup.createBuilder().apply {
+                name(TaCZTweaks.translatable("config.tweaks"))
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.description")))
+                    binding(Tweaks.endermenEvadeBullets.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
             }.build())
         }.build())
