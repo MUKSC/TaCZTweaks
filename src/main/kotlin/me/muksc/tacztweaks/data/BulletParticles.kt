@@ -8,7 +8,7 @@ import me.muksc.tacztweaks.strictOptionalFieldOf
 
 sealed class BulletParticles(
     val type: EBulletParticlesType,
-    val target: List<Target<*>>
+    val target: List<Target>
 ) {
     class Particle(
         val particle: String,
@@ -111,7 +111,7 @@ sealed class BulletParticles(
     }
 
     class Block(
-        target: List<Target<*>>,
+        target: List<Target>,
         val blocks: List<BlockOrBlockTag>,
         val hit: List<Particle>,
         val pierce: List<Particle>,
@@ -129,7 +129,7 @@ sealed class BulletParticles(
     }
 
     class Entity(
-        target: List<Target<*>>,
+        target: List<Target>,
         val entities: List<EntityOrEntityTag>,
         val hit: List<Particle>,
         val pierce: List<Particle>,

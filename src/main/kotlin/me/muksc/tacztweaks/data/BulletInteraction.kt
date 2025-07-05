@@ -12,7 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 
 sealed class BulletInteraction(
     val type: EBulletInteractionType,
-    val target: Target<*>,
+    val target: List<Target>,
     val pierce: Pierce,
     val gunPierce: GunPierce
 ) {
@@ -117,7 +117,7 @@ sealed class BulletInteraction(
     }
 
     class Block(
-        target: List<Target<*>>,
+        target: List<Target>,
         val blocks: List<BlockOrBlockTag>,
         val blockBreak: BlockBreak,
         pierce: Pierce,
@@ -235,7 +235,7 @@ sealed class BulletInteraction(
     }
 
     class Entity(
-        target: List<Target<*>>,
+        target: List<Target>,
         val entities: List<EntityOrEntityTag>,
         val damage: EntityDamage,
         pierce: Pierce,

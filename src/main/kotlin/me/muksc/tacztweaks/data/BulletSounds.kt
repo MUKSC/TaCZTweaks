@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation
 
 sealed class BulletSounds(
     val type: EBulletSoundsType,
-    val target: List<Target<*>>
+    val target: List<Target>
 ) {
     class Sound(
         val sound: ResourceLocation,
@@ -41,7 +41,7 @@ sealed class BulletSounds(
     }
 
     class Block(
-        target: List<Target<*>>,
+        target: List<Target>,
         val blocks: List<BlockOrBlockTag>,
         val hit: List<Sound>,
         val pierce: List<Sound>,
@@ -59,7 +59,7 @@ sealed class BulletSounds(
     }
 
     class Entity(
-        target: List<Target<*>>,
+        target: List<Target>,
         val entities: List<EntityOrEntityTag>,
         val hit: List<Sound>,
         val pierce: List<Sound>,
@@ -77,7 +77,7 @@ sealed class BulletSounds(
     }
 
     class Constant(
-        target: List<Target<*>>,
+        target: List<Target>,
         val interval: Int,
         val sounds: List<Sound>
     ) : BulletSounds(EBulletSoundsType.CONSTANT, target) {
@@ -91,7 +91,7 @@ sealed class BulletSounds(
     }
 
     class Whizz(
-        target: List<Target<*>>,
+        target: List<Target>,
         val sounds: List<DistanceSound>
     ) : BulletSounds(EBulletSoundsType.WHIZZ, target) {
         class DistanceSound(
