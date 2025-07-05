@@ -19,12 +19,12 @@ class BulletInteraction(
 
         enum class EBlockBreakType(
             override val key: String,
-            override val codec: Codec<out BlockBreak>
+            override val codecProvider: () -> Codec<out BlockBreak>
         ) : DispatchCodec<BlockBreak> {
-            NEVER("never", Never.CODEC),
-            COUNT("count", Count.CODEC),
-            FIXED_DAMAGE("fixed_damage", FixedDamage.CODEC),
-            DYNAMIC_DAMAGE("dynamic_damage", DynamicDamage.CODEC);
+            NEVER("never", { Never.CODEC }),
+            COUNT("count", { Count.CODEC }),
+            FIXED_DAMAGE("fixed_damage", { FixedDamage.CODEC }),
+            DYNAMIC_DAMAGE("dynamic_damage", { DynamicDamage.CODEC });
 
             companion object {
                 private val map = entries.associateBy(EBlockBreakType::key)
@@ -83,7 +83,7 @@ class BulletInteraction(
         }
 
         companion object {
-            val CODEC = EBlockBreakType.CODEC.dispatch(BlockBreak::type, EBlockBreakType::codec)
+            val CODEC = EBlockBreakType.CODEC.dispatch(BlockBreak::type) { it.codecProvider() }
         }
     }
 
@@ -92,11 +92,11 @@ class BulletInteraction(
 
         enum class EPierceType(
             override val key: String,
-            override val codec: Codec<out Pierce>
+            override val codecProvider: () -> Codec<out Pierce>
         ) : DispatchCodec<Pierce> {
-            NEVER("never", Never.CODEC),
-            COUNT("count", Count.CODEC),
-            DAMAGE("damage", Damage.CODEC);
+            NEVER("never", { Never.CODEC }),
+            COUNT("count", { Count.CODEC }),
+            DAMAGE("damage", { Damage.CODEC });
 
             companion object {
                 private val map = EPierceType.entries.associateBy(EPierceType::key)
@@ -162,7 +162,7 @@ class BulletInteraction(
         }
 
         companion object {
-            val CODEC = EPierceType.CODEC.dispatch(Pierce::type, EPierceType::codec)
+            val CODEC = EPierceType.CODEC.dispatch(Pierce::type) { it.codecProvider() }
         }
     }
 

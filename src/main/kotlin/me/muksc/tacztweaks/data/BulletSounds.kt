@@ -27,12 +27,12 @@ sealed class BulletSounds(
 
     enum class EBulletSoundsType(
         override val key: String,
-        override val codec: Codec<out BulletSounds>
+        override val codecProvider: () -> Codec<out BulletSounds>
     ) : DispatchCodec<BulletSounds> {
-        BLOCK("block", Block.CODEC),
-        ENTITY("entity", Entity.CODEC),
-        CONSTANT("constant", Constant.CODEC),
-        WHIZZ("whizz", Whizz.CODEC);
+        BLOCK("block", { Block.CODEC }),
+        ENTITY("entity", { Entity.CODEC }),
+        CONSTANT("constant", { Constant.CODEC }),
+        WHIZZ("whizz", { Whizz.CODEC });
 
         companion object {
             private val map = EBulletSoundsType.entries.associateBy(EBulletSoundsType::key)
@@ -115,6 +115,6 @@ sealed class BulletSounds(
     }
 
     companion object {
-        val CODEC = EBulletSoundsType.CODEC.dispatch(BulletSounds::type, EBulletSoundsType::codec)
+        val CODEC = EBulletSoundsType.CODEC.dispatch(BulletSounds::type) { it.codecProvider() }
     }
 }

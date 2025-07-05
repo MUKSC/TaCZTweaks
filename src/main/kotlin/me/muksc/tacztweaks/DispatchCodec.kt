@@ -5,7 +5,7 @@ import com.mojang.serialization.DataResult
 
 interface DispatchCodec<T> {
     val key: String
-    val codec: Codec<out T>
+    val codecProvider: () -> Codec<out T>
 
     companion object {
         fun <T : DispatchCodec<*>> getCodec(valueOf: (String) -> T): Codec<T> = Codec.STRING.comapFlatMap({

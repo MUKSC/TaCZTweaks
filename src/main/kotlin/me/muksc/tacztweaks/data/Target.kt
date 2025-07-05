@@ -16,13 +16,13 @@ sealed class Target<T>(
 
     enum class EType(
         override val key: String,
-        override val codec: Codec<out Target<*>>
+        override val codecProvider: () -> Codec<out Target<*>>
     ) : DispatchCodec<Target<*>> {
-        FALLBACK("fallback", Fallback.CODEC),
-        GUN("gun", Gun.CODEC),
-        AMMO("ammo", Ammo.CODEC),
-        DAMAGE("damage", Damage.CODEC),
-        SPEED("speed", Speed.CODEC);
+        FALLBACK("fallback", { Fallback.CODEC }),
+        GUN("gun", { Gun.CODEC }),
+        AMMO("ammo", { Ammo.CODEC }),
+        DAMAGE("damage", { Damage.CODEC }),
+        SPEED("speed", { Speed.CODEC });
 
         companion object {
             private val map = EType.entries.associateBy(EType::key)
@@ -81,6 +81,6 @@ sealed class Target<T>(
     }
 
     companion object {
-        val CODEC = EType.CODEC.dispatch(Target<*>::type, EType::codec)
+        val CODEC = EType.CODEC.dispatch(Target<*>::type) { it.codecProvider() }
     }
 }

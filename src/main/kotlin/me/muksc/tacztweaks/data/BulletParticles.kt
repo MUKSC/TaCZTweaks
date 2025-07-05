@@ -26,11 +26,11 @@ sealed class BulletParticles(
         ) {
             enum class ECoordinatesType(
                 override val key: String,
-                override val codec: Codec<out Coordinates>
+                override val codecProvider: () -> Codec<out Coordinates>
             ) : DispatchCodec<Coordinates> {
-                ABSOLUTE("absolute", Absolute.CODEC),
-                RELATIVE("relative", Relative.CODEC),
-                LOCAL("local", Local.CODEC);
+                ABSOLUTE("absolute", { Absolute.CODEC }),
+                RELATIVE("relative", { Relative.CODEC }),
+                LOCAL("local", { Local.CODEC });
 
                 companion object {
                     private val map = ECoordinatesType.entries.associateBy(ECoordinatesType::key)
@@ -81,7 +81,7 @@ sealed class BulletParticles(
             }
 
             companion object {
-                val CODEC = ECoordinatesType.CODEC.dispatch(Coordinates::type, ECoordinatesType::codec)
+                val CODEC = ECoordinatesType.CODEC.dispatch(Coordinates::type) { it.codecProvider() }
             }
         }
 
@@ -99,10 +99,10 @@ sealed class BulletParticles(
 
     enum class EBulletParticlesType(
         override val key: String,
-        override val codec: Codec<out BulletParticles>
+        override val codecProvider: () -> Codec<out BulletParticles>
     ) : DispatchCodec<BulletParticles> {
-        BLOCK("block", Block.CODEC),
-        ENTITY("entity", Entity.CODEC);
+        BLOCK("block", { Block.CODEC }),
+        ENTITY("entity", { Entity.CODEC });
 
         companion object {
             private val map = EBulletParticlesType.entries.associateBy(EBulletParticlesType::key)
@@ -147,6 +147,6 @@ sealed class BulletParticles(
     }
 
     companion object {
-        val CODEC = EBulletParticlesType.CODEC.dispatch(BulletParticles::type, EBulletParticlesType::codec)
+        val CODEC = EBulletParticlesType.CODEC.dispatch(BulletParticles::type) { it.codecProvider() }
     }
 }

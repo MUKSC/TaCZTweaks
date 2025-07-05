@@ -17,10 +17,10 @@ sealed class BulletInteraction(
 ) {
     enum class EBulletInteractionType(
         override val key: String,
-        override val codec: Codec<out BulletInteraction>
+        override val codecProvider: () -> Codec<out BulletInteraction>
     ) : DispatchCodec<BulletInteraction> {
-        BLOCK("block", Block.CODEC),
-        ENTITY("entity", Entity.CODEC);
+        BLOCK("block", { Block.CODEC }),
+        ENTITY("entity", { Entity.CODEC });
 
         companion object {
             private val map = EBulletInteractionType.entries.associateBy(EBulletInteractionType::key)
@@ -36,12 +36,12 @@ sealed class BulletInteraction(
     ) {
         enum class EPierceType(
             override val key: String,
-            override val codec: Codec<out Pierce>
+            override val codecProvider: () -> Codec<out Pierce>
         ) : DispatchCodec<Pierce> {
-            NEVER("never", Never.CODEC),
-            DEFAULT("default", Default.CODEC),
-            COUNT("count", Count.CODEC),
-            DAMAGE("damage", Damage.CODEC);
+            NEVER("never", { Never.CODEC }),
+            DEFAULT("default", { Default.CODEC }),
+            COUNT("count", { Count.CODEC }),
+            DAMAGE("damage", { Damage.CODEC });
 
             companion object {
                 private val map = EPierceType.entries.associateBy(EPierceType::key)
@@ -98,7 +98,7 @@ sealed class BulletInteraction(
         }
 
         companion object {
-            val CODEC = EPierceType.CODEC.dispatch(Pierce::type, EPierceType::codec)
+            val CODEC = EPierceType.CODEC.dispatch(Pierce::type) { it.codecProvider() }
         }
     }
 
@@ -130,13 +130,13 @@ sealed class BulletInteraction(
         ) {
             enum class EBlockBreakType(
                 override val key: String,
-                override val codec: Codec<out BlockBreak>
+                override val codecProvider: () -> Codec<out BlockBreak>
             ) : DispatchCodec<BlockBreak> {
-                NEVER("never", Never.CODEC),
-                INSTANT("instant", Instant.CODEC),
-                COUNT("count", Count.CODEC),
-                FIXED_DAMAGE("fixed_damage", FixedDamage.CODEC),
-                DYNAMIC_DAMAGE("dynamic_damage", DynamicDamage.CODEC);
+                NEVER("never", { Never.CODEC }),
+                INSTANT("instant", { Instant.CODEC }),
+                COUNT("count", { Count.CODEC }),
+                FIXED_DAMAGE("fixed_damage", { FixedDamage.CODEC }),
+                DYNAMIC_DAMAGE("dynamic_damage", { DynamicDamage.CODEC });
 
                 companion object {
                     private val map = entries.associateBy(EBlockBreakType::key)
@@ -217,7 +217,7 @@ sealed class BulletInteraction(
             }
 
             companion object {
-                val CODEC = EBlockBreakType.CODEC.dispatch(BlockBreak::type, EBlockBreakType::codec)
+                val CODEC = EBlockBreakType.CODEC.dispatch(BlockBreak::type) { it.codecProvider() }
             }
         }
 
@@ -267,6 +267,6 @@ sealed class BulletInteraction(
     companion object {
         // Load order stuff
         init { Target; Pierce; BlockBreak }
-        val CODEC = EBulletInteractionType.CODEC.dispatch(BulletInteraction::type, EBulletInteractionType::codec)
+        val CODEC = EBulletInteractionType.CODEC.dispatch(BulletInteraction::type) { it.codecProvider() }
     }
 }
