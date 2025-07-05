@@ -102,13 +102,13 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
     }
 
     fun handleBlockInteraction(ammo: EntityKineticBullet, result: BlockHitResult, state: BlockState): InteractionResult {
-        val ext = ammo as EntityKineticBulletExtension
-        val interaction = getBulletInteraction(ammo, result.location, BulletInteraction.Block::blocks) {
-            it.test(state)
-        } ?: BulletInteraction.Block.DEFAULT
-
         val level = ammo.level() as ServerLevel
         val blockPos = BlockPos(result.blockPos)
+        val ext = ammo as EntityKineticBulletExtension
+        val interaction = getBulletInteraction(ammo, result.location, BulletInteraction.Block::blocks) {
+            it.test(level, blockPos, state)
+        } ?: BulletInteraction.Block.DEFAULT
+
         val breakBlock = run {
             val hardness = state.getDestroySpeed(level, blockPos)
             if (hardness !in interaction.blockBreak.hardness) return@run false

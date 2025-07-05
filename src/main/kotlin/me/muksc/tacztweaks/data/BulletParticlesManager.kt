@@ -20,6 +20,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.registries.ForgeRegistries
 import kotlin.reflect.KClass
@@ -79,9 +80,9 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         this.bulletParticles = bulletParticles
     }
 
-    fun handleBlockParticle(type: EBlockParticleType, level: ServerLevel, entity: EntityKineticBullet, location: Vec3, state: BlockState) {
-        val particles = getParticle(entity, location, BulletParticles.Block::blocks) {
-            it.test(state)
+    fun handleBlockParticle(type: EBlockParticleType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
+        val particles = getParticle(entity, result.location, BulletParticles.Block::blocks) {
+            it.test(level, result.blockPos, state)
         }?.run(type.getParticle) ?: return
         for (particle in particles) {
             val id = ForgeRegistries.BLOCKS.getKey(state.block)?.toString()

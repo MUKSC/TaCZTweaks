@@ -118,7 +118,7 @@ sealed class BulletInteraction(
 
     class Block(
         target: List<Target>,
-        val blocks: List<BlockOrBlockTag>,
+        val blocks: List<BlockTestable>,
         val blockBreak: BlockBreak,
         pierce: Pierce,
         gunPierce: GunPierce
@@ -226,7 +226,7 @@ sealed class BulletInteraction(
             val DEFAULT = Block(emptyList(), emptyList(), BlockBreak.Never, Pierce.Never, GunPierce(false, false))
             val CODEC = RecordCodecBuilder.create { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Block::target),
-                Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
+                Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
                 BlockBreak.CODEC.strictOptionalFieldOf("block_break", DEFAULT.blockBreak).forGetter(Block::blockBreak),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Block::pierce),
                 GunPierce.codec(false).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Block::gunPierce)
@@ -236,7 +236,7 @@ sealed class BulletInteraction(
 
     class Entity(
         target: List<Target>,
-        val entities: List<EntityOrEntityTag>,
+        val entities: List<EntityTestable>,
         val damage: EntityDamage,
         pierce: Pierce,
         gunPierce: GunPierce
@@ -257,7 +257,7 @@ sealed class BulletInteraction(
             val DEFAULT = Entity(emptyList(), emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true))
             val CODEC = RecordCodecBuilder.create { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
-                Codec.list(EntityOrEntityTag.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
+                Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
                 EntityDamage.CODEC.strictOptionalFieldOf("damage", DEFAULT.damage).forGetter(Entity::damage),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Entity::pierce),
                 GunPierce.codec(true).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce)

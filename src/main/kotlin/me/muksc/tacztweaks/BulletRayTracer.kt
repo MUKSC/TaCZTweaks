@@ -43,8 +43,8 @@ class BulletRayTracer(
 
         if (original.type == HitResult.Type.MISS || state == null) return original
         val interactionResult = BulletInteractionManager.handleBlockInteraction(entity, original, state)
-        BulletParticlesManager.handleBlockParticle(interactionResult.toBlockParticleType(), level, entity, original.location, state)
-        BulletSoundsManager.handleBlockSound(interactionResult.toBlockSoundType(), level, entity, original.location, state)
+        BulletParticlesManager.handleBlockParticle(interactionResult.toBlockParticleType(), level, entity, original, state)
+        BulletSoundsManager.handleBlockSound(interactionResult.toBlockSoundType(), level, entity, original, state)
 
         if (interactionResult.pierce) return null
         accessor.invokeOnHitBlock(original, context.from, context.to)

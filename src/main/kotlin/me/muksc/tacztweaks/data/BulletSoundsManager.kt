@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
 import kotlin.reflect.KClass
 
@@ -84,12 +85,12 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         this.bulletSounds = bulletSounds
     }
 
-    fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, location: Vec3, state: BlockState) {
-        val sounds = getSound(entity, location, BulletSounds.Block::blocks) {
-            it.test(state)
+    fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
+        val sounds = getSound(entity, result.location, BulletSounds.Block::blocks) {
+            it.test(level, result.blockPos, state)
         }?.run(type.getSound) ?: return
         for (sound in sounds) {
-            sound.play(level, location, entity)
+            sound.play(level, result.location, entity)
         }
     }
 

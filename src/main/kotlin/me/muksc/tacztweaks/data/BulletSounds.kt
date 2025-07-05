@@ -42,7 +42,7 @@ sealed class BulletSounds(
 
     class Block(
         target: List<Target>,
-        val blocks: List<BlockOrBlockTag>,
+        val blocks: List<BlockTestable>,
         val hit: List<Sound>,
         val pierce: List<Sound>,
         val `break`: List<Sound>
@@ -50,7 +50,7 @@ sealed class BulletSounds(
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
-                Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
+                Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`)
@@ -60,7 +60,7 @@ sealed class BulletSounds(
 
     class Entity(
         target: List<Target>,
-        val entities: List<EntityOrEntityTag>,
+        val entities: List<EntityTestable>,
         val hit: List<Sound>,
         val pierce: List<Sound>,
         val kill: List<Sound>
@@ -68,7 +68,7 @@ sealed class BulletSounds(
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
-                Codec.list(EntityOrEntityTag.CODEC).fieldOf("entities").forGetter(Entity::entities),
+                Codec.list(EntityTestable.CODEC).fieldOf("entities").forGetter(Entity::entities),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill)

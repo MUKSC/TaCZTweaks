@@ -7,6 +7,8 @@ import me.muksc.tacztweaks.data.StrictOptionalFieldCodec
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
+fun <T> identity(value: T): T = value
+
 fun <T> Class<T>.setPrivateField(instance: T, name: String, value: Any?) {
     getDeclaredField(name).run {
         isAccessible = true
@@ -25,7 +27,7 @@ fun <T : Any> Codec<T>.strictOptionalFieldOf(name: String, defaultValue: T): Map
 
 fun <T> singleOrListCodec(codec: Codec<T>): Codec<List<T>> =
     Codec.either(codec, Codec.list(codec))
-        .xmap({ it.left().map { listOf(it) }.getOrNull() ?: it.right().get() }) { when {
+        .xmap({ it.map(::listOf, ::identity) }, { when {
             it.size == 1 -> Either.left(it.first())
             else -> Either.right(it)
-        } }
+        } })

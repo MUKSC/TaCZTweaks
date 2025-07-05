@@ -7,9 +7,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EntityType
 import net.minecraftforge.registries.ForgeRegistries
 
-sealed interface EntityOrEntityTag {
-    fun test(entity: net.minecraft.world.entity.Entity): Boolean
-
+sealed interface EntityOrEntityTag : EntityTestable {
     class Entity(val type: EntityType<*>) : EntityOrEntityTag {
         override fun test(entity: net.minecraft.world.entity.Entity): Boolean = entity.type == type
 
