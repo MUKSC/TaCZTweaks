@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
+import me.muksc.tacztweaks.singleOrListCodec
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.world.item.Tier
 import java.util.*
@@ -116,7 +117,7 @@ sealed class BulletInteraction(
     }
 
     class Block(
-        target: Target<*>,
+        target: List<Target<*>>,
         val blocks: List<BlockOrBlockTag>,
         val blockBreak: BlockBreak,
         pierce: Pierce,
@@ -222,9 +223,9 @@ sealed class BulletInteraction(
         }
 
         companion object {
-            val DEFAULT = Block(Target.Fallback, emptyList(), BlockBreak.Never, Pierce.Never, GunPierce(false, false))
+            val DEFAULT = Block(emptyList(), emptyList(), BlockBreak.Never, Pierce.Never, GunPierce(false, false))
             val CODEC = RecordCodecBuilder.create { it.group(
-                Target.CODEC.strictOptionalFieldOf("target", DEFAULT.target).forGetter(Block::target),
+                singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Block::target),
                 Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
                 BlockBreak.CODEC.strictOptionalFieldOf("block_break", DEFAULT.blockBreak).forGetter(Block::blockBreak),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Block::pierce),
@@ -234,7 +235,7 @@ sealed class BulletInteraction(
     }
 
     class Entity(
-        target: Target<*>,
+        target: List<Target<*>>,
         val entities: List<EntityOrEntityTag>,
         val damage: EntityDamage,
         pierce: Pierce,
@@ -253,9 +254,9 @@ sealed class BulletInteraction(
         }
 
         companion object {
-            val DEFAULT = Entity(Target.Fallback, emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true))
+            val DEFAULT = Entity(emptyList(), emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true))
             val CODEC = RecordCodecBuilder.create { it.group(
-                Target.CODEC.strictOptionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
+                singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
                 Codec.list(EntityOrEntityTag.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
                 EntityDamage.CODEC.strictOptionalFieldOf("damage", DEFAULT.damage).forGetter(Entity::damage),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Entity::pierce),

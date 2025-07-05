@@ -61,13 +61,13 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): T? = byType<T>().values.run {
-        filter { interaction -> interaction.target.test(entity, location) }.run {
+        filter { interaction -> interaction.target.any { it.test(entity, location) } }.run {
             firstOrNull { interaction ->
                 selector.invoke(interaction).any(predicate)
             } ?: firstOrNull { interaction ->
                 selector.invoke(interaction).isEmpty()
             }
-        } ?: filter { interaction -> interaction.target is Target.Fallback }.run {
+        } ?: filter { interaction -> interaction.target.isEmpty() }.run {
             firstOrNull { interaction ->
                 selector.invoke(interaction).any(predicate)
             } ?: firstOrNull { interaction ->

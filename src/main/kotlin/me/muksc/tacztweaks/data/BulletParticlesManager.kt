@@ -46,13 +46,13 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): T? = byType<T>().values.run {
-        filter { particles -> particles.target.test(entity, location) }.run {
+        filter { particles -> particles.target.any { it.test(entity, location) } }.run {
             firstOrNull { particles ->
                 selector.invoke(particles).any(predicate)
             } ?: firstOrNull { particles ->
                 selector.invoke(particles).isEmpty()
             }
-        } ?: filter { particles -> particles.target is Target.Fallback }.run {
+        } ?: filter { particles -> particles.target.isEmpty() }.run {
             firstOrNull { particles ->
                 selector.invoke(particles).any(predicate)
             } ?: firstOrNull { particles ->

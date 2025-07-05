@@ -8,7 +8,7 @@ import me.muksc.tacztweaks.strictOptionalFieldOf
 
 sealed class BulletParticles(
     val type: EBulletParticlesType,
-    val target: Target<*>
+    val target: List<Target<*>>
 ) {
     class Particle(
         val particle: String,
@@ -111,7 +111,7 @@ sealed class BulletParticles(
     }
 
     class Block(
-        target: Target<*>,
+        target: List<Target<*>>,
         val blocks: List<BlockOrBlockTag>,
         val hit: List<Particle>,
         val pierce: List<Particle>,
@@ -119,7 +119,7 @@ sealed class BulletParticles(
     ) : BulletParticles(EBulletParticlesType.BLOCK, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
-                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Block::target),
+                singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockOrBlockTag.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
@@ -129,7 +129,7 @@ sealed class BulletParticles(
     }
 
     class Entity(
-        target: Target<*>,
+        target: List<Target<*>>,
         val entities: List<EntityOrEntityTag>,
         val hit: List<Particle>,
         val pierce: List<Particle>,
@@ -137,7 +137,7 @@ sealed class BulletParticles(
     ) : BulletParticles(EBulletParticlesType.ENTITY, target) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
-                Target.CODEC.strictOptionalFieldOf("target", Target.Fallback).forGetter(Entity::target),
+                singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
                 Codec.list(EntityOrEntityTag.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),

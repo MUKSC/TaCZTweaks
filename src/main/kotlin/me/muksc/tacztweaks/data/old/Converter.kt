@@ -7,7 +7,7 @@ import java.util.*
 import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction
 
 fun OldBulletInteraction.convert() = BulletInteraction.Block(
-    target = if (guns.isEmpty()) Target.Fallback else Target.Gun(guns),
+    target = if (guns.isEmpty()) emptyList() else listOf(Target.Gun(guns)),
     blocks = blocks,
     blockBreak = when (blockBreak) {
         is OldBulletInteraction.BlockBreak.Never -> BulletInteraction.Block.BlockBreak.Never

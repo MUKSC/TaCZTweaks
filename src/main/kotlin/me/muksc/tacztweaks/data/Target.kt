@@ -18,7 +18,6 @@ sealed class Target<T>(
         override val key: String,
         override val codecProvider: () -> Codec<out Target<*>>
     ) : DispatchCodec<Target<*>> {
-        FALLBACK("fallback", { Fallback.CODEC }),
         GUN("gun", { Gun.CODEC }),
         AMMO("ammo", { Ammo.CODEC }),
         DAMAGE("damage", { Damage.CODEC }),
@@ -28,12 +27,6 @@ sealed class Target<T>(
             private val map = EType.entries.associateBy(EType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
-    }
-
-    object Fallback : Target<Unit>(EType.FALLBACK, emptyList()) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean = false
-
-        val CODEC = Codec.unit(Fallback)
     }
 
     class Gun(values: List<ResourceLocation>) : Target<ResourceLocation>(EType.GUN, values) {

@@ -41,8 +41,8 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         location: Vec3
     ): T? = byType<T>().values.run {
         firstOrNull { sounds ->
-            sounds.target.test(entity, location)
-        } ?: firstOrNull { sounds -> sounds.target is Target.Fallback }
+            sounds.target.any { it.test(entity, location) }
+        } ?: firstOrNull { sounds -> sounds.target.isEmpty() }
     }
 
     private inline fun <reified T : BulletSounds, E> getSound(
@@ -51,13 +51,13 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): T? = byType<T>().values.run {
-        filter { sounds -> sounds.target.test(entity, location) }.run {
+        filter { sounds -> sounds.target.any { it.test(entity, location) } }.run {
             firstOrNull { sounds ->
                 selector.invoke(sounds).any(predicate)
             } ?: firstOrNull { sounds ->
                 selector.invoke(sounds).isEmpty()
             }
-        } ?: filter { sounds -> sounds.target is Target.Fallback }.run {
+        } ?: filter { sounds -> sounds.target.isEmpty() }.run {
             firstOrNull { sounds ->
                 selector.invoke(sounds).any(predicate)
             } ?: firstOrNull { sounds ->
