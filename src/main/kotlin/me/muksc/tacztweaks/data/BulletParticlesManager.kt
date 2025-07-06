@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks.data
 
+import com.google.common.collect.ImmutableMap
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.mojang.brigadier.StringReader
@@ -7,6 +8,8 @@ import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
+import me.muksc.tacztweaks.thenPrioritizeBy
+import me.muksc.tacztweaks.toImmutableMap
 import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate
@@ -23,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.registries.ForgeRegistries
+import kotlin.collections.firstOrNull
 import kotlin.reflect.KClass
 
 private val GSON = GsonBuilder()
@@ -46,38 +50,35 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         location: Vec3,
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
-    ): T? = byType<T>().values.run {
-        filter { particles -> particles.target.any { it.test(entity, location) } }.run {
-            firstOrNull { particles ->
-                selector.invoke(particles).any(predicate)
-            } ?: firstOrNull { particles ->
-                selector.invoke(particles).isEmpty()
-            }
-        } ?: filter { particles -> particles.target.isEmpty() }.run {
-            firstOrNull { particles ->
-                selector.invoke(particles).any(predicate)
-            } ?: firstOrNull { particles ->
-                selector.invoke(particles).isEmpty()
-            }
-        }
+    ): T? = byType<T>().values.firstOrNull { particles ->
+        (particles.target.isEmpty() || particles.target.any { it.test(entity, location) })
+                && (selector(particles).isEmpty() || selector(particles).any(predicate))
     }
 
+    @Suppress("UnstableApiUsage")
     override fun apply(
         map: Map<ResourceLocation, JsonElement>,
         resourceManager: ResourceManager,
         profileFiller: ProfilerFiller,
     ) {
-        val bulletParticles = mutableMapOf<KClass<*>, MutableMap<ResourceLocation, BulletParticles>>()
+        val bulletParticles = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletParticles>>()
         for ((resourceLocation, element) in map) {
             try {
                 val particles = BulletParticles.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
-                bulletParticles.computeIfAbsent(particles::class) { mutableMapOf() }[resourceLocation] = particles
+                bulletParticles.computeIfAbsent(particles::class) { ImmutableMap.builder() }.put(resourceLocation, particles)
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet particles $resourceLocation $e")
                 error = true
             }
         }
-        this.bulletParticles = bulletParticles
+        this.bulletParticles = bulletParticles.mapValues { entry -> entry.value.orderEntriesByValue(
+            compareBy<BulletParticles> { it.priority }
+                .thenPrioritizeBy { it.target.isNotEmpty() }
+                .thenPrioritizeBy { when (it) {
+                    is BulletParticles.Block -> it.blocks.isNotEmpty()
+                    is BulletParticles.Entity -> it.entities.isNotEmpty()
+                } }
+        ).build() }.toImmutableMap()
     }
 
     fun handleBlockParticle(type: EBlockParticleType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {

@@ -8,7 +8,8 @@ import me.muksc.tacztweaks.strictOptionalFieldOf
 
 sealed class BulletParticles(
     val type: EBulletParticlesType,
-    val target: List<Target>
+    val target: List<Target>,
+    val priority: Int
 ) {
     class Particle(
         val particle: String,
@@ -115,15 +116,17 @@ sealed class BulletParticles(
         val blocks: List<BlockTestable>,
         val hit: List<Particle>,
         val pierce: List<Particle>,
-        val `break`: List<Particle>
-    ) : BulletParticles(EBulletParticlesType.BLOCK, target) {
+        val `break`: List<Particle>,
+        priority: Int
+    ) : BulletParticles(EBulletParticlesType.BLOCK, target, priority) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`)
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`),
+                Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Block::priority)
             ).apply(it, ::Block) }
         }
     }
@@ -133,15 +136,17 @@ sealed class BulletParticles(
         val entities: List<EntityTestable>,
         val hit: List<Particle>,
         val pierce: List<Particle>,
-        val kill: List<Particle>
-    ) : BulletParticles(EBulletParticlesType.ENTITY, target) {
+        val kill: List<Particle>,
+        priority: Int
+    ) : BulletParticles(EBulletParticlesType.ENTITY, target, priority) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
+                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
+                Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Entity::priority)
             ).apply(it, ::Entity) }
         }
     }

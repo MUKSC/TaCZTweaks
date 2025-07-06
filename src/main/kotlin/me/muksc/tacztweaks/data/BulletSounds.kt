@@ -9,7 +9,8 @@ import net.minecraft.resources.ResourceLocation
 
 sealed class BulletSounds(
     val type: EBulletSoundsType,
-    val target: List<Target>
+    val target: List<Target>,
+    val priority: Int
 ) {
     class Sound(
         val sound: ResourceLocation,
@@ -45,15 +46,17 @@ sealed class BulletSounds(
         val blocks: List<BlockTestable>,
         val hit: List<Sound>,
         val pierce: List<Sound>,
-        val `break`: List<Sound>
-    ) : BulletSounds(EBulletSoundsType.BLOCK, target) {
+        val `break`: List<Sound>,
+        priority: Int
+    ) : BulletSounds(EBulletSoundsType.BLOCK, target, priority) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`)
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`),
+                Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Block::priority)
             ).apply(it, ::Block) }
         }
     }
@@ -63,15 +66,17 @@ sealed class BulletSounds(
         val entities: List<EntityTestable>,
         val hit: List<Sound>,
         val pierce: List<Sound>,
-        val kill: List<Sound>
-    ) : BulletSounds(EBulletSoundsType.ENTITY, target) {
+        val kill: List<Sound>,
+        priority: Int
+    ) : BulletSounds(EBulletSoundsType.ENTITY, target, priority) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).fieldOf("entities").forGetter(Entity::entities),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
                 singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill)
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
+                Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Entity::priority)
             ).apply(it, ::Entity) }
         }
     }
@@ -79,21 +84,24 @@ sealed class BulletSounds(
     class Constant(
         target: List<Target>,
         val interval: Int,
-        val sounds: List<Sound>
-    ) : BulletSounds(EBulletSoundsType.CONSTANT, target) {
+        val sounds: List<Sound>,
+        priority: Int
+    ) : BulletSounds(EBulletSoundsType.CONSTANT, target, priority) {
         companion object {
             val CODEC = RecordCodecBuilder.create<Constant> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Constant::target),
                 Codec.INT.fieldOf("interval").forGetter(Constant::interval),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Constant::sounds)
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Constant::sounds),
+                Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Constant::priority)
             ).apply(it, ::Constant) }
         }
     }
 
     class Whizz(
         target: List<Target>,
-        val sounds: List<DistanceSound>
-    ) : BulletSounds(EBulletSoundsType.WHIZZ, target) {
+        val sounds: List<DistanceSound>,
+        priority: Int
+    ) : BulletSounds(EBulletSoundsType.WHIZZ, target, priority) {
         class DistanceSound(
             val threshold: Double,
             val sound: Sound
@@ -109,7 +117,8 @@ sealed class BulletSounds(
         companion object {
             val CODEC = RecordCodecBuilder.create<Whizz> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Whizz::target),
-                Codec.list(DistanceSound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds)
+                Codec.list(DistanceSound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds),
+                Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Whizz::priority)
             ).apply(it, ::Whizz) }
         }
     }

@@ -15,6 +15,8 @@ import me.muksc.tacztweaks.data.old.convert
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.DestroySpeedModifierHolder
+import me.muksc.tacztweaks.thenPrioritizeBy
+import me.muksc.tacztweaks.toImmutableMap
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -61,29 +63,19 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         location: Vec3,
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
-    ): T? = byType<T>().values.run {
-        filter { interaction -> interaction.target.any { it.test(entity, location) } }.run {
-            firstOrNull { interaction ->
-                selector.invoke(interaction).any(predicate)
-            } ?: firstOrNull { interaction ->
-                selector.invoke(interaction).isEmpty()
-            }
-        } ?: filter { interaction -> interaction.target.isEmpty() }.run {
-            firstOrNull { interaction ->
-                selector.invoke(interaction).any(predicate)
-            } ?: firstOrNull { interaction ->
-                selector.invoke(interaction).isEmpty()
-            }
-        }
+    ): T? = byType<T>().values.firstOrNull { interaction ->
+        (interaction.target.isEmpty() || interaction.target.any { it.test(entity, location) })
+                && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
     }
 
+    @Suppress("UnstableApiUsage")
     override fun apply(
         map: Map<ResourceLocation, JsonElement>,
         resourceManager: ResourceManager,
         profileFiller: ProfilerFiller,
     ) {
         error = false
-        val bulletInteractions = mutableMapOf<KClass<*>, MutableMap<ResourceLocation, BulletInteraction>>()
+        val bulletInteractions = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletInteraction>>()
         for ((resourceLocation, element) in map) {
             try {
                 val interaction = try {
@@ -93,13 +85,20 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                         .resultOrPartial { /* Nothing */ }.getOrNull()
                         ?.convert() ?: throw e
                 }
-                bulletInteractions.computeIfAbsent(interaction::class) { mutableMapOf() }[resourceLocation] = interaction
+                bulletInteractions.computeIfAbsent(interaction::class) { ImmutableMap.builder() }.put(resourceLocation, interaction)
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet interaction $resourceLocation", e)
                 error = true
             }
         }
-        this.bulletInteractions = ImmutableMap.copyOf(bulletInteractions)
+        this.bulletInteractions = bulletInteractions.mapValues { entry -> entry.value.orderEntriesByValue(
+            compareBy<BulletInteraction> { it.priority }
+                .thenPrioritizeBy { it.target.isNotEmpty() }
+                .thenPrioritizeBy { when (it) {
+                    is BulletInteraction.Block -> it.blocks.isNotEmpty()
+                    is BulletInteraction.Entity -> it.entities.isNotEmpty()
+                } }
+        ).build() }.toImmutableMap()
     }
 
     fun handleBlockInteraction(ammo: EntityKineticBullet, result: BlockHitResult, state: BlockState): InteractionResult {

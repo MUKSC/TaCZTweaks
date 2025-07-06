@@ -14,7 +14,8 @@ sealed class BulletInteraction(
     val type: EBulletInteractionType,
     val target: List<Target>,
     val pierce: Pierce,
-    val gunPierce: GunPierce
+    val gunPierce: GunPierce,
+    val priority: Int
 ) {
     enum class EBulletInteractionType(
         override val key: String,
@@ -121,8 +122,9 @@ sealed class BulletInteraction(
         val blocks: List<BlockTestable>,
         val blockBreak: BlockBreak,
         pierce: Pierce,
-        gunPierce: GunPierce
-    ) : BulletInteraction(EBulletInteractionType.BLOCK, target, pierce, gunPierce) {
+        gunPierce: GunPierce,
+        priority: Int
+    ) : BulletInteraction(EBulletInteractionType.BLOCK, target, pierce, gunPierce, priority) {
         sealed class BlockBreak(
             val type: EBlockBreakType,
             val hardness: ValueRange,
@@ -223,13 +225,14 @@ sealed class BulletInteraction(
         }
 
         companion object {
-            val DEFAULT = Block(emptyList(), emptyList(), BlockBreak.Never, Pierce.Never, GunPierce(false, false))
+            val DEFAULT = Block(emptyList(), emptyList(), BlockBreak.Never, Pierce.Never, GunPierce(false, false), 0)
             val CODEC = RecordCodecBuilder.create { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", DEFAULT.blocks).forGetter(Block::blocks),
                 BlockBreak.CODEC.strictOptionalFieldOf("block_break", DEFAULT.blockBreak).forGetter(Block::blockBreak),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Block::pierce),
-                GunPierce.codec(false).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Block::gunPierce)
+                GunPierce.codec(false).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Block::gunPierce),
+                Codec.INT.strictOptionalFieldOf("priority", DEFAULT.priority).forGetter(Block::priority)
             ).apply(it, ::Block) }
         }
     }
@@ -239,8 +242,9 @@ sealed class BulletInteraction(
         val entities: List<EntityTestable>,
         val damage: EntityDamage,
         pierce: Pierce,
-        gunPierce: GunPierce
-    ) : BulletInteraction(EBulletInteractionType.ENTITY, target, pierce, gunPierce) {
+        gunPierce: GunPierce,
+        priority: Int
+    ) : BulletInteraction(EBulletInteractionType.ENTITY, target, pierce, gunPierce, priority) {
         class EntityDamage(
             val modifier: Float,
             val multiplier: Float
@@ -254,13 +258,14 @@ sealed class BulletInteraction(
         }
 
         companion object {
-            val DEFAULT = Entity(emptyList(), emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true))
+            val DEFAULT = Entity(emptyList(), emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true), 0)
             val CODEC = RecordCodecBuilder.create { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
                 EntityDamage.CODEC.strictOptionalFieldOf("damage", DEFAULT.damage).forGetter(Entity::damage),
                 Pierce.CODEC.strictOptionalFieldOf("pierce", DEFAULT.pierce).forGetter(Entity::pierce),
-                GunPierce.codec(true).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce)
+                GunPierce.codec(true).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce),
+                Codec.INT.strictOptionalFieldOf("priority", DEFAULT.priority).forGetter(Entity::priority)
             ).apply(it, ::Entity) }
         }
     }

@@ -1,11 +1,14 @@
 package me.muksc.tacztweaks.data
 
+import com.google.common.collect.ImmutableMap
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
+import me.muksc.tacztweaks.thenPrioritizeBy
+import me.muksc.tacztweaks.toImmutableMap
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.resources.ResourceLocation
@@ -51,20 +54,9 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         location: Vec3,
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
-    ): T? = byType<T>().values.run {
-        filter { sounds -> sounds.target.any { it.test(entity, location) } }.run {
-            firstOrNull { sounds ->
-                selector.invoke(sounds).any(predicate)
-            } ?: firstOrNull { sounds ->
-                selector.invoke(sounds).isEmpty()
-            }
-        } ?: filter { sounds -> sounds.target.isEmpty() }.run {
-            firstOrNull { sounds ->
-                selector.invoke(sounds).any(predicate)
-            } ?: firstOrNull { sounds ->
-                selector.invoke(sounds).isEmpty()
-            }
-        }
+    ): T? = byType<T>().values.firstOrNull { sounds ->
+        (sounds.target.isEmpty() || sounds.target.any { it.test(entity, location) })
+                && (selector(sounds).isEmpty() || selector(sounds).any(predicate))
     }
 
     override fun apply(
@@ -72,17 +64,26 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         resourceManager: ResourceManager,
         profileFiller: ProfilerFiller,
     ) {
-        val bulletSounds = mutableMapOf<KClass<*>, MutableMap<ResourceLocation, BulletSounds>>()
+        val bulletSounds = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletSounds>>()
         for ((resourceLocation, element) in map) {
             try {
                 val sounds = BulletSounds.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
-                bulletSounds.computeIfAbsent(sounds::class) { mutableMapOf() }[resourceLocation] = sounds
+                bulletSounds.computeIfAbsent(sounds::class) { ImmutableMap.builder() }.put(resourceLocation, sounds)
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet sounds $resourceLocation $e")
                 error = true
             }
         }
-        this.bulletSounds = bulletSounds
+        this.bulletSounds = bulletSounds.mapValues { entry -> entry.value.orderEntriesByValue(
+            compareBy<BulletSounds> { it.priority }
+                .thenPrioritizeBy { it.target.isNotEmpty() }
+                .thenPrioritizeBy { when (it) {
+                    is BulletSounds.Block -> it.blocks.isNotEmpty()
+                    is BulletSounds.Entity -> it.entities.isNotEmpty()
+                    is BulletSounds.Whizz -> false
+                    is BulletSounds.Constant -> false
+                } }
+        ).build() }.toImmutableMap()
     }
 
     fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {

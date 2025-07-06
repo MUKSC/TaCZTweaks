@@ -54,5 +54,6 @@ fun OldBulletInteraction.convert() = BulletInteraction.Block(
             is OldBulletInteraction.Pierce.Damage -> pierce.requireGunPierce
         },
         consume = false
-    )
+    ),
+    priority = 0
 )
