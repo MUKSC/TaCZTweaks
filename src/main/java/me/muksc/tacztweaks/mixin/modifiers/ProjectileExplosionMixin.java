@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = ProjectileExplosion.class, remap = false)
+@Mixin(ProjectileExplosion.class)
 public abstract class ProjectileExplosionMixin {
     @WrapOperation(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     private boolean tacztweaks$explode$playerDamageModifier(Entity instance, DamageSource pSource, float pAmount, Operation<Boolean> original) {
