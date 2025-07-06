@@ -56,12 +56,12 @@ sealed class BlockTarget(
         }
     }
 
-    class Inverted(val value: BlockTarget) : BlockTarget(EBlockTargetType.INVERTED) {
-        override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean = !value.test(level, pos, state)
+    class Inverted(val term: BlockTarget) : BlockTarget(EBlockTargetType.INVERTED) {
+        override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean = !term.test(level, pos, state)
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Inverted> { it.group(
-                BlockTarget.CODEC.fieldOf("term").forGetter(Inverted::value)
+                BlockTarget.CODEC.fieldOf("term").forGetter(Inverted::term)
             ).apply(it, ::Inverted) }
         }
     }
