@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = EntityKineticBullet.class, remap = false)
 public abstract class EntityKineticBulletMixin {
     @Definition(id = "USE_MAGIC_DAMAGE_ON", field = "Lcom/tacz/guns/entity/EntityKineticBullet;USE_MAGIC_DAMAGE_ON:Lnet/minecraft/tags/TagKey;")
-    @Definition(id = "is", method = "Lnet/minecraft/world/entity/EntityType;is(Lnet/minecraft/tags/TagKey;)Z")
+    @Definition(id = "is", method = "Lnet/minecraft/world/entity/EntityType;is(Lnet/minecraft/tags/TagKey;)Z", remap = true)
     @Expression("?.is(USE_MAGIC_DAMAGE_ON)")
     @ModifyExpressionValue(method = "createDamageSources", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean tacztweaks$createDamageSources$dontUseMagicOnEndermen(boolean original, @Local(argsOnly = true) EntityKineticBullet.MaybeMultipartEntity parts) {
