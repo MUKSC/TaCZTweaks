@@ -68,6 +68,10 @@ Additionally, you can immediately start reloading after a shot.
 The new key bind is located under the TaCZ category.  
 Can be disabled on server side.
 
+### Balancing Modifiers
+You can tweak various parameters of all the guns at once.  
+![Balancing modifiers](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/balancing-modifiers.webp)
+
 ### Disable Bullet Culling
 Improves the accuracy of bullet rendering at close range.  
 ![Improved close-range bullet rendering](https://raw.githubusercontent.com/MUKSC/TaCZTweaks/refs/heads/main/assets/bullet-culling.webp)

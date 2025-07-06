@@ -1,8 +1,15 @@
-- Implemented config sync between server and client
-  - Server-side options are now synced to clients to prevent desync issues
-  - Players with operator status can update the config on the server from GUI 
-- Block interactions now fire the Forge block break event
-  - This allows mods/plugins like WorldGuard to properly prevent blocks from breaking when necessary
-- Fixed the `crawl.enabled` option being incorrectly located under the client config
-- Fixed the bullet whizzing feature stopped working since 2.5.1
-- Fixed some ghost block issues
+### General
+- Revamped the config screen structure
+- Added new balancing modifiers options
+- Added new `endermenEvadesBullets` option
+- Fixed the broken bullet hole rendering on VS ships
+- Fixed adventure mode players cannot break blocks though bullet interactions
+
+### Data pack
+- Added new `target` types, as well as new `blocks` and `entities` types, which allows more advanced customization
+  - Visit the [wiki](https://github.com/MUKSC/TaCZTweaks/wiki/Common-Types) for more detail
+- `target` field now accepts a list
+- Added new `priority` field
+- Added new `constant` bullet sounds type
+- Deprecated "block_break.tier" and "block_break.hardness", use "tier" and "hardness" target types instead
+  - It's not removed, but I don't recommend using it anymore
