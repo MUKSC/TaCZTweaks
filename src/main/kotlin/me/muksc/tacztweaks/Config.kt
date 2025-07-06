@@ -4,7 +4,6 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager
 import com.tacz.guns.resource.pojo.data.attachment.Modifier
 import dev.isxander.yacl3.api.*
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
-import dev.isxander.yacl3.config.v3.CodecConfig
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
 import dev.isxander.yacl3.dsl.ControllerBuilderFactory
@@ -28,11 +27,13 @@ import java.text.DecimalFormat
 object Config : SyncableJsonFileCodecConfig<Config>(
     YACLPlatform.getConfigDir().resolve("${TaCZTweaks.MOD_ID}.json")
 ) {
-    val gun by registerSyncable(Gun)
-    val modifiers by registerSyncable(Modifiers)
-    val crawl by registerSyncable(Crawl)
-    val compat by registerSyncable(Compat)
-    val tweaks by registerSyncable(Tweaks)
+    init {
+        registerSyncable("gun", Gun)
+        registerSyncable("modifiers", Modifiers)
+        registerSyncable("crawl", Crawl)
+        registerSyncable("compat", Compat)
+        registerSyncable("tweaks", Tweaks)
+    }
 
     object Gun : SyncableCodecConfig<Gun>() {
         val shootWhileSprinting by registerSyncable(
@@ -68,7 +69,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
 
-    class ModifierConfig : SyncableCodecConfig<ModifierConfig>() {
+    abstract class ModifierConfig : SyncableCodecConfig<ModifierConfig>() {
         val addend by registerSyncable(
             default = 0.0F,
             codec = FLOAT,
@@ -111,31 +112,33 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     }
 
     object Modifiers : SyncableCodecConfig<Modifiers>() {
-        val damage by registerSyncable(ModifierConfig())
-        val playerDamage by registerSyncable(ModifierConfig())
-        val headshot by registerSyncable(ModifierConfig())
-        val armorIgnore by registerSyncable(ModifierConfig())
-        val speed by registerSyncable(ModifierConfig())
-        val gravity by registerSyncable(ModifierConfig())
-        val friction by registerSyncable(ModifierConfig())
-        val inaccuracy by registerSyncable(ModifierConfig())
-        val aimInaccuracy by registerSyncable(ModifierConfig())
-        val rpm by registerSyncable(ModifierConfig())
-        val verticalRecoil by registerSyncable(ModifierConfig())
-        val horizontalRecoil by registerSyncable(ModifierConfig())
+        init {
+            registerSyncable("damage", Damage)
+            registerSyncable("playerDamage", PlayerDamage)
+            registerSyncable("headshot", Headshot)
+            registerSyncable("armorIgnore", ArmorIgnore)
+            registerSyncable("speed", Speed)
+            registerSyncable("gravity", Gravity)
+            registerSyncable("friction", Friction)
+            registerSyncable("inaccuracy", Inaccuracy)
+            registerSyncable("aimInaccuracy", AimInaccuracy)
+            registerSyncable("rpm", RPM)
+            registerSyncable("verticalRecoil", VerticalRecoil)
+            registerSyncable("horizontalRecoil", HorizontalRecoil)
+        }
 
-        fun damage(): Modifier = damage.syncedValue.toTaCZ()
-        fun playerDamage(): Modifier = playerDamage.syncedValue.toTaCZ()
-        fun headshot(): Modifier = headshot.syncedValue.toTaCZ()
-        fun armorIgnore(): Modifier = armorIgnore.syncedValue.toTaCZ()
-        fun speed(): Modifier = speed.syncedValue.toTaCZ()
-        fun gravity(): Modifier = gravity.syncedValue.toTaCZ()
-        fun friction(): Modifier = friction.syncedValue.toTaCZ()
-        fun inaccuracy(): Modifier = inaccuracy.syncedValue.toTaCZ()
-        fun aimInaccuracy(): Modifier = aimInaccuracy.syncedValue.toTaCZ()
-        fun rpm(): Modifier = rpm.syncedValue.toTaCZ()
-        fun verticalRecoil(): Modifier = verticalRecoil.syncedValue.toTaCZ()
-        fun horizontalRecoil(): Modifier = horizontalRecoil.syncedValue.toTaCZ()
+        object Damage : ModifierConfig()
+        object PlayerDamage : ModifierConfig()
+        object Headshot : ModifierConfig()
+        object ArmorIgnore : ModifierConfig()
+        object Speed : ModifierConfig()
+        object Gravity : ModifierConfig()
+        object Friction : ModifierConfig()
+        object Inaccuracy : ModifierConfig()
+        object AimInaccuracy : ModifierConfig()
+        object RPM : ModifierConfig()
+        object VerticalRecoil : ModifierConfig()
+        object HorizontalRecoil : ModifierConfig()
     }
 
     object Crawl : SyncableCodecConfig<Crawl>() {
@@ -428,18 +431,18 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         category(ConfigCategory.createBuilder().apply {
             name(TaCZTweaks.translatable("config.category.balancing"))
             for ((key, modifier) in listOf(
-                "damage" to Modifiers.damage,
-                "playerDamage" to Modifiers.playerDamage,
-                "headshot" to Modifiers.headshot,
-                "armorIgnore" to Modifiers.armorIgnore,
-                "speed" to Modifiers.speed,
-                "gravity" to Modifiers.gravity,
-                "friction" to Modifiers.friction,
-                "inaccuracy" to Modifiers.inaccuracy,
-                "aimInaccuracy" to Modifiers.aimInaccuracy,
-                "rpm" to Modifiers.rpm,
-                "verticalRecoil" to Modifiers.verticalRecoil,
-                "horizontalRecoil" to Modifiers.horizontalRecoil
+                "damage" to Modifiers.Damage,
+                "playerDamage" to Modifiers.PlayerDamage,
+                "headshot" to Modifiers.Headshot,
+                "armorIgnore" to Modifiers.ArmorIgnore,
+                "speed" to Modifiers.Speed,
+                "gravity" to Modifiers.Gravity,
+                "friction" to Modifiers.Friction,
+                "inaccuracy" to Modifiers.Inaccuracy,
+                "aimInaccuracy" to Modifiers.AimInaccuracy,
+                "rpm" to Modifiers.RPM,
+                "verticalRecoil" to Modifiers.VerticalRecoil,
+                "horizontalRecoil" to Modifiers.HorizontalRecoil
             )) {
                 group(OptionGroup.createBuilder().apply {
                     name(TaCZTweaks.translatable("config.modifiers.$key.name"))
@@ -448,7 +451,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     option(Option.createBuilder<Float>().apply {
                         nameSynced(TaCZTweaks.translatable("config.modifier.addend.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.addend.description")))
-                        binding(modifier.syncedValue.addend.asSyncedBinding())
+                        binding(modifier.addend.asSyncedBinding())
                         controller(slider(range = -100.0F..100.0F, step = 0.1F) {
                             Component.literal(DecimalFormat("+#.#;-#.#").format(it))
                         })
@@ -457,7 +460,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     option(Option.createBuilder<Float>().apply {
                         nameSynced(TaCZTweaks.translatable("config.modifier.multiplier.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.multiplier.description")))
-                        binding(modifier.syncedValue.multiplier.asSyncedBinding())
+                        binding(modifier.multiplier.asSyncedBinding())
                         controller(slider(range = -100.0F..100.0F, step = 0.1F) {
                             Component.literal("%.1f".format(it))
                         })
@@ -466,7 +469,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     option(Option.createBuilder<String>().apply {
                         nameSynced(TaCZTweaks.translatable("config.modifier.function.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.function.description")))
-                        binding(modifier.syncedValue.function.asSyncedBinding())
+                        binding(modifier.function.asSyncedBinding())
                         controller(stringField())
                         available(canUpdateServerConfig)
                     }.build())

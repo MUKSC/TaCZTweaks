@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class InaccuracyModifierMixin {
     @ModifyExpressionValue(method = "lambda$initCache$0", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getInaccuracy(Lcom/tacz/guns/resource/pojo/data/gun/InaccuracyType;F)F"))
     private static float tacztweaks$initCache$inaccuracyModifier(float original, @Local(argsOnly = true) InaccuracyType type) {
-        float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.inaccuracy(), original);
-        if (type == InaccuracyType.AIM) inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.aimInaccuracy(), inaccuracy);
+        float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), original);
+        if (type == InaccuracyType.AIM) inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
         return inaccuracy;
     }
 
@@ -36,7 +36,7 @@ public abstract class InaccuracyModifierMixin {
         CallbackInfoReturnable<IAttachmentModifier.DiagramsData> cir,
         @Local(ordinal = 0) LocalFloatRef inaccuracyRef
     ) {
-        inaccuracyRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.inaccuracy(), inaccuracyRef.get()));
+        inaccuracyRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), inaccuracyRef.get()));
     }
 
     @Inject(method = "buildAim", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;getCache(Ljava/lang/String;)Ljava/lang/Object;"))
@@ -47,8 +47,8 @@ public abstract class InaccuracyModifierMixin {
         CallbackInfoReturnable<IAttachmentModifier.DiagramsData> cir,
         @Local(ordinal = 0) LocalFloatRef inaccuracyRef
     ) {
-        float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.inaccuracy(), 1.0F - inaccuracyRef.get());
-        inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.aimInaccuracy(), inaccuracy);
+        float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), 1.0F - inaccuracyRef.get());
+        inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
         inaccuracyRef.set(1.0F - inaccuracy);
     }
 }

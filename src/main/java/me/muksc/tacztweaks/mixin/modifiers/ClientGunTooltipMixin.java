@@ -17,6 +17,6 @@ public abstract class ClientGunTooltipMixin {
     @Expression("? * (Double) DAMAGE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getText", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$getText$damageModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.damage(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Damage.INSTANCE.toTaCZ(), original);
     }
 }

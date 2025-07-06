@@ -20,22 +20,22 @@ public abstract class EntityKineticBulletMixin {
     @Expression("? * (Double) DAMAGE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/resource/pojo/data/gun/BulletData;)V", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$init$damageModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.damage(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Damage.INSTANCE.toTaCZ(), original);
     }
 
     @ModifyExpressionValue(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/EntityKineticBullet;getDamage(Lnet/minecraft/world/phys/Vec3;)F", ordinal = 1))
     private float tacztweaks$onHitEntity$playerDamageModifier(float original, @Local(argsOnly = true) TacHitResult result) {
         if (!(result.getEntity() instanceof Player)) return original;
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.playerDamage(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.PlayerDamage.INSTANCE.toTaCZ(), original);
     }
 
     @ModifyExpressionValue(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/resource/pojo/data/gun/BulletData;)V", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/BulletData;getGravity()F"))
     private float tacztweaks$init$gravityModifier(float original) {
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.gravity(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.Gravity.INSTANCE.toTaCZ(), original);
     }
 
     @ModifyExpressionValue(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/resource/pojo/data/gun/BulletData;)V", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/BulletData;getFriction()F"))
     private float tacztweaks$init$frictionModifier(float original) {
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.friction(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.Friction.INSTANCE.toTaCZ(), original);
     }
 }

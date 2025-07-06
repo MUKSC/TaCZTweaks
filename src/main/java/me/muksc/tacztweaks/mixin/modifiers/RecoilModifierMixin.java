@@ -13,23 +13,23 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class RecoilModifierMixin {
     @ModifyExpressionValue(method = "initCache", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/custom/RecoilModifier;getMaxInGunRecoilKeyFrame([Lcom/tacz/guns/resource/pojo/data/gun/GunRecoilKeyFrame;)F", ordinal = 0))
     private float tacztweaks$initCache$verticalRecoilModifier(float original) {
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.verticalRecoil(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.VerticalRecoil.INSTANCE.toTaCZ(), original);
     }
 
     @OnlyIn(Dist.CLIENT)
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/custom/RecoilModifier;getMaxInGunRecoilKeyFrame([Lcom/tacz/guns/resource/pojo/data/gun/GunRecoilKeyFrame;)F", ordinal = 0))
     private float tacztweaks$getPropertyDiagramsData$verticalRecoilModifier(float original) {
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.verticalRecoil(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.VerticalRecoil.INSTANCE.toTaCZ(), original);
     }
 
     @ModifyExpressionValue(method = "initCache", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/custom/RecoilModifier;getMaxInGunRecoilKeyFrame([Lcom/tacz/guns/resource/pojo/data/gun/GunRecoilKeyFrame;)F", ordinal = 1))
     private float tacztweaks$initCache$horizontalRecoilModifier(float original) {
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.horizontalRecoil(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.HorizontalRecoil.INSTANCE.toTaCZ(), original);
     }
 
     @OnlyIn(Dist.CLIENT)
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/custom/RecoilModifier;getMaxInGunRecoilKeyFrame([Lcom/tacz/guns/resource/pojo/data/gun/GunRecoilKeyFrame;)F", ordinal = 1))
     private float tacztweaks$getPropertyDiagramsData$horizontalRecoilModifier(float original) {
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.horizontalRecoil(), original);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.HorizontalRecoil.INSTANCE.toTaCZ(), original);
     }
 }

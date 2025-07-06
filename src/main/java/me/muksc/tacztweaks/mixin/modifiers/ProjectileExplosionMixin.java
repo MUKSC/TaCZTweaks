@@ -16,6 +16,6 @@ public abstract class ProjectileExplosionMixin {
     @WrapOperation(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     private boolean tacztweaks$explode$playerDamageModifier(Entity instance, DamageSource pSource, float pAmount, Operation<Boolean> original) {
         if (!(instance instanceof Player)) return original.call(instance, pSource, pAmount);
-        return original.call(instance, pSource, (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.playerDamage(), pAmount));
+        return original.call(instance, pSource, (float) AttachmentPropertyManager.eval(Config.Modifiers.PlayerDamage.INSTANCE.toTaCZ(), pAmount));
     }
 }

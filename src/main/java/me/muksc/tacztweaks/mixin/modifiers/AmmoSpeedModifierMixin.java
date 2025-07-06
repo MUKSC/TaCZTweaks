@@ -24,12 +24,12 @@ public abstract class AmmoSpeedModifierMixin {
     @ModifyArg(method = "initCache", at = @At(value = "INVOKE", target = "com/tacz/guns/api/modifier/CacheValue.<init>(Ljava/lang/Object;)V"))
     private Object tacztweaks$initCache$speedModifier(Object value) {
         if (!(value instanceof Float speed)) return value;
-        return (float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.speed(), speed);
+        return (float) AttachmentPropertyManager.eval(Config.Modifiers.Speed.INSTANCE.toTaCZ(), speed);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Inject(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;getCache(Ljava/lang/String;)Ljava/lang/Object;"))
     private void tacztweaks$getPropertyDiagramsData$speedModifier(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty, CallbackInfoReturnable<List<IAttachmentModifier.DiagramsData>> cir, @Local(ordinal = 0) LocalFloatRef ammoSpeedRef) {
-        ammoSpeedRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.speed(), ammoSpeedRef.get()));
+        ammoSpeedRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.Speed.INSTANCE.toTaCZ(), ammoSpeedRef.get()));
     }
 }

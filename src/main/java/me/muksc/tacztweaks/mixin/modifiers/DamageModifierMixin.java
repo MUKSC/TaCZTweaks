@@ -19,7 +19,7 @@ public abstract class DamageModifierMixin {
     @Expression("? * (Double) DAMAGE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "initCache", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$initCache$damageModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.damage(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Damage.INSTANCE.toTaCZ(), original);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -29,6 +29,6 @@ public abstract class DamageModifierMixin {
     @Expression("? * (Double) DAMAGE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$getPropertyDiagramsData$damageModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.damage(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Damage.INSTANCE.toTaCZ(), original);
     }
 }

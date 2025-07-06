@@ -19,7 +19,7 @@ public abstract class HeadshotModifierMixin {
     @Expression("? * (Double) HEAD_SHOT_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "initCache", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$initCache$headshotModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.headshot(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Headshot.INSTANCE.toTaCZ(), original);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -29,6 +29,6 @@ public abstract class HeadshotModifierMixin {
     @Expression("? * (Double) HEAD_SHOT_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$getPropertyDiagramsData$headshotModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.headshot(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Headshot.INSTANCE.toTaCZ(), original);
     }
 }

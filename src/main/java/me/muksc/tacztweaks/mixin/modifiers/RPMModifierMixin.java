@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class RPMModifierMixin {
     @ModifyExpressionValue(method = "initCache", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getRoundsPerMinute(Lcom/tacz/guns/api/item/gun/FireMode;)I"))
     private int tacztweaks$initCache$rpmModifier(int original) {
-        return (int) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.rpm(), original);
+        return (int) AttachmentPropertyManager.eval(Config.Modifiers.RPM.INSTANCE.toTaCZ(), original);
     }
 
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getRoundsPerMinute(Lcom/tacz/guns/api/item/gun/FireMode;)I"))
     private int tacztweaks$getPropertyDiagramsData$rpmModifier(int original) {
-        return (int) AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.rpm(), original);
+        return (int) AttachmentPropertyManager.eval(Config.Modifiers.RPM.INSTANCE.toTaCZ(), original);
     }
 }

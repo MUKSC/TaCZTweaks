@@ -17,7 +17,7 @@ public abstract class AttachmentDataUtilsMixin {
     @Expression("? * (Double) DAMAGE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getDamageWithAttachment", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static double tacztweaks$getDamageWithAttachment$damageModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.damage(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Damage.INSTANCE.toTaCZ(), original);
     }
 
     @Definition(id = "HEAD_SHOT_BASE_MULTIPLIER", field = "Lcom/tacz/guns/config/sync/SyncConfig;HEAD_SHOT_BASE_MULTIPLIER:Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;")
@@ -26,7 +26,7 @@ public abstract class AttachmentDataUtilsMixin {
     @Expression("? * (Double) HEAD_SHOT_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getHeadshotMultiplier", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static double tacztweaks$getHeadshotMultiplier$headshotModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.headshot(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.Headshot.INSTANCE.toTaCZ(), original);
     }
 
     @Definition(id = "ARMOR_IGNORE_BASE_MULTIPLIER", field = "Lcom/tacz/guns/config/sync/SyncConfig;ARMOR_IGNORE_BASE_MULTIPLIER:Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;")
@@ -35,6 +35,6 @@ public abstract class AttachmentDataUtilsMixin {
     @Expression("? * (Double) ARMOR_IGNORE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getArmorIgnoreWithAttachment", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static double tacztweaks$getArmorIgnoreWithAttachment$armorIgnoreModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.armorIgnore(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.ArmorIgnore.INSTANCE.toTaCZ(), original);
     }
 }

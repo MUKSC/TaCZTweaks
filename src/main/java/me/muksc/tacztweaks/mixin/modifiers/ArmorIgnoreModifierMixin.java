@@ -19,7 +19,7 @@ public abstract class ArmorIgnoreModifierMixin {
     @Expression("? * (Double) ARMOR_IGNORE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "initCache", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$initCache$armorIgnoreModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.armorIgnore(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.ArmorIgnore.INSTANCE.toTaCZ(), original);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -29,6 +29,6 @@ public abstract class ArmorIgnoreModifierMixin {
     @Expression("? * (Double) ARMOR_IGNORE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$getPropertyDiagramsData$armorIgnoreModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.INSTANCE.armorIgnore(), original);
+        return AttachmentPropertyManager.eval(Config.Modifiers.ArmorIgnore.INSTANCE.toTaCZ(), original);
     }
 }
