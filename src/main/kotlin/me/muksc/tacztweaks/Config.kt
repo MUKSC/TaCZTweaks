@@ -32,7 +32,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     val modifiers by registerSyncable(Modifiers)
     val crawl by registerSyncable(Crawl)
     val compat by registerSyncable(Compat)
-    val tweaks by register(Tweaks, Tweaks)
+    val tweaks by registerSyncable(Tweaks)
 
     object Gun : SyncableCodecConfig<Gun>() {
         val shootWhileSprinting by registerSyncable(
@@ -185,7 +185,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun mtsFix(): Boolean = mtsFix.syncedValue
     }
 
-    object Tweaks : CodecConfig<Tweaks>() {
+    object Tweaks : SyncableCodecConfig<Tweaks>() {
         val endermenEvadeBullets by registerSyncable(
             default = false,
             codec = BOOL,
