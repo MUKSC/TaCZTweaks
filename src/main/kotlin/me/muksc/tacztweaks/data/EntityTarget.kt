@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import net.minecraft.core.registries.Registries
 import net.minecraft.tags.TagKey
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -99,12 +100,27 @@ sealed class EntityTarget(
         }
     }
 
-    class Health(val range: ValueRange) : EntityTarget(EEntityTargetType.HEALTH) {
+    class Health(val unit: EHealthUnit, val range: ValueRange) : EntityTarget(EEntityTargetType.HEALTH) {
+        enum class EHealthUnit : StringRepresentable {
+            RAW,
+            PERCENTAGE;
+
+            override fun getSerializedName(): String = name.lowercase()
+
+            companion object {
+                val CODEC = StringRepresentable.fromEnum(::values)
+            }
+        }
+
         override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
-            entity is LivingEntity && entity.health in range
+            entity is LivingEntity && when (unit) {
+                EHealthUnit.RAW -> entity.health
+                EHealthUnit.PERCENTAGE -> entity.health / entity.maxHealth
+            } in range
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Health> { it.group(
+                EHealthUnit.CODEC.fieldOf("unit").forGetter(Health::unit),
                 ValueRange.CODEC.fieldOf("range").forGetter(Health::range)
             ).apply(it, ::Health) }
         }
