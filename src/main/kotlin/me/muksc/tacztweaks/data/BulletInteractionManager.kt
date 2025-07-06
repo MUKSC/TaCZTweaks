@@ -27,9 +27,10 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.minecraftforge.common.ForgeHooks
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.TierSortingRegistry
 import net.minecraftforge.common.util.FakePlayer
+import net.minecraftforge.event.level.BlockEvent
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.exp
@@ -144,8 +145,8 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         if (breakBlock) run {
             val owner = ammo.owner
             if (owner is ServerPlayer) {
-                val exp = ForgeHooks.onBlockBreakEvent(level, owner.gameMode.gameModeForPlayer, owner, blockPos)
-                if (exp == -1) return@run
+                val cancelled = MinecraftForge.EVENT_BUS.post(BlockEvent.BreakEvent(level, blockPos, state, owner))
+                if (cancelled) return@run
             }
             level.destroyBlock(blockPos, interaction.blockBreak.drop, ammo.owner)
         }
