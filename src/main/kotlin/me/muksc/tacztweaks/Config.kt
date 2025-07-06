@@ -88,7 +88,18 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             decoder = { buf -> buf.readUtf() }
         )
 
-        fun toTaCZ(): Modifier = Modifier().apply {
+        fun toTaCZ(): Modifier {
+            var modifier = modifier
+            if (modifier == null) modifier = create()
+            if (modifier.addend.toFloat() != addend.syncedValue) modifier = create()
+            if (modifier.multiplier.toFloat() != multiplier.syncedValue) modifier = create()
+            if (modifier.function != function.syncedValue.takeIf { it.isNotEmpty() }) modifier = create()
+            return modifier.also(this::modifier::set)
+        }
+
+        private var modifier: Modifier? = null
+
+        private fun create(): Modifier = Modifier().apply {
             val instance = this
             val config = this@ModifierConfig
             Modifier::class.java.run {
