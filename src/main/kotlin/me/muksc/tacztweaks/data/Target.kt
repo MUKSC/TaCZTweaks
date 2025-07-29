@@ -2,11 +2,15 @@ package me.muksc.tacztweaks.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.tacz.guns.api.entity.IGunOperator
 import com.tacz.guns.entity.EntityKineticBullet
+import com.tacz.guns.resource.modifier.custom.SilenceModifier
+import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.StringRepresentable
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.Vec3
 
 sealed class Target(
@@ -25,7 +29,9 @@ sealed class Target(
         AMMO("ammo", { Ammo.CODEC }),
         REGEX("regex", { RegexPattern.CODEC }),
         DAMAGE("damage", { Damage.CODEC }),
-        SPEED("speed", { Speed.CODEC });
+        SPEED("speed", { Speed.CODEC }),
+        SILENCED("silenced", { Silenced.CODEC }),
+        RANDOM_CHANCE("random_chance", { RandomChance.CODEC });
 
         companion object {
             private val map = ETargetType.entries.associateBy(ETargetType::key)
@@ -55,12 +61,12 @@ sealed class Target(
         }
     }
 
-    class Inverted(val value: Target) : Target(ETargetType.INVERTED) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean = !value.test(entity, location)
+    class Inverted(val term: Target) : Target(ETargetType.INVERTED) {
+        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean = !term.test(entity, location)
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Inverted> { it.group(
-                Target.CODEC.fieldOf("term").forGetter(Inverted::value)
+                Target.CODEC.fieldOf("term").forGetter(Inverted::term)
             ).apply(it, ::Inverted) }
         }
     }
@@ -131,6 +137,28 @@ sealed class Target(
             val CODEC = RecordCodecBuilder.create<Speed> { it.group(
                 Codec.list(ValueRange.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Speed::values)
             ).apply(it, ::Speed) }
+        }
+    }
+
+    object Silenced : Target(ETargetType.SILENCED) {
+        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean {
+            val owner = entity.owner as? LivingEntity ?: return false
+            val operator = IGunOperator.fromLivingEntity(owner)
+            val silence = operator.cacheProperty?.getCache<ObjectObjectImmutablePair<Integer, Boolean>>(SilenceModifier.ID) ?: return false
+            return silence.right()
+        }
+
+        val CODEC = Codec.unit(Silenced)
+    }
+
+    class RandomChance(val chance: Float) : Target(ETargetType.RANDOM_CHANCE) {
+        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
+            entity.random.nextFloat() < chance
+
+        companion object {
+            val CODEC = RecordCodecBuilder.create<RandomChance> { it.group(
+                Codec.FLOAT.fieldOf("chance").forGetter(RandomChance::chance)
+            ).apply(it, ::RandomChance) }
         }
     }
 
