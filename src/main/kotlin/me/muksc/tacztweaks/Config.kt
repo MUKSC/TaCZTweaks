@@ -116,6 +116,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             registerSyncable("damage", Damage)
             registerSyncable("playerDamage", PlayerDamage)
             registerSyncable("headshot", Headshot)
+            registerSyncable("playerHeadshot", PlayerHeadshot)
             registerSyncable("armorIgnore", ArmorIgnore)
             registerSyncable("speed", Speed)
             registerSyncable("gravity", Gravity)
@@ -130,6 +131,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         object Damage : ModifierConfig()
         object PlayerDamage : ModifierConfig()
         object Headshot : ModifierConfig()
+        object PlayerHeadshot : ModifierConfig()
         object ArmorIgnore : ModifierConfig()
         object Speed : ModifierConfig()
         object Gravity : ModifierConfig()
@@ -434,6 +436,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 "damage" to Modifiers.Damage,
                 "playerDamage" to Modifiers.PlayerDamage,
                 "headshot" to Modifiers.Headshot,
+                "playerHeadshot" to Modifiers.PlayerHeadshot,
                 "armorIgnore" to Modifiers.ArmorIgnore,
                 "speed" to Modifiers.Speed,
                 "gravity" to Modifiers.Gravity,

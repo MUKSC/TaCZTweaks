@@ -33,6 +33,8 @@
   "tacztweaks.config.modifiers.playerDamage.description": "Modifies the damage of guns against players.",
   "tacztweaks.config.modifiers.headshot.name": "Headshot Modifiers",
   "tacztweaks.config.modifiers.headshot.description": "Modifies the headshot multiplier of guns.",
+  "tacztweaks.config.modifiers.playerHeadshot.name": "Player Headshot Modifiers",
+  "tacztweaks.config.modifiers.playerHeadshot.description": "Modifies the headshot multiplier of guns against players.",
   "tacztweaks.config.modifiers.armorIgnore.name": "Armor Piercing Modifiers",
   "tacztweaks.config.modifiers.armorIgnore.description": "Modifies the armor piercing rate of guns.",
   "tacztweaks.config.modifiers.speed.name": "Speed Modifiers",
