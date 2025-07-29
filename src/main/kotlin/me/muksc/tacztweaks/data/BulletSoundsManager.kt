@@ -6,7 +6,9 @@ import com.google.gson.JsonElement
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
+import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageConditionalAirspaceSound
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
+import me.muksc.tacztweaks.network.NetworkHandler
 import me.muksc.tacztweaks.thenPrioritizeBy
 import me.muksc.tacztweaks.toImmutableMap
 import net.minecraft.core.registries.BuiltInRegistries
@@ -82,6 +84,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
                     is BulletSounds.Entity -> it.entities.isNotEmpty()
                     is BulletSounds.Whizz -> false
                     is BulletSounds.Constant -> false
+                    is BulletSounds.AirSpace -> false
                 } }
         ).build() }.toImmutableMap()
     }
@@ -116,6 +119,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     fun handleSoundWhizz(level: ServerLevel, entity: EntityKineticBullet, ignores: List<ServerPlayer>) {
         for (player in level.server.playerList.players) {
             if (entity.owner == player || player in ignores) continue
+            if (player.level().dimension() != level.dimension()) continue
             handleSoundWhizz(player, entity)
         }
     }
@@ -135,6 +139,37 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         val distance = playerPosition.distanceTo(position)
         val whizz = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
         whizz.sound.play(player, position, entity)
+    }
+
+    fun handleAirspace(level: ServerLevel, entity: EntityKineticBullet) {
+        val sounds = getSound<BulletSounds.AirSpace>(entity, entity.position()) ?: return
+        for (player in level.server.playerList.players) {
+            if (player.level().dimension() != level.dimension()) continue
+            val distance = player.position().distanceTo(entity.position())
+            val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
+            sound.sound.playAirspace(player, entity,sounds.airspace, sounds.occlusion)
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun BulletSounds.Sound.playAirspace(player: ServerPlayer, entity: EntityKineticBullet, airspace: ValueRange, occlusion: ValueRange) {
+        val soundEvent = SoundEvent.createVariableRangeEvent(sound)
+        NetworkHandler.sendS2C(player, ServerMessageConditionalAirspaceSound(
+            ClientboundSoundPacket(
+                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
+                entity.soundSource,
+                entity.x,
+                entity.y,
+                entity.z,
+                volume,
+                pitch,
+                player.random.nextLong()
+            ),
+            airspace.min.toFloat(),
+            airspace.max.toFloat(),
+            occlusion.min.toFloat(),
+            occlusion.max.toFloat()
+        ))
     }
 
     @Suppress("DEPRECATION")

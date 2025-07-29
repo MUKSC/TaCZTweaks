@@ -15,6 +15,7 @@ class ModMixinPlugin : IMixinConfigPlugin {
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.firstaid.") -> isModLoaded("firstaid")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lso.") -> isModLoaded("legendarysurvivaloverhaul")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.mts.") -> isModLoaded("mts")
+        mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.soundphysics.") -> isModLoaded("sound_physics_remastered")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs.") -> isModLoaded("valkyrienskies") && when (mixinClassName) {
             "me.muksc.tacztweaks.mixin.compat.vs.client.MixinLevelRendererMixin" -> !isModLoaded("vs_addition")
             else -> true

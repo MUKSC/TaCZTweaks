@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks;
 
 import me.muksc.tacztweaks.client.input.UnloadKey;
+import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
 import me.muksc.tacztweaks.data.BulletInteractionManager;
 import me.muksc.tacztweaks.data.BulletParticlesManager;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
@@ -43,6 +44,7 @@ public class TaCZTweaks {
         container = ModLoadingContext.get().getActiveContainer();
         Config.INSTANCE.touch();
         NetworkHandler.INSTANCE.register();
+        SoundPhysicsCompat.INSTANCE.initialize();
         MinecraftForge.EVENT_BUS.register(this);
     }
 

@@ -22,6 +22,7 @@ tacz-next = "1.1.7"
 tacz-modrinth = "1.1.6"
 firstaid-modrinth = "1.20.1-1.1"
 legendary-survival-overhaul-curseforge = "6268808"
+sound-physics-remastered-modrinth = "forge-1.20.1-1.4.13"
 valkyrienskies = "2.3.0-beta.5+bcda04a482"
 valkyrienskies-core = "1.1.0+2a62e6a823"
 neat-modrinth = "1.20.1-41-forge"
@@ -39,6 +40,7 @@ dev-isxander-yacl = { module = "dev.isxander:yet-another-config-lib", version.re
 modrinth-tacz = { module = "maven.modrinth:timeless-and-classics-zero", version.ref = "tacz-modrinth" }
 modrinth-firstaid = { module = "maven.modrinth:firstaid", version.ref = "firstaid-modrinth" }
 curseforge-legendary-survival-overhaul = { module = "curse.maven:legendary-survival-overhaul-840254", version.ref = "legendary-survival-overhaul-curseforge" }
+modrinth-sound-physics-remastered = { module = "maven.modrinth:sound-physics-remastered", version.ref = "sound-physics-remastered-modrinth" }
 org-valkyrienskies-forge = { module = "org.valkyrienskies:valkyrienskies-120-forge", version.ref = "valkyrienskies" }
 org-valkyrienskies-core-api = { module = "org.valkyrienskies.core:api", version.ref = "valkyrienskies-core" }
 org-valkyrienskies-core-api-game = { module = "org.valkyrienskies.core:api-game", version.ref = "valkyrienskies-core" }
