@@ -153,7 +153,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
 
     @Suppress("DEPRECATION")
     private fun BulletSounds.Sound.playAirspace(player: ServerPlayer, entity: EntityKineticBullet, airspace: ValueRange, occlusion: ValueRange) {
-        val soundEvent = SoundEvent.createVariableRangeEvent(sound)
+        val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
         NetworkHandler.sendS2C(player, ServerMessageConditionalAirspaceSound(
             ClientboundSoundPacket(
                 BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
@@ -174,7 +174,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
 
     @Suppress("DEPRECATION")
     private fun BulletSounds.Sound.play(player: ServerPlayer, position: Vec3, entity: EntityKineticBullet) {
-        val soundEvent = SoundEvent.createVariableRangeEvent(sound)
+        val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
         player.connection.send(ClientboundSoundPacket(
             BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
             entity.soundSource,
@@ -188,7 +188,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     }
 
     private fun BulletSounds.Sound.play(level: ServerLevel, position: Vec3, entity: EntityKineticBullet) {
-        val soundEvent = SoundEvent.createVariableRangeEvent(sound)
+        val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
         level.playSound(null, position.x, position.y, position.z, soundEvent, entity.soundSource, volume, pitch)
     }
 

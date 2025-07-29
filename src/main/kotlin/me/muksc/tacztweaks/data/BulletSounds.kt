@@ -6,6 +6,8 @@ import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.singleOrListCodec
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.resources.ResourceLocation
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 sealed class BulletSounds(
     val type: EBulletSoundsType,
@@ -15,13 +17,17 @@ sealed class BulletSounds(
     class Sound(
         val sound: ResourceLocation,
         val volume: Float,
-        val pitch: Float
+        val pitch: Float,
+        val range: Float?
     ) {
+        constructor(sound: ResourceLocation, volume: Float, pitch: Float, range: Optional<Float>) : this(sound, volume, pitch, range.getOrNull())
+
         companion object {
             val CODEC = RecordCodecBuilder.create<Sound> { it.group(
                 ResourceLocation.CODEC.fieldOf("sound").forGetter(Sound::sound),
                 Codec.FLOAT.strictOptionalFieldOf("volume", 1.0F).forGetter(Sound::volume),
                 Codec.FLOAT.strictOptionalFieldOf("pitch", 1.0F).forGetter(Sound::pitch),
+                Codec.FLOAT.strictOptionalFieldOf("range").forGetter { Optional.ofNullable(it.range) }
             ).apply(it, ::Sound) }
         }
     }
