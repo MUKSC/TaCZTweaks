@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks.network.message
 
+import com.tacz.guns.api.item.IAmmoBox
 import com.tacz.guns.api.item.IGun
 import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.TaCZTweaks
@@ -9,7 +10,6 @@ import me.muksc.tacztweaks.network.CustomPacketPayload
 import me.muksc.tacztweaks.network.StreamCodec
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraftforge.common.util.LogicalSidedProvider
 
 object ClientMessagePlayerUnload : CustomPacketPayload {
     val TYPE = CustomPacketPayload.Type<ClientMessagePlayerUnload>(
@@ -26,10 +26,18 @@ object ClientMessagePlayerUnload : CustomPacketPayload {
             if (player == null) return@execute
             val data = (player as ShooterDataHolderProvider).`tacztweaks$getShooterDataHolder`()
             val gunStack = data.currentGunItem?.get() ?: return@execute
+            val hasInfiniteAmmo = (0..player.inventory.containerSize).any { index ->
+                val stack = player.inventory.getItem(index)
+                val item = stack.item
+                if (item !is IAmmoBox) return@any false
+                if (!item.isAmmoBoxOfGun(gunStack, stack)) return@any false
+                item.isAllTypeCreative(stack) || item.isCreative(stack)
+            }
+            if (hasInfiniteAmmo) return@execute
+
             val gun = IGun.getIGunOrNull(gunStack) ?: return@execute
             val ext = gun as? UnloadableAbstractGunItem ?: return@execute
             ext.`tacztweaks$setUnloading`()
-            LogicalSidedProvider.WORKQUEUE
             gun.dropAllAmmo(player, gunStack)
         }
     }
