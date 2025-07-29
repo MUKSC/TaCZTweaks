@@ -76,6 +76,8 @@
   "tacztweaks.config.crawl.visualTweak.name": "Visual Tweak",
   "tacztweaks.config.crawl.visualTweak.description": "Tweaks the crawling animation to look more natural.",
   "tacztweaks.config.tweaks": "Tweaks",
+  "tacztweaks.config.tweaks.audibleReloadSounds.name": "Audible Reload Sounds",
+  "tacztweaks.config.tweaks.audibleReloadSounds.description": "Makes the other player's reload sounds audible",
   "tacztweaks.config.tweaks.endermenEvadeBullets.name": "Endermen Evade Bullets",
   "tacztweaks.config.tweaks.endermenEvadeBullets.description": "Makes endermen teleport away from bullets, avoiding getting hit.",
   "tacztweaks.config.tweaks.alwaysFilterByHand.name": "Always Filter by Hand",

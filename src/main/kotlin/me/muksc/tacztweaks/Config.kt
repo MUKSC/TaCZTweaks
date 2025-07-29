@@ -202,6 +202,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     }
 
     object Tweaks : SyncableCodecConfig<Tweaks>() {
+        val audibleReloadSounds by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val endermenEvadeBullets by registerSyncable(
             default = false,
             codec = BOOL,
@@ -214,6 +220,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val suppressKillSounds by register(false, BOOL)
         val hideHitMarkers by register(false, BOOL)
 
+        fun audibleReloadSounds(): Boolean = audibleReloadSounds.syncedValue
         fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
@@ -421,6 +428,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             }.build())
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.tweaks"))
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.tweaks.audibleReloadSounds.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.audibleReloadSounds.description")))
+                    binding(Tweaks.audibleReloadSounds.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.description")))
