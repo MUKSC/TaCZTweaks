@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
 import dev.isxander.yacl3.dsl.ControllerBuilderFactory
+import dev.isxander.yacl3.dsl.numberField
 import dev.isxander.yacl3.dsl.slider
 import dev.isxander.yacl3.dsl.stringField
 import dev.isxander.yacl3.platform.YACLPlatform
@@ -469,8 +470,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                         nameSynced(TaCZTweaks.translatable("config.modifier.addend.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.addend.description")))
                         binding(modifier.addend.asSyncedBinding())
-                        controller(slider(range = -100.0F..100.0F, step = 0.1F) {
-                            Component.literal(DecimalFormat("+#.#;-#.#").format(it))
+                        controller(numberField { value: Float ->
+                            Component.literal(DecimalFormat("+#.#;-#.#").format(value))
                         })
                         available(canUpdateServerConfig)
                     }.build())
@@ -478,8 +479,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                         nameSynced(TaCZTweaks.translatable("config.modifier.multiplier.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.multiplier.description")))
                         binding(modifier.multiplier.asSyncedBinding())
-                        controller(slider(range = -100.0F..100.0F, step = 0.1F) {
-                            Component.literal("%.1f".format(it))
+                        controller(numberField { value: Float ->
+                            Component.literal("%.1f".format(value))
                         })
                         available(canUpdateServerConfig)
                     }.build())
