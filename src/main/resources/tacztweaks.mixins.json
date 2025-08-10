@@ -29,6 +29,7 @@
     "features.bullet_interactions.BlockBehaviourMixin",
     "features.bullet_sounds.EntityKineticBulletMixin",
     "features.bullet_sounds.ModernKineticGunScriptAPIMixin",
+    "gun.ModernKineticGunScriptAPIMixin",
     "gun.movement.LivingEntityAimMixin",
     "gun.movement.LivingEntityReloadMixin",
     "gun.movement.LivingEntityShootMixin",

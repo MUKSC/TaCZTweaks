@@ -17,6 +17,8 @@
   "tacztweaks.config.gun.sprintWhileReloading.description": "Allows reloading guns while sprinting.",
   "tacztweaks.config.gun.reloadWhileShooting.name": "Reload While Shooting",
   "tacztweaks.config.gun.reloadWhileShooting.description": "Allows reloading guns immediately after shooting.",
+  "tacztweaks.config.gun.reloadDiscardsMagazine.name": "Reload Discards Magazine",
+  "tacztweaks.config.gun.reloadDiscardsMagazine.description": "Makes the reloading discarding the remaining ammo, instead of returning them back to the inventory.",
   "tacztweaks.config.gun.allowUnload.name": "Allow Unload",
   "tacztweaks.config.gun.allowUnload.description": "Enables or disables the gun unload feature.",
   "tacztweaks.config.gun.disableBulletCulling.name": "Disable Bullet Culling",

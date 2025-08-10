@@ -55,6 +55,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val reloadDiscardsMagazine by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val allowUnload by registerSyncable(
             default = true,
             codec = BOOL,
@@ -66,6 +72,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun shootWhileSprinting(): Boolean = shootWhileSprinting.syncedValue
         fun sprintWhileReloading(): Boolean = sprintWhileReloading.syncedValue
         fun reloadWhileShooting(): Boolean = reloadWhileShooting.syncedValue
+        fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
         fun allowUnload(): Boolean = allowUnload.syncedValue
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
@@ -393,6 +400,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.gun.reloadWhileShooting.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.reloadWhileShooting.description")))
                     binding(Gun.reloadWhileShooting.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.gun.reloadDiscardsMagazine.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.reloadDiscardsMagazine.description")))
+                    binding(Gun.reloadDiscardsMagazine.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())
