@@ -70,6 +70,7 @@
     "gun.movement.TickAnimationEventMixin",
     "tweaks.GunPackListMixin",
     "tweaks.GunSmithTableScreenMixin",
+    "tweaks.GunSoundInstanceMixin",
     "tweaks.RenderCrosshairEventMixin",
     "tweaks.SoundPlayManagerMixin"
   ],

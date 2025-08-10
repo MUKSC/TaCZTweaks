@@ -215,6 +215,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val betterMonoConversion by register(false, BOOL)
         val endermenEvadeBullets by registerSyncable(
             default = false,
             codec = BOOL,
@@ -229,6 +230,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
 
         fun audibleReloadSounds(): Boolean = audibleReloadSounds.syncedValue
         fun forceFirstPersonShootingSound(): Boolean = forceFirstPersonShootingSound.syncedValue
+        fun betterMonoConversion(): Boolean = betterMonoConversion.value
         fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
@@ -449,6 +451,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     binding(Tweaks.forceFirstPersonShootingSound.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.tweaks.betterMonoConversion.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.betterMonoConversion.description")))
+                    binding(Tweaks.betterMonoConversion.asBinding())
+                    controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.name"))
