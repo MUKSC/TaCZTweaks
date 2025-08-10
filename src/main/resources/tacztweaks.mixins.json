@@ -48,7 +48,8 @@
     "modifiers.RecoilModifierMixin",
     "modifiers.RPMModifierMixin",
     "tweaks.EnderManMixin",
-    "tweaks.EntityKineticBulletMixin"
+    "tweaks.EntityKineticBulletMixin",
+    "tweaks.ModernKineticGunScriptAPIMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",
