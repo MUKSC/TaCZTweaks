@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.singleOrListCodec
+import me.muksc.tacztweaks.sortedBy
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.resources.ResourceLocation
 import java.util.Optional
@@ -124,7 +125,7 @@ sealed class BulletSounds(
         companion object {
             val CODEC = RecordCodecBuilder.create<Whizz> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Whizz::target),
-                Codec.list(DistanceSound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds),
+                Codec.list(DistanceSound.CODEC).sortedBy(DistanceSound::threshold).strictOptionalFieldOf("sounds", emptyList()).forGetter(Whizz::sounds),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Whizz::priority)
             ).apply(it, ::Whizz) }
         }
@@ -142,7 +143,7 @@ sealed class BulletSounds(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(AirSpace::target),
                 ValueRange.CODEC.fieldOf("airspace").forGetter(AirSpace::airspace),
                 ValueRange.CODEC.fieldOf("occlusion").forGetter(AirSpace::occlusion),
-                Codec.list(DistanceSound.CODEC).strictOptionalFieldOf("sounds", emptyList()).forGetter(AirSpace::sounds),
+                Codec.list(DistanceSound.CODEC).sortedBy(DistanceSound::threshold).strictOptionalFieldOf("sounds", emptyList()).forGetter(AirSpace::sounds),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(AirSpace::priority)
             ).apply(it, ::AirSpace) }
         }

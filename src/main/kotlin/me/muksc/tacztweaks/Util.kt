@@ -37,3 +37,6 @@ fun <T> singleOrListCodec(codec: Codec<T>): Codec<List<T>> =
             it.size == 1 -> Either.left(it.first())
             else -> Either.right(it)
         } })
+
+fun <T, R : Comparable<R>> Codec<List<T>>.sortedBy(selector: (T) -> R): Codec<List<T>> =
+    xmap(::identity) { it.sortedBy(selector) }
