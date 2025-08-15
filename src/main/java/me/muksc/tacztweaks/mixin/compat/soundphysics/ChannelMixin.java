@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Mixin(Channel.class)
 public abstract class ChannelMixin {
+    @Shadow public abstract void destroy();
+
     @Inject(method = "play", at = @At(value = "INVOKE", target = "Lorg/lwjgl/openal/AL10;alSourcePlay(I)V", remap = false), cancellable = true)
     private void tacztweaks$play$cancelPlay(CallbackInfo ci) {
         try {
@@ -21,6 +23,7 @@ public abstract class ChannelMixin {
             if (sound == null || airspace.isEmpty() || occlusion.isEmpty()) return;
             if (sound.canPlayAtAirspace(airspace.get()) && sound.canPlayAtOcclusion(occlusion.get())) return;
             ci.cancel();
+            destroy();
         } finally {
             SoundPhysicsCompat.INSTANCE.setCurrentSound(null);
             SoundPhysicsCompat.INSTANCE.setCurrentAirspace(null);
