@@ -67,6 +67,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val cancelInspection by register(false, BOOL)
         val disableBulletCulling by register(false, BOOL)
 
         fun shootWhileSprinting(): Boolean = shootWhileSprinting.syncedValue
@@ -74,6 +75,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun reloadWhileShooting(): Boolean = reloadWhileShooting.syncedValue
         fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
         fun allowUnload(): Boolean = allowUnload.syncedValue
+        fun cancelInspection(): Boolean = cancelInspection.value
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
 
@@ -290,6 +292,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             name(TaCZTweaks.translatable("config.category.general"))
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.gun"))
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.cancelInspection.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.cancelInspection.description")))
+                    binding(Gun.cancelInspection.asBinding())
+                    controller(booleanController())
+                }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.disableBulletCulling.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableBulletCulling.description")))
