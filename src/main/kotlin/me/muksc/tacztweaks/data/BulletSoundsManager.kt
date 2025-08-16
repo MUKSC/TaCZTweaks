@@ -138,7 +138,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         val position = currentPosition.add(trajectory.scale(length))
         val distance = playerPosition.distanceTo(position)
         val whizz = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
-        whizz.sound.play(player, position, entity)
+        whizz.sound?.play(player, position, entity)
     }
 
     fun handleAirspace(level: ServerLevel, entity: EntityKineticBullet) {
@@ -147,7 +147,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
             if (player.level().dimension() != level.dimension()) continue
             val distance = player.position().distanceTo(entity.position())
             val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
-            sound.sound.playAirspace(player, entity,sounds.airspace, sounds.occlusion, sounds.reflectivity)
+            sound.sound?.playAirspace(player, entity,sounds.airspace, sounds.occlusion, sounds.reflectivity)
         }
     }
 
