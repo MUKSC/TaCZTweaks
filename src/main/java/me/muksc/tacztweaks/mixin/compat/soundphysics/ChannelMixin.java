@@ -3,7 +3,10 @@ package me.muksc.tacztweaks.mixin.compat.soundphysics;
 import com.mojang.blaze3d.audio.Channel;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsConditionalSoundInstance;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
+import me.muksc.tacztweaks.data.BulletSounds;
+import me.muksc.tacztweaks.data.BulletSoundsManager;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,16 +21,19 @@ public abstract class ChannelMixin {
     private void tacztweaks$play$cancelPlay(CallbackInfo ci) {
         try {
             SoundPhysicsConditionalSoundInstance sound = SoundPhysicsCompat.INSTANCE.getCurrentSound();
-            Optional<Float> airspace = Optional.ofNullable(SoundPhysicsCompat.INSTANCE.getCurrentAirspace());
-            Optional<Double> occlusion = Optional.ofNullable(SoundPhysicsCompat.INSTANCE.getCurrentOcclusionAccumulation());
-            if (sound == null || airspace.isEmpty() || occlusion.isEmpty()) return;
-            if (sound.canPlayAtAirspace(airspace.get()) && sound.canPlayAtOcclusion(occlusion.get())) return;
+            Float airspace = SoundPhysicsCompat.INSTANCE.getCurrentAirspace();
+            Double occlusion = SoundPhysicsCompat.INSTANCE.getCurrentOcclusionAccumulation();
+            Float reflectivity = SoundPhysicsCompat.INSTANCE.getCurrentReflectivity();
+            if (sound == null || airspace == null || occlusion == null || reflectivity == null) return;
+            reflectivity /= SoundPhysicsCompat.INSTANCE.getReflectivityDivider();
+            if (sound.canPlayAtAirspace(airspace) && sound.canPlayAtOcclusion(occlusion) && sound.canPlayAtReflectivity(reflectivity)) return;
             ci.cancel();
             destroy();
         } finally {
             SoundPhysicsCompat.INSTANCE.setCurrentSound(null);
             SoundPhysicsCompat.INSTANCE.setCurrentAirspace(null);
             SoundPhysicsCompat.INSTANCE.setCurrentOcclusionAccumulation(null);
+            SoundPhysicsCompat.INSTANCE.setCurrentReflectivity(null);
         }
     }
 }

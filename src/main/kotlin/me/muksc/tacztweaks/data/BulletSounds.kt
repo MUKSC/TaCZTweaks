@@ -135,6 +135,7 @@ sealed class BulletSounds(
         target: List<Target>,
         val airspace: ValueRange,
         val occlusion: ValueRange,
+        val reflectivity: ValueRange,
         val sounds: List<DistanceSound>,
         priority: Int
     ) : BulletSounds(EBulletSoundsType.AIRSPACE, target, priority) {
@@ -143,6 +144,7 @@ sealed class BulletSounds(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(AirSpace::target),
                 ValueRange.CODEC.fieldOf("airspace").forGetter(AirSpace::airspace),
                 ValueRange.CODEC.fieldOf("occlusion").forGetter(AirSpace::occlusion),
+                ValueRange.CODEC.fieldOf("reflectivity").forGetter(AirSpace::reflectivity),
                 Codec.list(DistanceSound.CODEC).sortedBy(DistanceSound::threshold).strictOptionalFieldOf("sounds", emptyList()).forGetter(AirSpace::sounds),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(AirSpace::priority)
             ).apply(it, ::AirSpace) }

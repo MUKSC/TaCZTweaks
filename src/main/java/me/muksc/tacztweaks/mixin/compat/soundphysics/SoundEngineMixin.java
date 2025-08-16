@@ -22,6 +22,7 @@ public abstract class SoundEngineMixin {
             SoundPhysicsCompat.INSTANCE.setCurrentSound(null);
             SoundPhysicsCompat.INSTANCE.setCurrentAirspace(null);
             SoundPhysicsCompat.INSTANCE.setCurrentOcclusionAccumulation(null);
+            SoundPhysicsCompat.INSTANCE.setCurrentReflectivity(null);
         }
     }
 
@@ -34,6 +35,7 @@ public abstract class SoundEngineMixin {
             SoundPhysicsCompat.INSTANCE.setCurrentSound(null);
             SoundPhysicsCompat.INSTANCE.setCurrentAirspace(null);
             SoundPhysicsCompat.INSTANCE.setCurrentOcclusionAccumulation(null);
+            SoundPhysicsCompat.INSTANCE.setCurrentReflectivity(null);
         }
     }
 }

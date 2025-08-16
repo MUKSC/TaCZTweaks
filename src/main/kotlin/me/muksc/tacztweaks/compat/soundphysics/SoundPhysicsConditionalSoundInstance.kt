@@ -17,7 +17,9 @@ class SoundPhysicsConditionalSoundInstance(
     private val minAirspace: Float,
     private val maxAirspace: Float,
     private val minOcclusion: Float,
-    private val maxOcclusion: Float
+    private val maxOcclusion: Float,
+    private val minReflectivity: Float,
+    private val maxReflectivity: Float
 ) : AbstractSoundInstance(sound.location, source, random) {
     init {
         this.volume = volume
@@ -32,4 +34,7 @@ class SoundPhysicsConditionalSoundInstance(
 
     fun canPlayAtOcclusion(occlusion: Double): Boolean =
         occlusion in minOcclusion..maxOcclusion
+
+    fun canPlayAtReflectivity(reflectivity: Float): Boolean =
+        reflectivity in minReflectivity..maxReflectivity
 }

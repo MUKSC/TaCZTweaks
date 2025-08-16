@@ -147,12 +147,12 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
             if (player.level().dimension() != level.dimension()) continue
             val distance = player.position().distanceTo(entity.position())
             val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
-            sound.sound.playAirspace(player, entity,sounds.airspace, sounds.occlusion)
+            sound.sound.playAirspace(player, entity,sounds.airspace, sounds.occlusion, sounds.reflectivity)
         }
     }
 
     @Suppress("DEPRECATION")
-    private fun BulletSounds.Sound.playAirspace(player: ServerPlayer, entity: EntityKineticBullet, airspace: ValueRange, occlusion: ValueRange) {
+    private fun BulletSounds.Sound.playAirspace(player: ServerPlayer, entity: EntityKineticBullet, airspace: ValueRange, occlusion: ValueRange, reflectivity: ValueRange) {
         val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
         NetworkHandler.sendS2C(player, ServerMessageConditionalAirspaceSound(
             ClientboundSoundPacket(
@@ -168,7 +168,9 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
             airspace.min.toFloat(),
             airspace.max.toFloat(),
             occlusion.min.toFloat(),
-            occlusion.max.toFloat()
+            occlusion.max.toFloat(),
+            reflectivity.min.toFloat(),
+            reflectivity.max.toFloat()
         ))
     }
 

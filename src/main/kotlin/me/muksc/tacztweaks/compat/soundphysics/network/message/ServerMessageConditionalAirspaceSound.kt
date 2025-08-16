@@ -15,7 +15,9 @@ class ServerMessageConditionalAirspaceSound(
     val minAirspace: Float,
     val maxAirspace: Float,
     val minOcclusion: Float,
-    val maxOcclusion: Float
+    val maxOcclusion: Float,
+    val minReflectivity: Float,
+    val maxReflectivity: Float
 ) : CustomPacketPayload {
     companion object {
         val TYPE = CustomPacketPayload.Type<ServerMessageConditionalAirspaceSound>(
@@ -28,6 +30,8 @@ class ServerMessageConditionalAirspaceSound(
                 buf.writeFloat(packet.maxAirspace)
                 buf.writeFloat(packet.minOcclusion)
                 buf.writeFloat(packet.maxOcclusion)
+                buf.writeFloat(packet.minReflectivity)
+                buf.writeFloat(packet.maxReflectivity)
             },
             decoder = { buf ->
                 val packet = ClientboundSoundPacket(buf)
@@ -35,7 +39,9 @@ class ServerMessageConditionalAirspaceSound(
                 val maxAirspace = buf.readFloat()
                 val minOcclusion = buf.readFloat()
                 val maxOcclusion = buf.readFloat()
-                ServerMessageConditionalAirspaceSound(packet, minAirspace, maxAirspace, minOcclusion, maxOcclusion)
+                val minReflectivity = buf.readFloat()
+                val maxReflectivity = buf.readFloat()
+                ServerMessageConditionalAirspaceSound(packet, minAirspace, maxAirspace, minOcclusion, maxOcclusion, minReflectivity, maxReflectivity)
             }
         )
 
@@ -56,7 +62,9 @@ class ServerMessageConditionalAirspaceSound(
                             packet.minAirspace,
                             packet.maxAirspace,
                             packet.minOcclusion,
-                            packet.maxOcclusion
+                            packet.maxOcclusion,
+                            packet.minReflectivity,
+                            packet.maxReflectivity
                         )
                     )
                 }

@@ -11,6 +11,8 @@ object SoundPhysicsCompat {
     var currentSound: SoundPhysicsConditionalSoundInstance? = null
     var currentAirspace: Float? = null
     var currentOcclusionAccumulation: Double? = null
+    var currentReflectivity: Float? = null
+    var reflectivityDivider = 1
 
     fun isEnabled(): Boolean = enabled
 
