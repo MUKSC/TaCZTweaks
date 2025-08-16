@@ -17,7 +17,8 @@ sealed class BulletParticles(
         val delta: Coordinates,
         val speed: Double,
         val count: Int,
-        val force: Boolean
+        val force: Boolean,
+        val duration: Int
     ) {
         sealed class Coordinates(
             val type: ECoordinatesType,
@@ -93,7 +94,8 @@ sealed class BulletParticles(
                 Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(Particle::delta),
                 Codec.DOUBLE.strictOptionalFieldOf("speed", 0.0).forGetter(Particle::speed),
                 Codec.INT.strictOptionalFieldOf("count", 1).forGetter(Particle::count),
-                Codec.BOOL.strictOptionalFieldOf("force", false).forGetter(Particle::force)
+                Codec.BOOL.strictOptionalFieldOf("force", false).forGetter(Particle::force),
+                Codec.INT.strictOptionalFieldOf("duration", 1).forGetter(Particle::duration)
             ).apply(it, ::Particle) }
         }
     }

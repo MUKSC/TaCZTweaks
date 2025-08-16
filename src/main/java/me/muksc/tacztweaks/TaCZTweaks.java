@@ -65,8 +65,10 @@ public class TaCZTweaks {
 
     @SubscribeEvent
     public void onLevelTick(TickEvent.LevelTickEvent e) {
+        if (e.phase != TickEvent.Phase.END) return;
         if (!(e.level instanceof ServerLevel level)) return;
         BlockBreakingManager.INSTANCE.onLevelTick(level);
+        BulletParticlesManager.INSTANCE.onLevelTick(level);
     }
 
     @SubscribeEvent

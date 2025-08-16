@@ -14,6 +14,7 @@ import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates
+import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
@@ -38,6 +39,15 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
     private val LOGGER = LogUtils.getLogger()
     private var error = false
     private var bulletParticles: Map<KClass<*>, Map<ResourceLocation, BulletParticles>> = emptyMap()
+    private val emitters: MutableList<ParticleEmitter> = mutableListOf()
+
+    private class ParticleEmitter(
+        val particle: BulletParticles.Particle,
+        val options: ParticleOptions,
+        val coordinates: Vec3,
+        val deltaCoordinates: Vec3,
+        var remainingDuration: Int
+    )
 
     fun hasError(): Boolean = error
 
@@ -81,6 +91,30 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         ).build() }.toImmutableMap()
     }
 
+    fun onLevelTick(level: ServerLevel) {
+        val iterator = emitters.iterator()
+        while (iterator.hasNext()) {
+            val emitter = iterator.next()
+            emitter.remainingDuration -= 1
+            for (player in level.players()) {
+                level.sendParticles(
+                    player,
+                    emitter.options,
+                    emitter.particle.force,
+                    emitter.coordinates.x,
+                    emitter.coordinates.y,
+                    emitter.coordinates.z,
+                    emitter.particle.count,
+                    emitter.deltaCoordinates.x,
+                    emitter.deltaCoordinates.y,
+                    emitter.deltaCoordinates.z,
+                    emitter.particle.speed
+                )
+            }
+            if (emitter.remainingDuration <= 0) iterator.remove()
+        }
+    }
+
     fun handleBlockParticle(type: EBlockParticleType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
         val particles = getParticle(entity, result.location, BulletParticles.Block::blocks) {
             it.test(level, result.blockPos, state)
@@ -101,7 +135,6 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
     }
 
     private fun BulletParticles.Particle.summon(server: MinecraftServer, entity: EntityKineticBullet, context: String? = null) {
-        val level = entity.level() as? ServerLevel ?: return
         val ext = entity as EntityKineticBulletExtension
         val source = entity.createCommandSourceStack()
             .withPosition(ext.`tacztweaks$getPosition`())
@@ -142,21 +175,13 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
                 delta.z
             )
         }.getPosition(source)
-        for (player in level.players()) {
-            level.sendParticles(
-                player,
-                particleOptions,
-                force,
-                coordinates.x,
-                coordinates.y,
-                coordinates.z,
-                count,
-                deltaCoordinates.x,
-                deltaCoordinates.y,
-                deltaCoordinates.z,
-                speed
-            )
-        }
+        emitters.add(ParticleEmitter(
+            this,
+            particleOptions,
+            coordinates,
+            deltaCoordinates,
+            duration
+        ))
     }
 
     enum class EBlockParticleType(val getParticle: (BulletParticles.Block) -> List<BulletParticles.Particle>) {
