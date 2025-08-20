@@ -6,7 +6,8 @@ import com.google.gson.JsonElement
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageConditionalAirspaceSound
+import me.muksc.tacztweaks.Config
+import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.network.NetworkHandler
 import me.muksc.tacztweaks.thenPrioritizeBy
@@ -38,6 +39,10 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
 
     fun hasError(): Boolean = error
 
+    fun debug(msg: () -> String) {
+        if (Config.Debug.bulletSounds()) LOGGER.info(msg.invoke())
+    }
+
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletSounds> byType(): Map<ResourceLocation, T> =
         bulletSounds.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
@@ -45,28 +50,26 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     private inline fun <reified T : BulletSounds> getSounds(
         entity: EntityKineticBullet,
         location: Vec3
-    ) : List<T> = byType<T>().values.filter { sounds ->
+    ) : List<Pair<ResourceLocation, T>> = byType<T>().entries.filter { (_, sounds) ->
         sounds.target.isEmpty() || sounds.target.any { it.test(entity ,location) }
-    }
+    }.map { it.toPair() }
 
     private inline fun <reified T : BulletSounds> getSound(
         entity: EntityKineticBullet,
         location: Vec3
-    ): T? = byType<T>().values.run {
-        firstOrNull { sounds ->
-            sounds.target.any { it.test(entity, location) }
-        } ?: firstOrNull { sounds -> sounds.target.isEmpty() }
-    }
+    ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, sounds) ->
+        sounds.target.isEmpty() || sounds.target.any { it.test(entity, location) }
+    }?.toPair()
 
     private inline fun <reified T : BulletSounds, E> getSound(
         entity: EntityKineticBullet,
         location: Vec3,
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
-    ): T? = byType<T>().values.firstOrNull { sounds ->
+    ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, sounds) ->
         (sounds.target.isEmpty() || sounds.target.any { it.test(entity, location) })
                 && (selector(sounds).isEmpty() || selector(sounds).any(predicate))
-    }
+    }?.toPair()
 
     override fun apply(
         map: Map<ResourceLocation, JsonElement>,
@@ -97,26 +100,29 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     }
 
     fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
-        val sounds = getSound(entity, result.location, BulletSounds.Block::blocks) {
+        val (id, sounds) = getSound(entity, result.location, BulletSounds.Block::blocks) {
             it.test(level, result.blockPos, state)
-        }?.run(type.getSound) ?: return
-        for (sound in sounds) {
+        } ?: return
+        debug { "Using block bullet sounds: $id" }
+        for (sound in type.getSound(sounds)) {
             sound.play(level, result.location, entity)
         }
     }
 
     fun handleEntitySound(type: EEntitySoundType, level: ServerLevel, entity: EntityKineticBullet, location: Vec3, target: Entity) {
-        val sounds = getSound(entity, location, BulletSounds.Entity::entities) {
+        val (id, sounds) = getSound(entity, location, BulletSounds.Entity::entities) {
             it.test(target)
-        }?.run(type.getSound) ?: return
-        for (sound in sounds) {
+        } ?: return
+        debug { "Using entity bullet sounds: $id" }
+        for (sound in type.getSound(sounds)) {
             sound.play(level, location, entity)
         }
     }
 
     fun handleConstant(level: ServerLevel, entity: EntityKineticBullet) {
         val location = entity.position()
-        val sounds = getSound<BulletSounds.Constant>(entity, location) ?: return
+        val (id, sounds) = getSound<BulletSounds.Constant>(entity, location) ?: return
+        debug { "Using constant bullet sounds: $id" }
         if (entity.tickCount % sounds.interval != 0) return
         for (sound in sounds.sounds) {
             sound.play(level, location, entity)
@@ -134,7 +140,8 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     fun handleSoundWhizz(player: ServerPlayer, entity: EntityKineticBullet) {
         val ext = entity as EntityKineticBulletExtension
         val destination = ext.`tacztweaks$getPosition`()
-        val sounds = getSound<BulletSounds.Whizz>(entity, destination) ?: return
+        val (id, sounds) = getSound<BulletSounds.Whizz>(entity, destination) ?: return
+        debug { "Using whizz bullet sounds '$id' for player '$player'" }
 
         val currentPosition = entity.position()
         val playerPosition = player.eyePosition
@@ -153,8 +160,9 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         for (player in level.server.playerList.players) {
             if (player.level().dimension() != level.dimension()) continue
             val distance = player.position().distanceTo(entity.position())
-            val candidates = soundsList.mapNotNull { sounds ->
+            val candidates = soundsList.mapNotNull { (id, sounds) ->
                 val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return@mapNotNull null
+                debug { "Using airspace bullet sounds '$id' for player '$player'" }
                 sounds to sound
             }
             NetworkHandler.sendS2C(player, ServerMessageAirspaceSounds(candidates.map { (sounds, airspace) ->

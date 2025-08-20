@@ -10,7 +10,9 @@ import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.util.AttachmentDataUtils
 import com.tacz.guns.util.TacHitResult
 import me.muksc.tacztweaks.BlockBreakingManager
+import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.Context
+import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.data.old.convert
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
@@ -47,12 +49,17 @@ private val GSON = GsonBuilder()
 object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet_interactions") {
     private val LOGGER = LogUtils.getLogger()
     private val FAKE_PROFILE = GameProfile(UUID.fromString("BF8411E4-9730-4215-9AE8-1688EEDF9B72"), "[Minecraft]")
+    private val DEFAULT = TaCZTweaks.id("default")
     private var error = false
     private var bulletInteractions: Map<KClass<*>, Map<ResourceLocation, BulletInteraction>> = emptyMap()
 
     fun hasError(): Boolean = error
 
     init { BulletInteraction }
+
+    private fun debug(msg: () -> String) {
+        if (Config.Debug.bulletInteractions()) LOGGER.info(msg.invoke())
+    }
 
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletInteraction> byType(): Map<ResourceLocation, T> =
@@ -63,10 +70,10 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         location: Vec3,
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
-    ): T? = byType<T>().values.firstOrNull { interaction ->
+    ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
         (interaction.target.isEmpty() || interaction.target.any { it.test(entity, location) })
                 && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
-    }
+    }?.toPair()
 
     @Suppress("UnstableApiUsage")
     override fun apply(
@@ -105,9 +112,10 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val level = ammo.level() as ServerLevel
         val blockPos = BlockPos(result.blockPos)
         val ext = ammo as EntityKineticBulletExtension
-        val interaction = getBulletInteraction(ammo, result.location, BulletInteraction.Block::blocks) {
+        val (id, interaction) = getBulletInteraction(ammo, result.location, BulletInteraction.Block::blocks) {
             it.test(level, blockPos, state)
-        } ?: BulletInteraction.Block.DEFAULT
+        } ?: (DEFAULT to BulletInteraction.Block.DEFAULT)
+        debug { "Using block bullet interaction: $id" }
 
         val breakBlock = run {
             val hardness = state.getDestroySpeed(level, blockPos)
@@ -150,15 +158,17 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             level.destroyBlock(blockPos, interaction.blockBreak.drop, ammo.owner)
         }
         return InteractionResult(shouldPierce(ammo, result, interaction, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
+            .also { debug { it.toString() } }
     }
 
     fun handleEntityInteraction(ammo: EntityKineticBullet, result: TacHitResult, context: ClipContext): InteractionResult {
         val ext = ammo as EntityKineticBulletExtension
         val accessor = ammo as EntityKineticBulletAccessor
         val entity = result.entity
-        val interaction = getBulletInteraction(ammo, result.location, BulletInteraction.Entity::entities) {
+        val (id, interaction) = getBulletInteraction(ammo, result.location, BulletInteraction.Entity::entities) {
             it.test(entity)
-        } ?: BulletInteraction.Entity.DEFAULT
+        } ?: (DEFAULT to BulletInteraction.Entity.DEFAULT)
+        debug { "Using entity bullet interaction: $id" }
 
         ext.`tacztweaks$addDamageModifier`(interaction.damage.modifier, interaction.damage.multiplier)
         try {
@@ -167,8 +177,9 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             ext.`tacztweaks$popDamageModifier`()
         }
         val isDead = !entity.isAlive
-        if (accessor.explosion) return InteractionResult(false, isDead)
+        if (accessor.explosion) return InteractionResult(false, isDead).also { debug { it.toString() } }
         return InteractionResult(shouldPierce(ammo, result, interaction, isDead, ext::`tacztweaks$incrementEntityPierce`, ext::`tacztweaks$getEntityPierce`), isDead)
+            .also { debug { it.toString() } }
     }
 
     private fun shouldPierce(

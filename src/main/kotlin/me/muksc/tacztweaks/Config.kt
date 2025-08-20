@@ -34,6 +34,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         registerSyncable("crawl", Crawl)
         registerSyncable("compat", Compat)
         registerSyncable("tweaks", Tweaks)
+        registerSyncable("debug", Debug)
     }
 
     object Gun : SyncableCodecConfig<Gun>() {
@@ -248,6 +249,31 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun hideHitMarkers(): Boolean = hideHitMarkers.value
     }
 
+    object Debug : SyncableCodecConfig<Debug>() {
+        val bulletInteractions by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val bulletParticles by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+        val bulletSounds by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
+
+        fun bulletInteractions(): Boolean = bulletInteractions.syncedValue
+        fun bulletParticles(): Boolean = bulletParticles.syncedValue
+        fun bulletSounds(): Boolean = bulletSounds.syncedValue
+    }
+
     fun generateConfigScreen(parent: Screen?): Screen = YetAnotherConfigLib.createBuilder().apply {
         title(TaCZTweaks.translatable("config.title"))
         save {
@@ -383,6 +409,30 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.hideHitMarkers.description")))
                     binding(Tweaks.hideHitMarkers.asBinding())
                     controller(booleanController())
+                }.build())
+            }.build())
+            group(OptionGroup.createBuilder().apply {
+                name(TaCZTweaks.translatable("config.debug"))
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.debug.bulletInteractions.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.debug.bulletInteractions.description")))
+                    binding(Debug.bulletInteractions.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.debug.bulletParticles.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.debug.bulletParticles.description")))
+                    binding(Debug.bulletParticles.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.debug.bulletSounds.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.debug.bulletSounds.description")))
+                    binding(Debug.bulletSounds.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
             }.build())
         }.build())

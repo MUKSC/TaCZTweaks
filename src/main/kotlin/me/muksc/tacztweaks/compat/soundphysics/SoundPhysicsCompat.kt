@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks.compat.soundphysics
 
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
+import me.muksc.tacztweaks.data.BulletSoundsManager
 import me.muksc.tacztweaks.network.NetworkHandler
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.ModList
@@ -31,6 +32,7 @@ object SoundPhysicsCompat {
         val airspace = processing.airspace ?: return
         val occlusionAccumulation = processing.occlusionAccumulation ?: return
         val reflectivity = processing.reflectivity?.div(processing.reflectivityDivider) ?: return
+        BulletSoundsManager.debug { "airspace: $airspace, occlusion: $occlusionAccumulation, reflectivity: $reflectivity" }
         val sound = pending.sounds.firstOrNull {
             it.canPlayAtAirspace(airspace)
                     && it.canPlayAtOcclusion(occlusionAccumulation)

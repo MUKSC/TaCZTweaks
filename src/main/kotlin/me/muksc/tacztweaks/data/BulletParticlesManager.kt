@@ -7,6 +7,7 @@ import com.mojang.brigadier.StringReader
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
+import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.thenPrioritizeBy
 import me.muksc.tacztweaks.toImmutableMap
@@ -51,6 +52,10 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
 
     fun hasError(): Boolean = error
 
+    private fun debug(msg: () -> String) {
+        if (Config.Debug.bulletParticles()) LOGGER.info(msg.invoke())
+    }
+
     @Suppress("UNCHECKED_CAST")
     private inline fun <reified T : BulletParticles> byType(): Map<ResourceLocation, T> =
         bulletParticles.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
@@ -60,10 +65,10 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         location: Vec3,
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
-    ): T? = byType<T>().values.firstOrNull { particles ->
+    ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, particles) ->
         (particles.target.isEmpty() || particles.target.any { it.test(entity, location) })
                 && (selector(particles).isEmpty() || selector(particles).any(predicate))
-    }
+    }?.toPair()
 
     @Suppress("UnstableApiUsage")
     override fun apply(
@@ -116,20 +121,22 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
     }
 
     fun handleBlockParticle(type: EBlockParticleType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
-        val particles = getParticle(entity, result.location, BulletParticles.Block::blocks) {
+        val (id, particles) = getParticle(entity, result.location, BulletParticles.Block::blocks) {
             it.test(level, result.blockPos, state)
-        }?.run(type.getParticle) ?: return
-        for (particle in particles) {
+        } ?: return
+        debug { "Using block bullet particles: $id" }
+        for (particle in type.getParticle(particles)) {
             val id = ForgeRegistries.BLOCKS.getKey(state.block)?.toString()
             particle.summon(level.server, entity, id)
         }
     }
 
     fun handleEntityParticle(type: EEntityParticleType, level: ServerLevel, entity: EntityKineticBullet, location: Vec3, target: Entity) {
-        val particles = getParticle(entity, location, BulletParticles.Entity::entities) {
+        val (id, particles) = getParticle(entity, location, BulletParticles.Entity::entities) {
             it.test(target)
-        }?.run(type.getParticle) ?: return
-        for (particle in particles) {
+        } ?: return
+        debug { "Using entity bullet particles: $id" }
+        for (particle in type.getParticle(particles)) {
             particle.summon(level.server, entity)
         }
     }
