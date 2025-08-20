@@ -5,8 +5,8 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bawnorton.mixinsquared/mixinsquared-common/0.2.0/9739c3aa07b2ea27b3f82bb46cb0e82f3b42ddb8/mixinsquared-common-0.2.0.jar" />
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-common/0.5.0-rc.2/2530eb48dd708354210a6f5fd7cc8b970565b3f1/mixinextras-common-0.5.0-rc.2.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bawnorton.mixinsquared/mixinsquared-common/0.3.3/6924a12fda7133f322ab7aa2ff03c258327c2e6e/mixinsquared-common-0.3.3.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-common/0.5.0/286da96036621082491d971dfc62bee8fc37d161/mixinextras-common-0.5.0.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/6d1c8bf4c28e697f472a83bd6add76ec4951734/mixin-0.8.5-processor.jar" />
         </processorPath>
         <module name="tacz-tweaks.main" />
