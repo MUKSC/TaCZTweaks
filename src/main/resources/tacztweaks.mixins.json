@@ -55,7 +55,6 @@
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",
-    "compat.soundphysics.ChannelMixin",
     "compat.soundphysics.SoundEngineMixin",
     "compat.vs.client.BulletHoleParticleMixin",
     "compat.vs.client.MixinLevelRendererMixin",

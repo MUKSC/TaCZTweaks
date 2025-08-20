@@ -42,6 +42,13 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     private inline fun <reified T : BulletSounds> byType(): Map<ResourceLocation, T> =
         bulletSounds.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
 
+    private inline fun <reified T : BulletSounds> getSounds(
+        entity: EntityKineticBullet,
+        location: Vec3
+    ) : List<T> = byType<T>().values.filter { sounds ->
+        sounds.target.isEmpty() || sounds.target.any { it.test(entity ,location) }
+    }
+
     private inline fun <reified T : BulletSounds> getSound(
         entity: EntityKineticBullet,
         location: Vec3
@@ -142,36 +149,40 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     }
 
     fun handleAirspace(level: ServerLevel, entity: EntityKineticBullet) {
-        val sounds = getSound<BulletSounds.AirSpace>(entity, entity.position()) ?: return
+        val soundsList = getSounds<BulletSounds.AirSpace>(entity, entity.position()).takeIf { it.isNotEmpty() } ?: return
         for (player in level.server.playerList.players) {
             if (player.level().dimension() != level.dimension()) continue
             val distance = player.position().distanceTo(entity.position())
-            val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
-            sound.sound?.playAirspace(player, entity,sounds.airspace, sounds.occlusion, sounds.reflectivity)
+            val candidates = soundsList.mapNotNull { sounds ->
+                val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return@mapNotNull null
+                sounds to sound
+            }
+            NetworkHandler.sendS2C(player, ServerMessageAirspaceSounds(candidates.map { (sounds, airspace) ->
+                @Suppress("DEPRECATION")
+                val packet = airspace.sound?.run {
+                    val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
+                    ClientboundSoundPacket(
+                        BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
+                        entity.soundSource,
+                        entity.x,
+                        entity.y,
+                        entity.z,
+                        volume,
+                        pitch,
+                        player.random.nextLong()
+                    )
+                }
+                ServerMessageAirspaceSounds.AirspaceSound(
+                    packet,
+                    sounds.airspace.min.toFloat(),
+                    sounds.airspace.max.toFloat(),
+                    sounds.occlusion.min.toFloat(),
+                    sounds.occlusion.max.toFloat(),
+                    sounds.reflectivity.min.toFloat(),
+                    sounds.reflectivity.max.toFloat()
+                )
+            }, entity.x, entity.y, entity.z))
         }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun BulletSounds.Sound.playAirspace(player: ServerPlayer, entity: EntityKineticBullet, airspace: ValueRange, occlusion: ValueRange, reflectivity: ValueRange) {
-        val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
-        NetworkHandler.sendS2C(player, ServerMessageConditionalAirspaceSound(
-            ClientboundSoundPacket(
-                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
-                entity.soundSource,
-                entity.x,
-                entity.y,
-                entity.z,
-                volume,
-                pitch,
-                player.random.nextLong()
-            ),
-            airspace.min.toFloat(),
-            airspace.max.toFloat(),
-            occlusion.min.toFloat(),
-            occlusion.max.toFloat(),
-            reflectivity.min.toFloat(),
-            reflectivity.max.toFloat()
-        ))
     }
 
     @Suppress("DEPRECATION")

@@ -1,0 +1,10 @@
+{
+  "sound_physics_trigger": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "tacztweaks:sound_physics_trigger"
+      }
+    ]
+  }
+}

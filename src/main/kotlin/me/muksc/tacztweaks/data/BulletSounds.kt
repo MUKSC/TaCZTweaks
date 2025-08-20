@@ -144,9 +144,9 @@ sealed class BulletSounds(
         companion object {
             val CODEC = RecordCodecBuilder.create<AirSpace> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(AirSpace::target),
-                ValueRange.CODEC.fieldOf("airspace").forGetter(AirSpace::airspace),
-                ValueRange.CODEC.fieldOf("occlusion").forGetter(AirSpace::occlusion),
-                ValueRange.CODEC.fieldOf("reflectivity").forGetter(AirSpace::reflectivity),
+                ValueRange.CODEC.optionalFieldOf("airspace", ValueRange.DEFAULT).forGetter(AirSpace::airspace),
+                ValueRange.CODEC.optionalFieldOf("occlusion", ValueRange.DEFAULT).forGetter(AirSpace::occlusion),
+                ValueRange.CODEC.optionalFieldOf("reflectivity", ValueRange.DEFAULT).forGetter(AirSpace::reflectivity),
                 Codec.list(DistanceSound.CODEC).sortedBy(DistanceSound::threshold).strictOptionalFieldOf("sounds", emptyList()).forGetter(AirSpace::sounds),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(AirSpace::priority)
             ).apply(it, ::AirSpace) }
