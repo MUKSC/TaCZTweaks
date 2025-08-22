@@ -51,14 +51,14 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         entity: EntityKineticBullet,
         location: Vec3
     ) : List<Pair<ResourceLocation, T>> = byType<T>().entries.filter { (_, sounds) ->
-        sounds.target.isEmpty() || sounds.target.any { it.test(entity ,location) }
+        sounds.target.isEmpty() || sounds.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) }
     }.map { it.toPair() }
 
     private inline fun <reified T : BulletSounds> getSound(
         entity: EntityKineticBullet,
         location: Vec3
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, sounds) ->
-        sounds.target.isEmpty() || sounds.target.any { it.test(entity, location) }
+        sounds.target.isEmpty() || sounds.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) }
     }?.toPair()
 
     private inline fun <reified T : BulletSounds, E> getSound(
@@ -67,7 +67,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, sounds) ->
-        (sounds.target.isEmpty() || sounds.target.any { it.test(entity, location) })
+        (sounds.target.isEmpty() || sounds.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
                 && (selector(sounds).isEmpty() || selector(sounds).any(predicate))
     }?.toPair()
 

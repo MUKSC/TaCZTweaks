@@ -66,7 +66,7 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, particles) ->
-        (particles.target.isEmpty() || particles.target.any { it.test(entity, location) })
+        (particles.target.isEmpty() || particles.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
                 && (selector(particles).isEmpty() || selector(particles).any(predicate))
     }?.toPair()
 

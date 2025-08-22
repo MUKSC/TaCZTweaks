@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3
 sealed class Target(
     val type: ETargetType
 ) {
-    abstract fun test(entity: EntityKineticBullet, location: Vec3): Boolean
+    abstract fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean
 
     enum class ETargetType(
         override val key: String,
@@ -40,8 +40,8 @@ sealed class Target(
     }
 
     class AllOf(val terms: List<Target>) : Target(ETargetType.ALL_OF) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            terms.all { it.test(entity, location) }
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            terms.all { it.test(entity, weaponId, damage) }
 
         companion object {
             val CODEC = RecordCodecBuilder.create<AllOf> { it.group(
@@ -51,8 +51,8 @@ sealed class Target(
     }
 
     class AnyOf(val terms: List<Target>) : Target(ETargetType.ANY_OF) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            terms.any { it.test(entity, location) }
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            terms.any { it.test(entity, weaponId, damage) }
 
         companion object {
             val CODEC = RecordCodecBuilder.create<AnyOf> { it.group(
@@ -62,7 +62,8 @@ sealed class Target(
     }
 
     class Inverted(val term: Target) : Target(ETargetType.INVERTED) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean = !term.test(entity, location)
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            !term.test(entity, weaponId, damage)
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Inverted> { it.group(
@@ -72,8 +73,8 @@ sealed class Target(
     }
 
     class Gun(val values: List<ResourceLocation>) : Target(ETargetType.GUN) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            values.contains(entity.gunId)
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            values.contains(weaponId)
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Gun> { it.group(
@@ -83,8 +84,8 @@ sealed class Target(
     }
 
     class Ammo(val values: List<ResourceLocation>) : Target(ETargetType.AMMO) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            values.contains(entity.ammoId)
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            entity != null && values.contains(entity.ammoId)
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Ammo> { it.group(
@@ -105,9 +106,9 @@ sealed class Target(
             }
         }
 
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean = regex.matches(when (match) {
-            EMatchType.GUN -> entity.gunId.toString()
-            EMatchType.AMMO -> entity.ammoId.toString()
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean = regex.matches(when (match) {
+            EMatchType.GUN -> weaponId.toString()
+            EMatchType.AMMO -> entity?.ammoId?.toString() ?: ""
         })
 
         companion object {
@@ -119,8 +120,8 @@ sealed class Target(
     }
 
     class Damage(val values: List<ValueRange>) : Target(ETargetType.DAMAGE) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            values.any { it.contains(entity.getDamage(location)) }
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            entity != null && values.any { it.contains(damage) }
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Damage> { it.group(
@@ -130,8 +131,8 @@ sealed class Target(
     }
 
     class Speed(val values: List<ValueRange>) : Target(ETargetType.SPEED) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            values.any { it.contains(entity.deltaMovement.length() * 10) }
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            entity != null && values.any { it.contains(entity.deltaMovement.length() * 10) }
 
         companion object {
             val CODEC = RecordCodecBuilder.create<Speed> { it.group(
@@ -141,8 +142,8 @@ sealed class Target(
     }
 
     object Silenced : Target(ETargetType.SILENCED) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean {
-            val owner = entity.owner as? LivingEntity ?: return false
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
+            val owner = entity?.owner as? LivingEntity ?: return false
             val operator = IGunOperator.fromLivingEntity(owner)
             val silence = operator.cacheProperty?.getCache<ObjectObjectImmutablePair<Integer, Boolean>>(SilenceModifier.ID) ?: return false
             return silence.right()
@@ -152,8 +153,8 @@ sealed class Target(
     }
 
     class RandomChance(val chance: Float) : Target(ETargetType.RANDOM_CHANCE) {
-        override fun test(entity: EntityKineticBullet, location: Vec3): Boolean =
-            entity.random.nextFloat() < chance
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            entity != null && entity.random.nextFloat() < chance
 
         companion object {
             val CODEC = RecordCodecBuilder.create<RandomChance> { it.group(

@@ -71,7 +71,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
-        (interaction.target.isEmpty() || interaction.target.any { it.test(entity, location) })
+        (interaction.target.isEmpty() || interaction.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
                 && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
     }?.toPair()
 
