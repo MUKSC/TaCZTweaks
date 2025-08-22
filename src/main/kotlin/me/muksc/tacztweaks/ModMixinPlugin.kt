@@ -13,6 +13,7 @@ class ModMixinPlugin : IMixinConfigPlugin {
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean = when {
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.firstaid.") -> isModLoaded("firstaid")
+        mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lrtactical.") -> isModLoaded("lrtactical")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lso.") -> isModLoaded("legendarysurvivaloverhaul")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.mts.") -> isModLoaded("mts")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.soundphysics.") -> isModLoaded("sound_physics_remastered")

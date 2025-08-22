@@ -268,10 +268,17 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val meleeInteractions by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
 
         fun bulletInteractions(): Boolean = bulletInteractions.syncedValue
         fun bulletParticles(): Boolean = bulletParticles.syncedValue
         fun bulletSounds(): Boolean = bulletSounds.syncedValue
+        fun meleeInteractions(): Boolean = meleeInteractions.syncedValue
     }
 
     fun generateConfigScreen(parent: Screen?): Screen = YetAnotherConfigLib.createBuilder().apply {
@@ -431,6 +438,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.debug.bulletSounds.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.debug.bulletSounds.description")))
                     binding(Debug.bulletSounds.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.debug.meleeInteractions.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.debug.meleeInteractions.description")))
+                    binding(Debug.meleeInteractions.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())

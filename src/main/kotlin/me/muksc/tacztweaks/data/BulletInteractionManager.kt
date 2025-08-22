@@ -207,7 +207,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         return true
     }
 
-    private fun calcBlockBreakingDelta(damage: Float, armorIgnore: Double, state: BlockState, level: ServerLevel, pos: BlockPos): Float {
+    fun calcBlockBreakingDelta(damage: Float, armorIgnore: Double, state: BlockState, level: ServerLevel, pos: BlockPos): Float {
         val player = object : FakePlayer(level, FAKE_PROFILE) {
             override fun getDigSpeed(state: BlockState, pos: BlockPos?): Float =
                 super.getDigSpeed(state, pos) + damage

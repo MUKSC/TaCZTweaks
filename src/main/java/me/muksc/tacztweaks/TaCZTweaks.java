@@ -7,10 +7,12 @@ import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.sound.SoundManager;
 import me.muksc.tacztweaks.client.input.UnloadKey;
+import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
 import me.muksc.tacztweaks.data.BulletInteractionManager;
 import me.muksc.tacztweaks.data.BulletParticlesManager;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
+import me.muksc.tacztweaks.data.MeleeInteractionManager;
 import me.muksc.tacztweaks.network.NetworkHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -52,6 +54,7 @@ public class TaCZTweaks {
         container = ModLoadingContext.get().getActiveContainer();
         Config.INSTANCE.touch();
         NetworkHandler.INSTANCE.register();
+        LRTacticalCompat.INSTANCE.initialize();
         SoundPhysicsCompat.INSTANCE.initialize();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -61,6 +64,7 @@ public class TaCZTweaks {
         e.addListener(BulletInteractionManager.INSTANCE);
         e.addListener(BulletParticlesManager.INSTANCE);
         e.addListener(BulletSoundsManager.INSTANCE);
+        e.addListener(MeleeInteractionManager.INSTANCE);
     }
 
     @SubscribeEvent

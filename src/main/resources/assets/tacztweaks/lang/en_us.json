@@ -105,6 +105,8 @@
   "tacztweaks.config.debug.bulletParticles.description": "Enables the debug log for bullet particles.",
   "tacztweaks.config.debug.bulletSounds.name": "Bullet Sounds Debug",
   "tacztweaks.config.debug.bulletSounds.description": "Enables the debug log for bullet sounds.",
+  "tacztweaks.config.debug.meleeInteractions.name": "Melee Interactions Debug",
+  "tacztweaks.config.debug.meleeInteractions.description": "Enables the debug log for melee interactions.",
   "tacztweaks.config.label.synced": "Displaying server-side config",
   "tacztweaks.config.label.enabled": "Enabled",
   "tacztweaks.config.label.disabled": "Disabled",
