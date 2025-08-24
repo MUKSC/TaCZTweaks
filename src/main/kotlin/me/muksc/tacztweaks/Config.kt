@@ -213,12 +213,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     }
 
     object Tweaks : SyncableCodecConfig<Tweaks>() {
-        val audibleReloadSounds by registerSyncable(
-            default = false,
-            codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
-        )
         val forceFirstPersonShootingSound by registerSyncable(
             default = false,
             codec = BOOL,
@@ -238,7 +232,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val suppressKillSounds by register(false, BOOL)
         val hideHitMarkers by register(false, BOOL)
 
-        fun audibleReloadSounds(): Boolean = audibleReloadSounds.syncedValue
         fun forceFirstPersonShootingSound(): Boolean = forceFirstPersonShootingSound.syncedValue
         fun betterMonoConversion(): Boolean = betterMonoConversion.value
         fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
@@ -524,13 +517,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             }.build())
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.tweaks"))
-                option(Option.createBuilder<Boolean>().apply {
-                    nameSynced(TaCZTweaks.translatable("config.tweaks.audibleReloadSounds.name"))
-                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.audibleReloadSounds.description")))
-                    binding(Tweaks.audibleReloadSounds.asSyncedBinding())
-                    controller(booleanController())
-                    available(canUpdateServerConfig)
-                }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.tweaks.forceFirstPersonShootingSound.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.forceFirstPersonShootingSound.description")))

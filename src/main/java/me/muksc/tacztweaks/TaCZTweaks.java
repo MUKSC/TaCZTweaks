@@ -1,11 +1,5 @@
 package me.muksc.tacztweaks;
 
-import com.tacz.guns.api.TimelessAPI;
-import com.tacz.guns.api.event.common.GunReloadEvent;
-import com.tacz.guns.api.item.IGun;
-import com.tacz.guns.resource.index.CommonGunIndex;
-import com.tacz.guns.resource.pojo.data.gun.Bolt;
-import com.tacz.guns.sound.SoundManager;
 import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
@@ -20,7 +14,6 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -30,7 +23,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -101,23 +93,6 @@ public class TaCZTweaks {
                 .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED));
             e.getEntity().sendSystemMessage(text);
         }
-    }
-
-    @SubscribeEvent
-    public void onGunReload(GunReloadEvent e) {
-        if (e.getLogicalSide() != LogicalSide.SERVER) return;
-        if (!Config.Tweaks.INSTANCE.audibleReloadSounds()) return;
-        ItemStack stack = e.getGunItemStack();
-        IGun gun = IGun.getIGunOrNull(stack);
-        if (gun == null) return;
-        ResourceLocation gunId = gun.getGunId(stack);
-        ResourceLocation gunDisplayId = gun.getGunDisplayId(stack);
-        CommonGunIndex index = TimelessAPI.getCommonGunIndex(gunId).orElse(null);
-        if (index == null) return;
-        Bolt boltType = index.getGunData().getBolt();
-        int ammoCount = gun.getCurrentAmmoCount(stack) + (gun.hasBulletInBarrel(stack) && boltType != Bolt.OPEN_BOLT ? 1 : 0);
-        String soundName = ammoCount == 0 ? SoundManager.RELOAD_EMPTY_SOUND : SoundManager.RELOAD_TACTICAL_SOUND;
-        SoundManager.sendSoundToNearby(e.getEntity(), 32, gunId, gunDisplayId, soundName, 1.0F, 1.0F);
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MOD_ID, value = Dist.CLIENT)

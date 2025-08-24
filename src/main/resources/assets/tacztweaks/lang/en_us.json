@@ -80,8 +80,6 @@
   "tacztweaks.config.crawl.visualTweak.name": "Visual Tweak",
   "tacztweaks.config.crawl.visualTweak.description": "Tweaks the crawling animation to look more natural.",
   "tacztweaks.config.tweaks": "Tweaks",
-  "tacztweaks.config.tweaks.audibleReloadSounds.name": "Audible Reload Sounds",
-  "tacztweaks.config.tweaks.audibleReloadSounds.description": "Makes the other player's reload sounds audible.\n\nNote: The first person sounds are typically in stereo, meaning it won't preserve the directionality when played.\nEnabling the `Stereo to Mono conversion` option will converts the sounds to mono and fixes this issue.",
   "tacztweaks.config.tweaks.forceFirstPersonShootingSound.name": "Force First Person Shooting Sound",
   "tacztweaks.config.tweaks.forceFirstPersonShootingSound.description": "Uses the first person shooting sound instead of the third person one when other players shoot.\n\nNote: The first person sounds are typically in stereo, meaning it won't preserve the directionality when played.\nEnabling the `Stereo to Mono conversion` option will converts the sounds to mono and fixes this issue.",
   "tacztweaks.config.tweaks.betterMonoConversion.name": "Stereo to Mono Conversion",

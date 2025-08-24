@@ -2,7 +2,6 @@ package me.muksc.tacztweaks.mixin.tweaks;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -38,7 +37,6 @@ public abstract class SoundPlayManagerMixin {
     private static boolean tacztweaks$playMessageSound$monoSounds(String instance, Object o, Operation<Boolean> original) {
         if (!Config.Tweaks.INSTANCE.betterMonoConversion()) return original.call(instance, o);
         return original.call(instance, o) || SoundManager.SHOOT_SOUND.equals(o)
-            || SoundManager.RELOAD_EMPTY_SOUND.equals(o) || SoundManager.RELOAD_TACTICAL_SOUND.equals(o)
             || SoundManager.SILENCE_SOUND.equals(o);
     }
 }
