@@ -19,6 +19,8 @@
   "tacztweaks.config.gun.reloadWhileShooting.description": "Allows reloading guns immediately after shooting.",
   "tacztweaks.config.gun.reloadDiscardsMagazine.name": "Reload Discards Magazine",
   "tacztweaks.config.gun.reloadDiscardsMagazine.description": "Makes the reloading discarding the remaining ammo, instead of returning them back to the inventory.",
+  "tacztweaks.config.gun.reloadDiscardsMagazineExclusions.name": "Reload Discards Magazine Exclusions",
+  "tacztweaks.config.gun.reloadDiscardsMagazineExclusions.description": "List of gun ids to excluded from the effect of the `Reload Discards Magazine` option.",
   "tacztweaks.config.gun.allowUnload.name": "Allow Unload",
   "tacztweaks.config.gun.allowUnload.description": "Enables or disables the gun unload feature.",
   "tacztweaks.config.gun.cancelInspection.name": "Cancel Inspection",

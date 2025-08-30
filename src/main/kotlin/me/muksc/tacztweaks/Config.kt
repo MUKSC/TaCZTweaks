@@ -1,5 +1,8 @@
 package me.muksc.tacztweaks
 
+import com.google.common.collect.Lists
+import com.google.common.collect.Lists.newArrayListWithCapacity
+import com.mojang.serialization.Codec
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager
 import com.tacz.guns.resource.pojo.data.attachment.Modifier
 import dev.isxander.yacl3.api.*
@@ -20,6 +23,7 @@ import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import java.text.DecimalFormat
@@ -62,6 +66,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val reloadDiscardsMagazineExclusions by registerSyncable(
+            default = listOf("tacz:m870", "tacz:db_short", "tacz:db_long"),
+            codec = Codec.list(STRING),
+            encoder = { buf, value -> buf.writeCollection(value, FriendlyByteBuf::writeUtf) },
+            decoder = { buf -> buf.readCollection(Lists::newArrayListWithCapacity, FriendlyByteBuf::readUtf) }
+        )
         val allowUnload by registerSyncable(
             default = true,
             codec = BOOL,
@@ -75,6 +85,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun sprintWhileReloading(): Boolean = sprintWhileReloading.syncedValue
         fun reloadWhileShooting(): Boolean = reloadWhileShooting.syncedValue
         fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
+        fun reloadDiscardsMagazineExclusions(): List<String> = reloadDiscardsMagazineExclusions.syncedValue
         fun allowUnload(): Boolean = allowUnload.syncedValue
         fun cancelInspection(): Boolean = cancelInspection.value
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
@@ -314,6 +325,22 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             }.build())
         }
 
+        fun <T> ListOption.Builder<T>.nameSynced(name: MutableComponent) {
+            if (ConfigManager.syncedWithServer) name.withStyle(ChatFormatting.YELLOW)
+            this.name(name)
+        }
+
+        fun <T> ListOption.Builder<T>.descriptionSynced(description: OptionDescription) {
+            this.description(OptionDescription.createBuilder().apply {
+                if (ConfigManager.syncedWithServer) {
+                    text(TaCZTweaks.translatable("config.label.synced")
+                        .append(Component.literal("\n"))
+                        .withStyle(ChatFormatting.YELLOW))
+                }
+                text(description.text())
+            }.build())
+        }
+
         category(ConfigCategory.createBuilder().apply {
             name(TaCZTweaks.translatable("config.category.general"))
             group(OptionGroup.createBuilder().apply {
@@ -482,6 +509,15 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())
+            }.build())
+            group(ListOption.createBuilder<String>().apply {
+                nameSynced(TaCZTweaks.translatable("config.gun.reloadDiscardsMagazineExclusions.name"))
+                descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.reloadDiscardsMagazineExclusions.description")))
+                collapsed(true)
+                binding(Gun.reloadDiscardsMagazineExclusions.asSyncedBinding())
+                controller(stringField())
+                initial("")
+                available(canUpdateServerConfig)
             }.build())
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.crawl"))
