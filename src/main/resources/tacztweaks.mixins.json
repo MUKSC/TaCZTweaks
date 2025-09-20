@@ -17,6 +17,8 @@
     "compat.lso.CommonForgeEventsMixin",
     "compat.mts.EntityUtilMixin",
     "compat.soundphysics.SoundPhysicsMixin",
+    "compat.soundphysics.SoundPhysicsMixin$1_1_x",
+    "compat.soundphysics.SoundPhysicsMixin$1_5_x",
     "compat.vs.BlockHitResultMixin",
     "compat.vs.BlockRayTraceMixin",
     "compat.vs.ClipContextMixin",
