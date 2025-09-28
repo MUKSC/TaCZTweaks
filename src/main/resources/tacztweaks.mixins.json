@@ -44,6 +44,7 @@
     "modifiers.AmmoSpeedModifierMixin",
     "modifiers.ArmorIgnoreModifierMixin",
     "modifiers.AttachmentDataUtilsMixin",
+    "modifiers.CameraSetupEventMixin",
     "modifiers.ClientGunTooltipMixin",
     "modifiers.DamageModifierMixin",
     "modifiers.EntityKineticBulletMixin",

@@ -21,7 +21,11 @@ public abstract class InaccuracyModifierMixin {
     @ModifyExpressionValue(method = "lambda$initCache$0", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getInaccuracy(Lcom/tacz/guns/resource/pojo/data/gun/InaccuracyType;F)F"))
     private static float tacztweaks$initCache$inaccuracyModifier(float original, @Local(argsOnly = true) InaccuracyType type) {
         float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), original);
-        if (type == InaccuracyType.AIM) inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+        switch (type) {
+            case AIM -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+            case SNEAK -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.SneakInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+            case LIE -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.CrawlInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+        }
         return inaccuracy;
     }
 

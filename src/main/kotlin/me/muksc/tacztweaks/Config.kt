@@ -1,7 +1,6 @@
 package me.muksc.tacztweaks
 
 import com.google.common.collect.Lists
-import com.google.common.collect.Lists.newArrayListWithCapacity
 import com.mojang.serialization.Codec
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager
 import com.tacz.guns.resource.pojo.data.attachment.Modifier
@@ -145,9 +144,15 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             registerSyncable("friction", Friction)
             registerSyncable("inaccuracy", Inaccuracy)
             registerSyncable("aimInaccuracy", AimInaccuracy)
+            registerSyncable("sneakInaccuracy", SneakInaccuracy)
+            registerSyncable("crawlInaccuracy", CrawlInaccuracy)
             registerSyncable("rpm", RPM)
             registerSyncable("verticalRecoil", VerticalRecoil)
             registerSyncable("horizontalRecoil", HorizontalRecoil)
+            registerSyncable("aimVerticalRecoil", AimVerticalRecoil)
+            registerSyncable("aimHorizontalRecoil", AimHorizontalRecoil)
+            registerSyncable("crawlVerticalRecoil", CrawlVerticalRecoil)
+            registerSyncable("crawlHorizontalRecoil", CrawlHorizontalRecoil)
         }
 
         object Damage : ModifierConfig()
@@ -160,9 +165,15 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         object Friction : ModifierConfig()
         object Inaccuracy : ModifierConfig()
         object AimInaccuracy : ModifierConfig()
+        object SneakInaccuracy : ModifierConfig()
+        object CrawlInaccuracy : ModifierConfig()
         object RPM : ModifierConfig()
         object VerticalRecoil : ModifierConfig()
         object HorizontalRecoil : ModifierConfig()
+        object AimVerticalRecoil : ModifierConfig()
+        object AimHorizontalRecoil : ModifierConfig()
+        object CrawlVerticalRecoil : ModifierConfig()
+        object CrawlHorizontalRecoil : ModifierConfig()
     }
 
     object Crawl : SyncableCodecConfig<Crawl>() {
@@ -588,9 +599,15 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 "friction" to Modifiers.Friction,
                 "inaccuracy" to Modifiers.Inaccuracy,
                 "aimInaccuracy" to Modifiers.AimInaccuracy,
+                "sneakInaccuracy" to Modifiers.SneakInaccuracy,
+                "crawlInaccuracy" to Modifiers.CrawlInaccuracy,
                 "rpm" to Modifiers.RPM,
                 "verticalRecoil" to Modifiers.VerticalRecoil,
-                "horizontalRecoil" to Modifiers.HorizontalRecoil
+                "horizontalRecoil" to Modifiers.HorizontalRecoil,
+                "aimVerticalRecoil" to Modifiers.AimVerticalRecoil,
+                "aimHorizontalRecoil" to Modifiers.AimHorizontalRecoil,
+                "crawlVerticalRecoil" to Modifiers.CrawlVerticalRecoil,
+                "crawlHorizontalRecoil" to Modifiers.CrawlHorizontalRecoil
             )) {
                 group(OptionGroup.createBuilder().apply {
                     name(TaCZTweaks.translatable("config.modifiers.$key.name"))
