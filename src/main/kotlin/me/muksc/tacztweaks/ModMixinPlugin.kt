@@ -53,7 +53,6 @@ class ModMixinPlugin : IMixinConfigPlugin {
 
     private fun versionCheck(id: String, spec: String): Boolean {
         val info = ModList.get()?.getModFileById(id) ?: LoadingModList.get()?.getModFileById(id) ?: return false
-        println("version: ${info.mods[0].version}, spec: $spec, artifact: ${VersionRange.createFromVersionSpec(spec)}, result: ${VersionRange.createFromVersionSpec(spec).containsVersion(info.mods[0].version)}")
         return VersionRange.createFromVersionSpec(spec).containsVersion(info.mods[0].version)
     }
 }

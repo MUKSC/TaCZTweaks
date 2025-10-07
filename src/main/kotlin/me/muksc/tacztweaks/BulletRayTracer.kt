@@ -3,6 +3,7 @@ package me.muksc.tacztweaks
 import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.util.EntityUtil
 import com.tacz.guns.util.TacHitResult
+import me.muksc.tacztweaks.compat.pillagers_gun.PillagersGunCompat
 import me.muksc.tacztweaks.data.BulletInteractionManager
 import me.muksc.tacztweaks.data.BulletParticlesManager
 import me.muksc.tacztweaks.data.BulletParticlesManager.EBlockParticleType
@@ -30,6 +31,8 @@ class BulletRayTracer(
     fun handle(original: BlockHitResult, state: BlockState?): BlockHitResult? {
         val entities = EntityUtil.findEntitiesOnPath(entity, findEntitiesStart, original.location)
         for (result in entities.sortedBy { findEntitiesStart.distanceTo(it.hitPos) }) {
+            val owner = entity.owner
+            if (owner != null && PillagersGunCompat.shouldIgnore(result.entity, owner)) continue
             ext.`tacztweaks$setPosition`(result.hitPos)
             val interactionResult = BulletInteractionManager.handleEntityInteraction(entity, TacHitResult(result), context)
             BulletParticlesManager.handleEntityParticle(interactionResult.toEntityParticleType(), level, entity, result.hitPos, result.entity)

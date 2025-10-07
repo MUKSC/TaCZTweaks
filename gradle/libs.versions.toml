@@ -24,6 +24,7 @@ firstaid-modrinth = "1.20.1-1.1"
 legendary-survival-overhaul-curseforge = "6268808"
 sound-physics-remastered-modrinth = "forge-1.20.1-1.5.0"
 lrtactical-modrinth = "0.3.0"
+pillagers-gun-curseforge = "6875446"
 valkyrienskies = "2.3.0-beta.5+bcda04a482"
 valkyrienskies-core = "1.1.0+2a62e6a823"
 neat-modrinth = "1.20.1-41-forge"
@@ -43,6 +44,7 @@ modrinth-firstaid = { module = "maven.modrinth:firstaid", version.ref = "firstai
 curseforge-legendary-survival-overhaul = { module = "curse.maven:legendary-survival-overhaul-840254", version.ref = "legendary-survival-overhaul-curseforge" }
 modrinth-sound-physics-remastered = { module = "maven.modrinth:sound-physics-remastered", version.ref = "sound-physics-remastered-modrinth" }
 modrinth-lrtactical = { module = "maven.modrinth:lr-tactical", version.ref = "lrtactical-modrinth" }
+curseforge-pillagers-gun = { module = "curse.maven:pillagers-gun-948255", version.ref = "pillagers-gun-curseforge" }
 org-valkyrienskies-forge = { module = "org.valkyrienskies:valkyrienskies-120-forge", version.ref = "valkyrienskies" }
 org-valkyrienskies-core-api = { module = "org.valkyrienskies.core:api", version.ref = "valkyrienskies-core" }
 org-valkyrienskies-core-api-game = { module = "org.valkyrienskies.core:api-game", version.ref = "valkyrienskies-core" }

@@ -2,6 +2,7 @@ package me.muksc.tacztweaks;
 
 import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat;
+import me.muksc.tacztweaks.compat.pillagers_gun.PillagersGunCompat;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
 import me.muksc.tacztweaks.data.BulletInteractionManager;
 import me.muksc.tacztweaks.data.BulletParticlesManager;
@@ -47,6 +48,7 @@ public class TaCZTweaks {
         Config.INSTANCE.touch();
         NetworkHandler.INSTANCE.register();
         LRTacticalCompat.INSTANCE.initialize();
+        PillagersGunCompat.INSTANCE.initialize();
         SoundPhysicsCompat.INSTANCE.initialize();
         MinecraftForge.EVENT_BUS.register(this);
     }
