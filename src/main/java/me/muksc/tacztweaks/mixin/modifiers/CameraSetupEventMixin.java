@@ -46,10 +46,12 @@ public abstract class CameraSetupEventMixin {
         GunRecoilExtension ext = (GunRecoilExtension) instance;
         try {
             ext.tacztweaks$setModifier(value -> {
-                double recoil = AttachmentPropertyManager.eval(Config.Modifiers.VerticalRecoil.INSTANCE.toTaCZ(), value);
+                boolean negative = value < 0;
+                double recoil = AttachmentPropertyManager.eval(Config.Modifiers.VerticalRecoil.INSTANCE.toTaCZ(), Math.abs(value));
                 if (crawlRef.get()) recoil = AttachmentPropertyManager.eval(Config.Modifiers.CrawlVerticalRecoil.INSTANCE.toTaCZ(), recoil);
                 double aimingModifier = AttachmentPropertyManager.eval(Config.Modifiers.AimVerticalRecoil.INSTANCE.toTaCZ(), recoil) - recoil;
-                return recoil + (aimingModifier * aimingProgressRef.get());
+                recoil = recoil + (aimingModifier * aimingProgressRef.get());
+                return recoil * (negative ? -1 : 1);
             });
             return original.call(instance, modifier);
         } finally {
@@ -68,10 +70,12 @@ public abstract class CameraSetupEventMixin {
         GunRecoilExtension ext = (GunRecoilExtension) instance;
         try {
             ext.tacztweaks$setModifier(value -> {
-                double recoil = AttachmentPropertyManager.eval(Config.Modifiers.HorizontalRecoil.INSTANCE.toTaCZ(), value);
+                boolean negative = value < 0;
+                double recoil = AttachmentPropertyManager.eval(Config.Modifiers.HorizontalRecoil.INSTANCE.toTaCZ(), Math.abs(value));
                 if (crawlRef.get()) recoil = AttachmentPropertyManager.eval(Config.Modifiers.CrawlHorizontalRecoil.INSTANCE.toTaCZ(), recoil);
                 double aimingModifier = AttachmentPropertyManager.eval(Config.Modifiers.AimHorizontalRecoil.INSTANCE.toTaCZ(), recoil) - recoil;
-                return recoil + (aimingModifier * aimingProgressRef.get());
+                recoil = recoil + (aimingModifier * aimingProgressRef.get());
+                return recoil * (negative ? -1 : 1);
             });
             return original.call(instance, modifier);
         } finally {
