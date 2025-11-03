@@ -7,18 +7,15 @@ import com.mojang.authlib.GameProfile
 import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
+import com.tacz.guns.init.ModDamageTypes
 import com.tacz.guns.util.AttachmentDataUtils
 import com.tacz.guns.util.TacHitResult
-import me.muksc.tacztweaks.BlockBreakingManager
-import me.muksc.tacztweaks.Config
-import me.muksc.tacztweaks.Context
-import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.*
 import me.muksc.tacztweaks.data.old.convert
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.DestroySpeedModifierHolder
-import me.muksc.tacztweaks.thenPrioritizeBy
-import me.muksc.tacztweaks.toImmutableMap
+import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.ShieldInteractionBehaviour
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -26,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
@@ -34,7 +32,11 @@ import net.minecraft.world.phys.Vec3
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.TierSortingRegistry
 import net.minecraftforge.common.util.FakePlayer
+import net.minecraftforge.event.entity.living.ShieldBlockEvent
 import net.minecraftforge.event.level.BlockEvent
+import net.minecraftforge.eventbus.api.EventPriority
+import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.common.Mod
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.exp
@@ -46,6 +48,7 @@ private val GSON = GsonBuilder()
     .disableHtmlEscaping()
     .create()
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TaCZTweaks.MOD_ID)
 object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet_interactions") {
     private val LOGGER = LogUtils.getLogger()
     private val FAKE_PROFILE = GameProfile(UUID.fromString("BF8411E4-9730-4215-9AE8-1688EEDF9B72"), "[Minecraft]")
@@ -73,6 +76,15 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
         (interaction.target.isEmpty() || interaction.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
                 && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
+    }?.toPair()
+
+    private inline fun <reified T : BulletInteraction> getBulletInteraction(
+        entity: EntityKineticBullet,
+        location: Vec3,
+        predicate: (T) -> Boolean
+    ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
+        (interaction.target.isEmpty() || interaction.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
+                && predicate(interaction)
     }?.toPair()
 
     @Suppress("UnstableApiUsage")
@@ -104,6 +116,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 .thenPrioritizeBy { when (it) {
                     is BulletInteraction.Block -> it.blocks.isNotEmpty()
                     is BulletInteraction.Entity -> it.entities.isNotEmpty()
+                    is BulletInteraction.Shield -> false
                 } }
         ).build() }.toImmutableMap()
     }
@@ -157,7 +170,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             }
             level.destroyBlock(blockPos, interaction.blockBreak.drop, ammo.owner)
         }
-        return InteractionResult(shouldPierce(ammo, result, interaction, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
+        return InteractionResult(shouldPierce(ammo, result, interaction.pierce, interaction.gunPierce, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
             .also { debug { it.toString() } }
     }
 
@@ -178,31 +191,76 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         }
         val isDead = !entity.isAlive
         if (accessor.explosion) return InteractionResult(false, isDead).also { debug { it.toString() } }
-        return InteractionResult(shouldPierce(ammo, result, interaction, isDead, ext::`tacztweaks$incrementEntityPierce`, ext::`tacztweaks$getEntityPierce`), isDead)
+        return InteractionResult(shouldPierce(ammo, result, interaction.pierce, interaction.gunPierce, isDead, ext::`tacztweaks$incrementEntityPierce`, ext::`tacztweaks$getEntityPierce`), isDead)
             .also { debug { it.toString() } }
     }
 
+    fun handleShieldInteraction(ammo: EntityKineticBullet, location: Vec3, shield: ItemStack, originalDamage: Float): ShieldInteractionResult {
+        val (id, interaction) = getBulletInteraction<BulletInteraction.Shield>(ammo, location) {
+            it.predicate.matches(shield)
+        } ?: (DEFAULT to BulletInteraction.Shield.DEFAULT)
+        debug { "Using shield bullet interaction: $id" }
+
+        val damage = (originalDamage - interaction.damage.falloff) * interaction.damage.multiplier
+        val durabilityDamage = lambda@ { durabilityDamage: Int ->
+            if (interaction.durability.conditional && damage <= 0) return@lambda 0
+            when (interaction.durability) {
+                is BulletInteraction.Shield.Durability.DynamicDamage -> ((durabilityDamage + interaction.durability.modifier) * interaction.durability.multiplier).toInt()
+                is BulletInteraction.Shield.Durability.FixedDamage -> interaction.durability.damage
+            }
+        }
+        val disableDuration = run {
+            if (interaction.disable.conditional && damage <= 0) return@run 0
+            if (ammo.random.nextFloat() < interaction.disable.chance) {
+                interaction.disable.duration
+            } else {
+                0
+            }
+        }
+        return ShieldInteractionResult(originalDamage - damage, durabilityDamage, disableDuration)
+    }
+
+    @JvmStatic
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    fun onShieldBlock(e: ShieldBlockEvent) {
+        if (!e.damageSource.`is`(ModDamageTypes.BULLETS_TAG)) return
+        val ammo = e.damageSource.directEntity as? EntityKineticBullet ?: return
+        val location = e.damageSource.sourcePosition ?: return
+        val behaviour = e.entity as ShieldInteractionBehaviour
+        val result = handleShieldInteraction(ammo, location, e.entity.useItem, e.originalBlockedDamage)
+
+        if (result.blockedDamage <= 0) {
+            e.isCanceled = true
+            return
+        }
+        e.blockedDamage = result.blockedDamage
+        e.setShieldTakesDamage(true)
+        behaviour.`tacztweaks$setCustomShieldDurabilityDamage`(result.durabilityDamage)
+        behaviour.`tacztweaks$setCustomShieldDisableDuration`(result.disableDuration)
+    }
+
     private fun shouldPierce(
-        ammo: EntityKineticBullet, result: HitResult, interaction: BulletInteraction, condition: Boolean,
+        ammo: EntityKineticBullet, result: HitResult,
+        pierce: BulletInteraction.Pierce, gunPierce: BulletInteraction.GunPierce, condition: Boolean,
         incrementCustomPierce: () -> Unit, getCustomPierce: () -> Int
     ): Boolean {
         val accessor = ammo as EntityKineticBulletAccessor
         val ext = ammo as EntityKineticBulletExtension
-        if (interaction.gunPierce.consume) accessor.pierce -= 1
-        if (interaction.gunPierce.required && accessor.pierce <= 0) return false
-        when (interaction.pierce) {
+        if (gunPierce.consume) accessor.pierce -= 1
+        if (gunPierce.required && accessor.pierce <= 0) return false
+        when (pierce) {
             is BulletInteraction.Pierce.Never -> false
             is BulletInteraction.Pierce.Default -> true
             is BulletInteraction.Pierce.Count -> {
                 incrementCustomPierce.invoke()
-                getCustomPierce.invoke() < interaction.pierce.count
+                getCustomPierce.invoke() < pierce.count
             }
             is BulletInteraction.Pierce.Damage -> ammo.getDamage(result.location) > 0.0F
         } || return false
-        if (interaction.pierce.conditional && !condition) return false
+        if (pierce.conditional && !condition) return false
         ext.`tacztweaks$addDamageModifier`(
-            -interaction.pierce.damageFalloff,
-            interaction.pierce.damageMultiplier
+            -pierce.damageFalloff,
+            pierce.damageMultiplier
         )
         return true
     }
@@ -229,5 +287,11 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
     data class InteractionResult(
         val pierce: Boolean,
         val condition: Boolean
+    )
+
+    data class ShieldInteractionResult(
+        val blockedDamage: Float,
+        val durabilityDamage: (Int) -> Int,
+        val disableDuration: Int
     )
 }

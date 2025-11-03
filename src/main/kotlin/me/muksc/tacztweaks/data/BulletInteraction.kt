@@ -6,6 +6,7 @@ import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
 import me.muksc.tacztweaks.singleOrListCodec
 import me.muksc.tacztweaks.strictOptionalFieldOf
+import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.world.item.Tier
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -13,8 +14,6 @@ import kotlin.jvm.optionals.getOrNull
 sealed class BulletInteraction(
     val type: EBulletInteractionType,
     val target: List<Target>,
-    val pierce: Pierce,
-    val gunPierce: GunPierce,
     val priority: Int
 ) {
     enum class EBulletInteractionType(
@@ -22,7 +21,8 @@ sealed class BulletInteraction(
         override val codecProvider: () -> Codec<out BulletInteraction>
     ) : DispatchCodec<BulletInteraction> {
         BLOCK("block", { Block.CODEC }),
-        ENTITY("entity", { Entity.CODEC });
+        ENTITY("entity", { Entity.CODEC }),
+        SHIELD("shield", { Shield.CODEC });
 
         companion object {
             private val map = EBulletInteractionType.entries.associateBy(EBulletInteractionType::key)
@@ -121,10 +121,10 @@ sealed class BulletInteraction(
         target: List<Target>,
         val blocks: List<BlockTestable>,
         val blockBreak: BlockBreak,
-        pierce: Pierce,
-        gunPierce: GunPierce,
+        val pierce: Pierce,
+        val gunPierce: GunPierce,
         priority: Int
-    ) : BulletInteraction(EBulletInteractionType.BLOCK, target, pierce, gunPierce, priority) {
+    ) : BulletInteraction(EBulletInteractionType.BLOCK, target, priority) {
         sealed class BlockBreak(
             val type: EBlockBreakType,
             val hardness: ValueRange,
@@ -241,10 +241,10 @@ sealed class BulletInteraction(
         target: List<Target>,
         val entities: List<EntityTestable>,
         val damage: EntityDamage,
-        pierce: Pierce,
-        gunPierce: GunPierce,
+        val pierce: Pierce,
+        val gunPierce: GunPierce,
         priority: Int
-    ) : BulletInteraction(EBulletInteractionType.ENTITY, target, pierce, gunPierce, priority) {
+    ) : BulletInteraction(EBulletInteractionType.ENTITY, target, priority) {
         class EntityDamage(
             val modifier: Float,
             val multiplier: Float
@@ -267,6 +267,101 @@ sealed class BulletInteraction(
                 GunPierce.codec(true).strictOptionalFieldOf("gun_pierce", DEFAULT.gunPierce).forGetter(Entity::gunPierce),
                 Codec.INT.strictOptionalFieldOf("priority", DEFAULT.priority).forGetter(Entity::priority)
             ).apply(it, ::Entity) }
+        }
+    }
+
+    class Shield(
+        target: List<Target>,
+        val predicate: ItemPredicate,
+        val damage: ShieldDamage,
+        val disable: Disable,
+        val durability: Durability,
+        priority: Int
+    ) : BulletInteraction(EBulletInteractionType.SHIELD, target, priority) {
+        class ShieldDamage(
+            val falloff: Float,
+            val multiplier: Float
+        ) {
+            companion object {
+                val CODEC = RecordCodecBuilder.create<ShieldDamage> { it.group(
+                    Codec.FLOAT.strictOptionalFieldOf("falloff", 0.0F).forGetter(ShieldDamage::falloff),
+                    Codec.FLOAT.strictOptionalFieldOf("multiplier", 1.0F).forGetter(ShieldDamage::multiplier)
+                ).apply(it, ::ShieldDamage) }
+            }
+        }
+
+        class Disable(
+            val duration: Int,
+            val chance: Float,
+            val conditional: Boolean
+        ) {
+            companion object {
+                val CODEC = RecordCodecBuilder.create<Disable> { it.group(
+                    Codec.INT.strictOptionalFieldOf("duration", 100).forGetter(Disable::duration),
+                    Codec.FLOAT.strictOptionalFieldOf("chance", 1.0F).forGetter(Disable::chance),
+                    Codec.BOOL.strictOptionalFieldOf("conditional", true).forGetter(Disable::conditional)
+                ).apply(it, ::Disable) }
+            }
+        }
+
+        sealed class Durability(
+            val type: EDurabilityType,
+            val conditional: Boolean
+        ) {
+            enum class EDurabilityType(
+                override val key: String,
+                override val codecProvider: () -> Codec<out Durability>
+            ) : DispatchCodec<Durability> {
+                FIXED_DAMAGE("fixed_damage", { FixedDamage.CODEC }),
+                DYNAMIC_DAMAGE("dynamic_damage", { DynamicDamage.CODEC });
+
+                companion object {
+                    private val map = entries.associateBy(EDurabilityType::key)
+                    val CODEC = DispatchCodec.getCodec(map::getValue)
+                }
+            }
+
+            class FixedDamage(
+                val damage: Int,
+                conditional: Boolean
+            ) : Durability(EDurabilityType.FIXED_DAMAGE, conditional) {
+                companion object {
+                    val CODEC = RecordCodecBuilder.create<FixedDamage> { it.group(
+                        Codec.INT.fieldOf("damage").forGetter(FixedDamage::damage),
+                        Codec.BOOL.strictOptionalFieldOf("conditional", true).forGetter(FixedDamage::conditional)
+                    ).apply(it, ::FixedDamage) }
+                }
+            }
+
+            class DynamicDamage(
+                val modifier: Int,
+                val multiplier: Float,
+                conditional: Boolean
+            ) : Durability(EDurabilityType.DYNAMIC_DAMAGE, conditional) {
+                companion object {
+                    val CODEC = RecordCodecBuilder.create<DynamicDamage> { it.group(
+                        Codec.INT.strictOptionalFieldOf("modifier", 0).forGetter(DynamicDamage::modifier),
+                        Codec.FLOAT.strictOptionalFieldOf("multiplier", 1.0F).forGetter(DynamicDamage::multiplier),
+                        Codec.BOOL.strictOptionalFieldOf("conditional", true).forGetter(DynamicDamage::conditional)
+                    ).apply(it, ::DynamicDamage) }
+                }
+            }
+
+            companion object {
+                val CODEC = EDurabilityType.CODEC.dispatch(Durability::type) { it.codecProvider() }
+            }
+        }
+
+        companion object {
+            val DEFAULT = Shield(emptyList(), ItemPredicate.ANY, ShieldDamage(0.0F, 1.0F), Disable(0, 0.0F, true), Durability.FixedDamage(0, true), 0)
+            val CODEC = RecordCodecBuilder.create<Shield> { it.group(
+                singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Shield::target),
+                ItemPredicateCodec.strictOptionalFieldOf("predicate", DEFAULT.predicate).forGetter(Shield::predicate),
+                ShieldDamage.CODEC.strictOptionalFieldOf("damage", DEFAULT.damage).forGetter(Shield::damage),
+                Disable.CODEC.strictOptionalFieldOf("disable", DEFAULT.disable).forGetter(Shield::disable),
+                Durability.CODEC.strictOptionalFieldOf("durability", DEFAULT.durability).forGetter(Shield::durability),
+                Codec.INT.strictOptionalFieldOf("priority", DEFAULT.priority).forGetter(Shield::priority)
+            ).apply(it, ::Shield) }
         }
     }
 

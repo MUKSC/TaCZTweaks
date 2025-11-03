@@ -1,0 +1,14 @@
+{
+  "type": "shield",
+  "damage": {
+    "multiplier": 0.1
+  },
+  "disable": {
+    "duration": 10,
+    "chance": 0.2
+  },
+  "durability": {
+    "type": "dynamic_damage",
+    "multiplier": 0.5
+  }
+}

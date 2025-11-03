@@ -30,6 +30,8 @@
     "features.BlockRayTraceMixin",
     "features.EntityKineticBulletMixin",
     "features.bullet_interactions.BlockBehaviourMixin",
+    "features.bullet_interactions.LivingEntityMixin",
+    "features.bullet_interactions.PlayerMixin",
     "features.bullet_sounds.EntityKineticBulletMixin",
     "features.bullet_sounds.ModernKineticGunScriptAPIMixin",
     "features.melee_interactions.ModernKineticGunItemMixin",
