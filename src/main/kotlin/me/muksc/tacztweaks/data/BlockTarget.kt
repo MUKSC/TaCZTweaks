@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
+import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
@@ -25,6 +26,7 @@ sealed class BlockTarget(
         BLOCK("block", { Block.CODEC }),
         BLOCK_TAG("block_tag", { BlockTag.CODEC }),
         REGEX("regex", { RegexPattern.CODEC }),
+        PREDICATE("predicate", { Predicate.CODEC }),
         TIER("tier", { HardnessTier.CODEC }),
         HARDNESS("hardness", { Hardness.CODEC });
 
@@ -96,6 +98,17 @@ sealed class BlockTarget(
             val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(
                 Codec.STRING.xmap(::Regex, Regex::pattern).fieldOf("regex").forGetter(RegexPattern::regex)
             ).apply(it, ::RegexPattern) }
+        }
+    }
+
+    class Predicate(val predicate: BlockPredicate) : BlockTarget(EBlockTargetType.PREDICATE) {
+        override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean =
+            predicate.matches(level, pos)
+
+        companion object {
+            val CODEC = RecordCodecBuilder.create<Predicate> { it.group(
+                BlockPredicateCodec.fieldOf("predicate").forGetter(Predicate::predicate)
+            ).apply(it, ::Predicate) }
         }
     }
 

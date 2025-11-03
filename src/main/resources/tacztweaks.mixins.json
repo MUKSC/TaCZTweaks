@@ -29,6 +29,7 @@
     "crawl.LivingEntityMixinMixin",
     "features.BlockRayTraceMixin",
     "features.EntityKineticBulletMixin",
+    "features.ModernKineticGunScriptAPIMixin",
     "features.bullet_interactions.BlockBehaviourMixin",
     "features.bullet_interactions.LivingEntityMixin",
     "features.bullet_interactions.PlayerMixin",

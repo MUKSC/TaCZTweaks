@@ -7,11 +7,13 @@ import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.resource.modifier.custom.SilenceModifier
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair
 import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.strictOptionalFieldOf
+import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.phys.Vec3
 
 sealed class Target(
     val type: ETargetType
@@ -28,9 +30,12 @@ sealed class Target(
         GUN("gun", { Gun.CODEC }),
         AMMO("ammo", { Ammo.CODEC }),
         REGEX("regex", { RegexPattern.CODEC }),
+        PREDICATE("predicate", { Predicate.CODEC }),
         DAMAGE("damage", { Damage.CODEC }),
         SPEED("speed", { Speed.CODEC }),
         SILENCED("silenced", { Silenced.CODEC }),
+        FIRST_OF_BURST("first_of_burst", { FirstOfBurst.CODEC }),
+        FIRST_OF_PELLETS("first_of_pellets", { FirstOfPellets.CODEC }),
         RANDOM_CHANCE("random_chance", { RandomChance.CODEC });
 
         companion object {
@@ -119,6 +124,17 @@ sealed class Target(
         }
     }
 
+    class Predicate(val predicate: EntityPredicate) : Target(ETargetType.PREDICATE) {
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
+            entity != null && predicate.matches(entity.level() as ServerLevel, entity.position(), entity)
+
+        companion object {
+            val CODEC = RecordCodecBuilder.create<Predicate> { it.group(
+                EntityPredicateCodec.fieldOf("predicate").forGetter(Predicate::predicate)
+            ).apply(it, ::Predicate) }
+        }
+    }
+
     class Damage(val values: List<ValueRange>) : Target(ETargetType.DAMAGE) {
         override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean =
             entity != null && values.any { it.contains(damage) }
@@ -150,6 +166,24 @@ sealed class Target(
         }
 
         val CODEC = Codec.unit(Silenced)
+    }
+
+    object FirstOfBurst : Target(ETargetType.FIRST_OF_BURST) {
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
+            val ext = entity as? EntityKineticBulletExtension ?: return false
+            return ext.`tacztweaks$firstOfBurst`()
+        }
+
+        val CODEC = Codec.unit(FirstOfBurst)
+    }
+
+    object FirstOfPellets : Target(ETargetType.FIRST_OF_PELLETS) {
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
+            val ext = entity as? EntityKineticBulletExtension ?: return false
+            return ext.`tacztweaks$firstOfPellets`()
+        }
+
+        val CODEC = Codec.unit(FirstOfPellets)
     }
 
     class RandomChance(val chance: Float) : Target(ETargetType.RANDOM_CHANCE) {

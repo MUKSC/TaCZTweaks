@@ -39,6 +39,12 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     @Unique
     private Vec3 tacztweaks$position = Vec3.ZERO;
 
+    @Unique
+    private boolean tacztweaks$firstOfBurst = false;
+
+    @Unique
+    private boolean tacztweaks$firstOfPellets = false;
+
     @Override
     public ItemStack tacztweaks$getGunStack() {
         return tacztweaks$gunStack;
@@ -72,6 +78,26 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     @Override
     public void tacztweaks$setPosition(Vec3 position) {
         tacztweaks$position = position;
+    }
+
+    @Override
+    public boolean tacztweaks$firstOfBurst() {
+        return tacztweaks$firstOfBurst;
+    }
+
+    @Override
+    public void tacztweaks$markFirstOfBurst() {
+        tacztweaks$firstOfBurst = true;
+    }
+
+    @Override
+    public boolean tacztweaks$firstOfPellets() {
+        return tacztweaks$firstOfPellets;
+    }
+
+    @Override
+    public void tacztweaks$markFirstOfPellets() {
+        tacztweaks$firstOfPellets = true;
     }
 
     @Override

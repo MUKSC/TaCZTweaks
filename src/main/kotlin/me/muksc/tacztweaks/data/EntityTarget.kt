@@ -3,7 +3,9 @@ package me.muksc.tacztweaks.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
+import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.core.registries.Registries
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.TagKey
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
@@ -24,6 +26,7 @@ sealed class EntityTarget(
         ENTITY("entity", { Entity.CODEC }),
         ENTITY_TAG("entity_tag", { EntityTag.CODEC }),
         REGEX("regex", { RegexPattern.CODEC }),
+        PREDICATE("predicate", { Predicate.CODEC }),
         HEALTH("health", { Health.CODEC }),
         ARMOR("armor", { Armor.CODEC }),
         ARMOR_TOUGHNESS("armor_toughness", { ArmorToughness.CODEC });
@@ -97,6 +100,17 @@ sealed class EntityTarget(
             val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(
                 Codec.STRING.xmap(::Regex, Regex::pattern).fieldOf("regex").forGetter(RegexPattern::regex)
             ).apply(it, ::RegexPattern) }
+        }
+    }
+
+    class Predicate(val predicate: EntityPredicate) : EntityTarget(EEntityTargetType.PREDICATE) {
+        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+            predicate.matches(entity.level() as ServerLevel, entity.position(), entity)
+
+        companion object {
+            val CODEC = RecordCodecBuilder.create<Predicate> { it.group(
+                EntityPredicateCodec.fieldOf("predicate").forGetter(Predicate::predicate)
+            ).apply(it, ::Predicate) }
         }
     }
 
