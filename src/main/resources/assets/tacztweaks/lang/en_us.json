@@ -24,7 +24,7 @@
   "tacztweaks.config.gun.allowUnload.name": "Allow Unload",
   "tacztweaks.config.gun.allowUnload.description": "Enables or disables the gun unload feature.",
   "tacztweaks.config.gun.cancelInspection.name": "Cancel Inspection",
-  "tacztweaks.config.gun.cancelInspection.description": "Allows you to cancel the gun inspection animation by pressing the inspect key again within 3 seconds, instead of replaying the animation from the start.",
+  "tacztweaks.config.gun.cancelInspection.description": "Allows you to cancel the gun inspection animation by pressing the inspect key again within 3 seconds, instead of replaying the animation from the start.\nNote: Some guns might not work correctly due to the flexibility of the gun pack scripting system.",
   "tacztweaks.config.gun.disableBulletCulling.name": "Disable Bullet Culling",
   "tacztweaks.config.gun.disableBulletCulling.description": "Improves the accuracy of bullet rendering at close range.\nPotentially impacts performance in intense scenarios, such as large-scale multiplayer gunfights.",
   "tacztweaks.config.modifier.addend.name": "Addend",
