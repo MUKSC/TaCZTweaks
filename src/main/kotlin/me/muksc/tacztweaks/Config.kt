@@ -77,6 +77,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val reduceSensitivityKeyMultiplier by register(1.0, DOUBLE)
+        val disableReduceSensitivityKeyWhileAiming by register(false, BOOL)
         val cancelInspection by register(false, BOOL)
         val disableBulletCulling by register(false, BOOL)
 
@@ -86,6 +88,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
         fun reloadDiscardsMagazineExclusions(): List<String> = reloadDiscardsMagazineExclusions.syncedValue
         fun allowUnload(): Boolean = allowUnload.syncedValue
+        fun reduceSensitivityKeyMultiplier(): Double = reduceSensitivityKeyMultiplier.value
+        fun disableReduceSensitivityKeyWhileAiming(): Boolean = disableReduceSensitivityKeyWhileAiming.value
         fun cancelInspection(): Boolean = cancelInspection.value
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
@@ -356,6 +360,20 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             name(TaCZTweaks.translatable("config.category.general"))
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.gun"))
+                option(Option.createBuilder<Double>().apply {
+                    name(TaCZTweaks.translatable("config.gun.reduceSensitivityKeyMultiplier.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.reduceSensitivityKeyMultiplier.description")))
+                    binding(Gun.reduceSensitivityKeyMultiplier.asBinding())
+                    controller(slider(range = 0.0..1.0, step = 0.01) {
+                        TaCZTweaks.translatable("config.label.multiplier", "%.2f".format(it))
+                    })
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.disableReduceSensitivityKeyWhileAiming.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableReduceSensitivityKeyWhileAiming.description")))
+                    binding(Gun.disableReduceSensitivityKeyWhileAiming.asBinding())
+                    controller(booleanController())
+                }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.gun.cancelInspection.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.cancelInspection.description")))

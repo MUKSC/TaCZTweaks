@@ -1,5 +1,6 @@
 package me.muksc.tacztweaks;
 
+import me.muksc.tacztweaks.client.input.ReduceSensitivityKey;
 import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat;
 import me.muksc.tacztweaks.compat.pillagers_gun.PillagersGunCompat;
@@ -109,7 +110,8 @@ public class TaCZTweaks {
 
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-            event.register(UnloadKey.UNLOAD_KEY);
+            event.register(UnloadKey.KEY);
+            event.register(ReduceSensitivityKey.KEY);
         }
     }
 }

@@ -1,5 +1,6 @@
 {
-  "key.tacztweaks.unload": "Unload",
+  "tacztweaks.key.unload": "Unload",
+  "tacztweaks.key.reduceSensitivity":"Reduce Sensitivity",
   "tacztweaks.unload.done": "Unloaded",
   "tacztweaks.search": "Search...",
   "tacztweaks.packs.filter": "Filter",
@@ -23,6 +24,10 @@
   "tacztweaks.config.gun.reloadDiscardsMagazineExclusions.description": "List of gun ids to excluded from the effect of the `Reload Discards Magazine` option.",
   "tacztweaks.config.gun.allowUnload.name": "Allow Unload",
   "tacztweaks.config.gun.allowUnload.description": "Enables or disables the gun unload feature.",
+  "tacztweaks.config.gun.reduceSensitivityKeyMultiplier.name": "Reduce Sensitivity Key Multiplier",
+  "tacztweaks.config.gun.reduceSensitivityKeyMultiplier.description": "Sensitivity multiplier while holding down the 'reduce sensitivity' key.",
+  "tacztweaks.config.gun.disableReduceSensitivityKeyWhileAiming.name": "Disable Reduce Sensitivity Key While Aiming",
+  "tacztweaks.config.gun.disableReduceSensitivityKeyWhileAiming.description": "Disables the reduce sensitivity key while aiming.",
   "tacztweaks.config.gun.cancelInspection.name": "Cancel Inspection",
   "tacztweaks.config.gun.cancelInspection.description": "Allows you to cancel the gun inspection animation by pressing the inspect key again within 3 seconds, instead of replaying the animation from the start.\nNote: Some guns might not work correctly due to the flexibility of the gun pack scripting system.",
   "tacztweaks.config.gun.disableBulletCulling.name": "Disable Bullet Culling",
