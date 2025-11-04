@@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.init.ModDamageTypes
+import com.tacz.guns.particles.BulletHoleOption
 import com.tacz.guns.util.AttachmentDataUtils
 import com.tacz.guns.util.TacHitResult
 import me.muksc.tacztweaks.*
@@ -170,7 +171,18 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             }
             level.destroyBlock(blockPos, interaction.blockBreak.drop, ammo.owner)
         }
-        return InteractionResult(shouldPierce(ammo, result, interaction.pierce, interaction.gunPierce, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`), breakBlock)
+        val pierce = shouldPierce(ammo, result, interaction.pierce, interaction.gunPierce, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`)
+        if (pierce && !breakBlock && interaction.pierce.renderBulletHole) {
+            val bulletHoleOption = BulletHoleOption(
+                result.direction,
+                blockPos,
+                ammo.ammoId.toString(),
+                ammo.gunId.toString(),
+                ammo.gunDisplayId.toString()
+            )
+            level.sendParticles(bulletHoleOption, result.location.x, result.location.y, result.location.z, 1, 0.0, 0.0, 0.0, 0.0)
+        }
+        return InteractionResult(pierce, breakBlock)
             .also { debug { it.toString() } }
     }
 

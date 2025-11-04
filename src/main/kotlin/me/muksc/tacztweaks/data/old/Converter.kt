@@ -39,12 +39,14 @@ fun OldBulletInteraction.convert() = BulletInteraction.Block(
             count = pierce.count,
             conditional = pierce.condition == OldBulletInteraction.Pierce.ECondition.ON_BREAK,
             damageFalloff = pierce.damageFalloff,
-            damageMultiplier = pierce.damageMultiplier
+            damageMultiplier = pierce.damageMultiplier,
+            renderBulletHole = false
         )
         is OldBulletInteraction.Pierce.Damage -> BulletInteraction.Pierce.Damage(
             conditional = pierce.condition == OldBulletInteraction.Pierce.ECondition.ON_BREAK,
             damageFalloff = pierce.damageFalloff,
-            damageMultiplier = pierce.damageMultiplier
+            damageMultiplier = pierce.damageMultiplier,
+            renderBulletHole = false
         )
     },
     gunPierce = BulletInteraction.GunPierce(

@@ -34,7 +34,8 @@ sealed class BulletInteraction(
         val type: EPierceType,
         val conditional: Boolean,
         val damageFalloff: Float,
-        val damageMultiplier: Float
+        val damageMultiplier: Float,
+        val renderBulletHole: Boolean
     ) {
         enum class EPierceType(
             override val key: String,
@@ -51,20 +52,22 @@ sealed class BulletInteraction(
             }
         }
 
-        object Never : Pierce(EPierceType.NEVER, false, 0.0F, 1.0F) {
+        object Never : Pierce(EPierceType.NEVER, false, 0.0F, 1.0F, false) {
             val CODEC = Codec.unit(Never)
         }
 
         class Default(
             conditional: Boolean,
             damageFalloff: Float,
-            damageMultiplier: Float
-        ) : Pierce(EPierceType.DEFAULT, conditional, damageFalloff, damageMultiplier) {
+            damageMultiplier: Float,
+            renderBulletHole: Boolean
+        ) : Pierce(EPierceType.DEFAULT, conditional, damageFalloff, damageMultiplier, renderBulletHole) {
             companion object {
                 val CODEC = RecordCodecBuilder.create<Default> { it.group(
                     Codec.BOOL.strictOptionalFieldOf("conditional", false).forGetter(Default::conditional),
                     Codec.FLOAT.strictOptionalFieldOf("damageFalloff", 0.0F).forGetter(Default::damageFalloff),
-                    Codec.FLOAT.strictOptionalFieldOf("damageMultiplier", 1.0F).forGetter(Default::damageMultiplier)
+                    Codec.FLOAT.strictOptionalFieldOf("damageMultiplier", 1.0F).forGetter(Default::damageMultiplier),
+                    Codec.BOOL.strictOptionalFieldOf("render_bullet_hole", false).forGetter(Default::renderBulletHole)
                 ).apply(it, ::Default) }
             }
         }
@@ -73,14 +76,16 @@ sealed class BulletInteraction(
             val count: Int,
             conditional: Boolean,
             damageFalloff: Float,
-            damageMultiplier: Float
-        ) : Pierce(EPierceType.COUNT, conditional, damageFalloff, damageMultiplier) {
+            damageMultiplier: Float,
+            renderBulletHole: Boolean
+        ) : Pierce(EPierceType.COUNT, conditional, damageFalloff, damageMultiplier, renderBulletHole) {
             companion object {
                 val CODEC = RecordCodecBuilder.create<Count> { it.group(
                     Codec.INT.fieldOf("count").forGetter(Count::count),
                     Codec.BOOL.strictOptionalFieldOf("conditional", false).forGetter(Count::conditional),
                     Codec.FLOAT.strictOptionalFieldOf("damage_falloff", 0.0F).forGetter(Count::damageFalloff),
-                    Codec.FLOAT.strictOptionalFieldOf("damage_multiplier", 1.0F).forGetter(Count::damageMultiplier)
+                    Codec.FLOAT.strictOptionalFieldOf("damage_multiplier", 1.0F).forGetter(Count::damageMultiplier),
+                    Codec.BOOL.strictOptionalFieldOf("render_bullet_hole", false).forGetter(Count::renderBulletHole)
                 ).apply(it, ::Count) }
             }
         }
@@ -88,13 +93,15 @@ sealed class BulletInteraction(
         class Damage(
             conditional: Boolean,
             damageFalloff: Float,
-            damageMultiplier: Float
-        ) : Pierce(EPierceType.DAMAGE, conditional, damageFalloff, damageMultiplier) {
+            damageMultiplier: Float,
+            renderBulletHole: Boolean
+        ) : Pierce(EPierceType.DAMAGE, conditional, damageFalloff, damageMultiplier, renderBulletHole) {
             companion object {
                 val CODEC = RecordCodecBuilder.create<Damage> { it.group(
                     Codec.BOOL.strictOptionalFieldOf("conditional", false).forGetter(Damage::conditional),
                     Codec.FLOAT.strictOptionalFieldOf("damage_falloff", 0.0F).forGetter(Damage::damageFalloff),
-                    Codec.FLOAT.strictOptionalFieldOf("damage_multiplier", 1.0F).forGetter(Damage::damageMultiplier)
+                    Codec.FLOAT.strictOptionalFieldOf("damage_multiplier", 1.0F).forGetter(Damage::damageMultiplier),
+                    Codec.BOOL.strictOptionalFieldOf("render_bullet_hole", false).forGetter(Damage::renderBulletHole)
                 ).apply(it, ::Damage) }
             }
         }
@@ -258,7 +265,7 @@ sealed class BulletInteraction(
         }
 
         companion object {
-            val DEFAULT = Entity(emptyList(), emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F), GunPierce(true, true), 0)
+            val DEFAULT = Entity(emptyList(), emptyList(), EntityDamage(0.0F, 1.0F), Pierce.Default(false, 0.0F, 1.0F, false), GunPierce(true, true), 0)
             val CODEC = RecordCodecBuilder.create { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", DEFAULT.target).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", DEFAULT.entities).forGetter(Entity::entities),
