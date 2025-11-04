@@ -60,7 +60,8 @@
     "modifiers.RPMModifierMixin",
     "tweaks.EnderManMixin",
     "tweaks.EntityKineticBulletMixin",
-    "tweaks.ModernKineticGunScriptAPIMixin"
+    "tweaks.ModernKineticGunScriptAPIMixin",
+    "tweaks.ProtectionEnchantmentMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",

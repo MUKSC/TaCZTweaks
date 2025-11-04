@@ -246,6 +246,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             decoder = { buf -> buf.readBoolean() }
         )
         val betterMonoConversion by register(false, BOOL)
+        val bulletProtection by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val endermenEvadeBullets by registerSyncable(
             default = false,
             codec = BOOL,
@@ -260,6 +266,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
 
         fun forceFirstPersonShootingSound(): Boolean = forceFirstPersonShootingSound.syncedValue
         fun betterMonoConversion(): Boolean = betterMonoConversion.value
+        fun bulletProtection(): Boolean = bulletProtection.syncedValue
         fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
@@ -594,6 +601,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.betterMonoConversion.description")))
                     binding(Tweaks.betterMonoConversion.asBinding())
                     controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.tweaks.bulletProtection.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.bulletProtection.description")))
+                    binding(Tweaks.bulletProtection.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.name"))
