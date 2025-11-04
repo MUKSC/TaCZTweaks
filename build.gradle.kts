@@ -108,7 +108,7 @@ dependencies {
     compileOnly(fg.deobf(libs.curseforge.legendary.survival.overhaul.get()))
     implementation(fg.deobf(libs.modrinth.sound.physics.remastered.get()))
     compileOnly(fg.deobf(libs.modrinth.lrtactical.get()))
-    compileOnly(fg.deobf(libs.curseforge.pillagers.gun.get()))
+    implementation(fg.deobf(libs.curseforge.pillagers.gun.get()))
     compileOnly(fg.deobf(libs.org.valkyrienskies.forge.get()))
     compileOnly(libs.org.valkyrienskies.core.api)
     compileOnly(libs.org.valkyrienskies.core.api.game)

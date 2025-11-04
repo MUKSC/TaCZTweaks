@@ -26,7 +26,7 @@ public abstract class LocalPlayerInspectMixin {
     private long tacztweaks$lastInspect = -1L;
 
     @Inject(method = "lambda$inspect$0", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getBolt()Lcom/tacz/guns/resource/pojo/data/gun/Bolt;"), cancellable = true)
-    private void test(GunData gunData, IGun iGun, ItemStack mainHandItem, GunDisplayInstance gunIndex, CallbackInfo ci) {
+    private void tacztweaks$inspect$cancelInspection(GunData gunData, IGun iGun, ItemStack mainHandItem, GunDisplayInstance gunIndex, CallbackInfo ci) {
         if (!Config.Gun.INSTANCE.cancelInspection()) return;
         long now = player.level().getGameTime();
         if (now - tacztweaks$lastInspect > 3L * 20) {
