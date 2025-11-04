@@ -77,7 +77,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
-        val reduceSensitivityKeyMultiplier by register(1.0, DOUBLE)
+        val reduceSensitivityKeyMultiplier by register(0.5, DOUBLE)
         val disableReduceSensitivityKeyWhileAiming by register(false, BOOL)
         val cancelInspection by register(false, BOOL)
         val disableBulletCulling by register(false, BOOL)
