@@ -25,8 +25,8 @@ legendary-survival-overhaul-curseforge = "6268808"
 sound-physics-remastered-modrinth = "forge-1.20.1-1.5.0"
 lrtactical-modrinth = "0.3.0"
 pillagers-gun-curseforge = "6875446"
-valkyrienskies = "2.3.0-beta.5+bcda04a482"
-valkyrienskies-core = "1.1.0+2a62e6a823"
+valkyrienskies = "2.3.0-beta.11"
+valkyrienskies-core = "1.1.0+cf6990a85d"
 neat-modrinth = "1.20.1-41-forge"
 
 [libraries]

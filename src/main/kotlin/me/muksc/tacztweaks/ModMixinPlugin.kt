@@ -24,6 +24,8 @@ class ModMixinPlugin : IMixinConfigPlugin {
         }
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs.") -> isModLoaded("valkyrienskies") && when (mixinClassName) {
             "me.muksc.tacztweaks.mixin.compat.vs.client.MixinLevelRendererMixin" -> !isModLoaded("vs_addition")
+            "me.muksc.tacztweaks.mixin.compat.vs.RaycastUtilsKtMixin$2_3_0_beta11" -> versionCheck("valkyrienskies", "[2.3.0-beta.11,)")
+            "me.muksc.tacztweaks.mixin.compat.vs.RaycastUtilsKtMixin$2_3_0_beta5" -> versionCheck("valkyrienskies", "(,2.3.0-beta.11)")
             else -> true
         }
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs_addition.") -> isModLoaded("vs_addition")
