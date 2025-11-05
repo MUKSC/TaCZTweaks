@@ -17,6 +17,7 @@ import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.DestroySpeedModifierHolder
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.ShieldInteractionBehaviour
+import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -117,7 +118,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 .thenPrioritizeBy { when (it) {
                     is BulletInteraction.Block -> it.blocks.isNotEmpty()
                     is BulletInteraction.Entity -> it.entities.isNotEmpty()
-                    is BulletInteraction.Shield -> false
+                    is BulletInteraction.Shield -> it.predicate != ItemPredicate.ANY
                 } }
         ).build() }.toImmutableMap()
     }
