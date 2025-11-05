@@ -38,7 +38,7 @@ public abstract class ModernKineticGunScriptAPIMixin {
         }
     }
 
-    @ModifyArg(method = "lambda$shootOnce$2", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), index = 0)
+    @ModifyArg(method = "lambda$shootOnce$2", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z", remap = true), index = 0)
     private Entity tacztweaks$shootOnce$apply(Entity pEntity) {
         var ext = (EntityKineticBulletExtension) pEntity;
         ext.tacztweaks$setBurstIndex(tacztweaks$burstIndex);
