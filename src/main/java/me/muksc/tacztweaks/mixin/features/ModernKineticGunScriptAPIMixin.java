@@ -1,48 +1,48 @@
 package me.muksc.tacztweaks.mixin.features;
 
-import com.llamalad7.mixinextras.expression.Definition;
-import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.tacz.guns.api.entity.IGunOperator;
-import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
 public abstract class ModernKineticGunScriptAPIMixin {
     @Unique
-    private boolean tacztweaks$firstOfBurst = false;
+    private int tacztweaks$burstIndex = 0;
 
     @Unique
-    private boolean tacztweaks$firstOfPellets = false;
+    private int tacztweaks$pelletIndex = 0;
 
     @Inject(method = "shootOnce", at = @At("HEAD"))
-    private void tacztweaks$shootOnce$resetBurst(boolean consumeAmmo, CallbackInfo ci) {
-        tacztweaks$firstOfBurst = true;
+    private void tacztweaks$shootOnce$onInit(boolean consumeAmmo, CallbackInfo ci) {
+        tacztweaks$burstIndex = 0;
     }
 
-    @Inject(method = "lambda$shootOnce$2", at = @At("HEAD"))
-    private void tacztweaks$shootOnce$resetPellets(boolean consumeAmmo, GunData gunData, int bulletAmount, BulletData bulletData, IGunOperator gunOperator, float processedSpeed, float inaccuracy, int soundDistance, boolean useSilenceSound, CallbackInfoReturnable<Boolean> cir) {
-        tacztweaks$firstOfPellets = true;
+    @WrapMethod(method = "lambda$shootOnce$2")
+    private boolean tacztweaks$shootOnce$onInitBurst(boolean consumeAmmo, GunData gunData, int bulletAmount, BulletData bulletData, IGunOperator gunOperator, float processedSpeed, float inaccuracy, int soundDistance, boolean useSilenceSound, Operation<Boolean> original) {
+        try {
+            tacztweaks$pelletIndex = 0;
+            return original.call(consumeAmmo, gunData, bulletAmount, bulletData, gunOperator, processedSpeed, inaccuracy, soundDistance, useSilenceSound);
+        } finally {
+            tacztweaks$burstIndex++;
+        }
     }
 
-    @Definition(id = "EntityKineticBullet", type = EntityKineticBullet.class)
-    @Expression("new EntityKineticBullet(?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    @ModifyExpressionValue(method = "lambda$shootOnce$2", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private EntityKineticBullet tacztweaks$shootOnce$apply(EntityKineticBullet original) {
-        var ext = (EntityKineticBulletExtension) original;
-        if (tacztweaks$firstOfBurst) ext.tacztweaks$markFirstOfBurst();
-        if (tacztweaks$firstOfPellets) ext.tacztweaks$markFirstOfPellets();
-        tacztweaks$firstOfBurst = false;
-        tacztweaks$firstOfPellets = false;
-        return original;
+    @ModifyArg(method = "lambda$shootOnce$2", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), index = 0)
+    private Entity tacztweaks$shootOnce$apply(Entity pEntity) {
+        var ext = (EntityKineticBulletExtension) pEntity;
+        ext.tacztweaks$setBurstIndex(tacztweaks$burstIndex);
+        ext.tacztweaks$setPelletIndex(tacztweaks$pelletIndex++);
+        return pEntity;
     }
 }

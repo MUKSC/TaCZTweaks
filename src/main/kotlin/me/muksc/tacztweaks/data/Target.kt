@@ -10,6 +10,7 @@ import me.muksc.tacztweaks.DispatchCodec
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.advancements.critereon.EntityPredicate
+import net.minecraft.advancements.critereon.MinMaxBounds
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.StringRepresentable
@@ -34,8 +35,8 @@ sealed class Target(
         DAMAGE("damage", { Damage.CODEC }),
         SPEED("speed", { Speed.CODEC }),
         SILENCED("silenced", { Silenced.CODEC }),
-        FIRST_OF_BURST("first_of_burst", { FirstOfBurst.CODEC }),
-        FIRST_OF_PELLETS("first_of_pellets", { FirstOfPellets.CODEC }),
+        BURST_INDEX("burst_index", { BurstIndex.CODEC }),
+        PELLET_INDEX("pellet_index", { PelletIndex.CODEC }),
         RANDOM_CHANCE("random_chance", { RandomChance.CODEC });
 
         companion object {
@@ -168,22 +169,34 @@ sealed class Target(
         val CODEC = Codec.unit(Silenced)
     }
 
-    object FirstOfBurst : Target(ETargetType.FIRST_OF_BURST) {
+    class BurstIndex(
+        val index: MinMaxBounds.Ints
+    ) : Target(ETargetType.BURST_INDEX) {
         override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
             val ext = entity as? EntityKineticBulletExtension ?: return false
-            return ext.`tacztweaks$firstOfBurst`()
+            return index.matches(ext.`tacztweaks$getBurstIndex`())
         }
 
-        val CODEC = Codec.unit(FirstOfBurst)
+        companion object {
+            val CODEC = RecordCodecBuilder.create<BurstIndex> { it.group(
+                IntsMinMaxBounds.fieldOf("index").forGetter(BurstIndex::index)
+            ).apply(it, ::BurstIndex) }
+        }
     }
 
-    object FirstOfPellets : Target(ETargetType.FIRST_OF_PELLETS) {
+    class PelletIndex(
+        val index: MinMaxBounds.Ints
+    ) : Target(ETargetType.PELLET_INDEX) {
         override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
             val ext = entity as? EntityKineticBulletExtension ?: return false
-            return ext.`tacztweaks$firstOfPellets`()
+            return index.matches(ext.`tacztweaks$getPelletIndex`())
         }
 
-        val CODEC = Codec.unit(FirstOfPellets)
+        companion object {
+            val CODEC = RecordCodecBuilder.create<PelletIndex> { it.group(
+                IntsMinMaxBounds.fieldOf("index").forGetter(PelletIndex::index)
+            ).apply(it, ::PelletIndex) }
+        }
     }
 
     class RandomChance(val chance: Float) : Target(ETargetType.RANDOM_CHANCE) {

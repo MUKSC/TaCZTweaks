@@ -6,10 +6,16 @@ import com.mojang.serialization.JsonOps
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.advancements.critereon.MinMaxBounds
 
 val JsonCodec = Codec.PASSTHROUGH.xmap(
     { it.convert(JsonOps.INSTANCE).value },
     { Dynamic(JsonOps.INSTANCE, it) }
+)
+
+val IntsMinMaxBounds = JsonCodec.xmap(
+    { MinMaxBounds.Ints.fromJson(it) },
+    { it.serializeToJson() }
 )
 
 val ItemPredicateCodec = JsonCodec.xmap(
