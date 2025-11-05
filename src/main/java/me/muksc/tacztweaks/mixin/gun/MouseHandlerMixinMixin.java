@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.api.entity.IGunOperator;
 import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.client.input.ReduceSensitivityKey;
+import me.muksc.tacztweaks.client.input.TiltGunKey;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ public abstract class MouseHandlerMixinMixin {
     @Expression("1.0 + (? - 1.0) * (double) ?")
     @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$reduceSensitivity$reduceSensitivity(double original, @Local(argsOnly = true, ordinal = 0) LocalPlayer player) {
-        if (!ReduceSensitivityKey.KEY.isDown()) return original;
+        if (!ReduceSensitivityKey.KEY.isDown() && (!Config.Gun.INSTANCE.tiltGunKeyTriggersReduceSensitivity() || !TiltGunKey.isActive(player))) return original;
         double multiplier = Config.Gun.INSTANCE.reduceSensitivityKeyMultiplier();
         if (Config.Gun.INSTANCE.disableReduceSensitivityKeyWhileAiming()) {
             multiplier = 1 + (multiplier - 1) * (1 - IGunOperator.fromLivingEntity(player).getSynAimingProgress());

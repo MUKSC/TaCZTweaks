@@ -79,6 +79,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         )
         val reduceSensitivityKeyMultiplier by register(0.5, DOUBLE)
         val disableReduceSensitivityKeyWhileAiming by register(false, BOOL)
+        val tiltGunKeyCancelsSprint by register(true, BOOL)
+        val tiltGunKeyTriggersReduceSensitivity by register(true, BOOL)
         val cancelInspection by register(false, BOOL)
         val disableBulletCulling by register(false, BOOL)
 
@@ -90,6 +92,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun allowUnload(): Boolean = allowUnload.syncedValue
         fun reduceSensitivityKeyMultiplier(): Double = reduceSensitivityKeyMultiplier.value
         fun disableReduceSensitivityKeyWhileAiming(): Boolean = disableReduceSensitivityKeyWhileAiming.value
+        fun tiltGunKeyCancelsSprint(): Boolean = tiltGunKeyCancelsSprint.value
+        fun tiltGunKeyTriggersReduceSensitivity(): Boolean = tiltGunKeyTriggersReduceSensitivity.value
         fun cancelInspection(): Boolean = cancelInspection.value
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
     }
@@ -379,6 +383,18 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.gun.disableReduceSensitivityKeyWhileAiming.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableReduceSensitivityKeyWhileAiming.description")))
                     binding(Gun.disableReduceSensitivityKeyWhileAiming.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.tiltGunKeyTriggersReduceSensitivity.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.tiltGunKeyTriggersReduceSensitivity.description")))
+                    binding(Gun.tiltGunKeyTriggersReduceSensitivity.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.tiltGunKeyCancelsSprint.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.tiltGunKeyCancelsSprint.description")))
+                    binding(Gun.tiltGunKeyCancelsSprint.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
