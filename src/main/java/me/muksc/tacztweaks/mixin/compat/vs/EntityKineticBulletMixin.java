@@ -13,6 +13,7 @@ import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(value = EntityKineticBullet.class, remap = false)
 public abstract class EntityKineticBulletMixin {
@@ -28,8 +29,7 @@ public abstract class EntityKineticBulletMixin {
         @Local(argsOnly = true) BlockHitResult result
     ) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return original.call(instance, pType, pPosX, pPosY, pPosZ, pParticleCount, pXOffset, pYOffset, pZOffset, pSpeed);
-        BlockHitResultWithShip ext = (BlockHitResultWithShip) result;
-        Ship ship = ext.tacztweaks$getShip();
+        Ship ship = VSGameUtilsKt.getShipObjectManagingPos(instance, result.getBlockPos());
 
         Vector3d pos = new Vector3d(pPosX, pPosY, pPosZ);
         if (ship != null) pos = ship.getTransform().getWorldToShip().transformPosition(pos);
