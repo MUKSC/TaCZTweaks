@@ -85,6 +85,7 @@
     "tweaks.GunPackListMixin",
     "tweaks.GunSmithTableScreenMixin",
     "tweaks.GunSoundInstanceMixin",
+    "tweaks.RefitKeyMixin",
     "tweaks.RenderCrosshairEventMixin",
     "tweaks.SoundPlayManagerMixin"
   ],

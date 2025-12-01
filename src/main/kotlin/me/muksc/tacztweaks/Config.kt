@@ -270,6 +270,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val disableRefitOnAdventure by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val alwaysFilterByHand by register(true, BOOL)
         val suppressHeadHitSounds by register(false, BOOL)
         val suppressFleshHitSounds by register(false, BOOL)
@@ -280,6 +286,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun betterMonoConversion(): Boolean = betterMonoConversion.value
         fun bulletProtection(): Boolean = bulletProtection.syncedValue
         fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
+        fun disableRefitOnAdventure(): Boolean = disableRefitOnAdventure.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
         fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
@@ -643,6 +650,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.endermenEvadeBullets.description")))
                     binding(Tweaks.endermenEvadeBullets.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.tweaks.disableRefitOnAdventure.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.disableRefitOnAdventure.description")))
+                    binding(Tweaks.disableRefitOnAdventure.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())

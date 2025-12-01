@@ -120,6 +120,8 @@
   "tacztweaks.config.tweaks.bulletProtection.description": "Makes the Projectile Protection enchantment reduce bullet damage.",
   "tacztweaks.config.tweaks.endermenEvadeBullets.name": "Endermen Evade Bullets",
   "tacztweaks.config.tweaks.endermenEvadeBullets.description": "Makes endermen teleport away from bullets, avoiding getting hit.",
+  "tacztweaks.config.tweaks.disableRefitOnAdventure.name": "Disable Refit on Adventure",
+  "tacztweaks.config.tweaks.disableRefitOnAdventure.description": "Disables the refit (attachment modification) function on adventure mode.",
   "tacztweaks.config.tweaks.alwaysFilterByHand.name": "Always Filter by Hand",
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "Always enable filter by hand option in the gun smith table",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "Suppress Head Hit Sounds",
