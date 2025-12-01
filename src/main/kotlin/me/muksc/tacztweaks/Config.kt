@@ -201,12 +201,14 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val pitchLowerLimit by register(-10.0F, FLOAT)
         val dynamicPitchLimit by register(false, BOOL)
         val visualTweak by register(true, BOOL)
+        val tiltGun by register(false, BOOL)
 
         fun enabled(): Boolean = enabled.syncedValue
         fun pitchUpperLimit(): Float = pitchUpperLimit.value
         fun pitchLowerLimit(): Float = pitchLowerLimit.value
         fun dynamicPitchLimit(): Boolean = dynamicPitchLimit.value
         fun visualTweak(): Boolean = visualTweak.value
+        fun tiltGun(): Boolean = tiltGun.value
     }
 
     object Compat : SyncableCodecConfig<Compat>() {
@@ -422,6 +424,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.crawl.visualTweak.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.visualTweak.description")))
                     binding(Crawl.visualTweak.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.crawl.tiltGun.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.tiltGun.description")))
+                    binding(Crawl.tiltGun.asBinding())
                     controller(booleanController())
                 }.build())
             }.build())

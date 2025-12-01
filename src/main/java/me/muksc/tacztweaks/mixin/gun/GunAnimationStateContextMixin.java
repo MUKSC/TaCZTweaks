@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class GunAnimationStateContextMixin {
     @WrapOperation(method = "lambda$shouldSlide$18", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isCrouching()Z", remap = true))
     private boolean tacztweaks$shouldSlide$tiltGunKey(Entity instance, Operation<Boolean> original) {
-        return original.call(instance) || ((Config.Gun.INSTANCE.tiltGunKeyCancelsSprint() || !instance.isSprinting()) && TiltGunKey.KEY.isDown());
+        boolean tiltGunKey = (Config.Gun.INSTANCE.tiltGunKeyCancelsSprint() || !instance.isSprinting()) && TiltGunKey.KEY.isDown();
+        boolean crawlTilt = Config.Crawl.INSTANCE.tiltGun() && instance.isVisuallyCrawling();
+        return original.call(instance) || tiltGunKey || crawlTilt;
     }
 }
