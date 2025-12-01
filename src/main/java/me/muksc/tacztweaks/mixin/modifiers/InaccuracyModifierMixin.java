@@ -22,7 +22,9 @@ public abstract class InaccuracyModifierMixin {
     private static float tacztweaks$initCache$inaccuracyModifier(float original, @Local(argsOnly = true) InaccuracyType type) {
         float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), original);
         switch (type) {
+            case STAND -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.StandInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
             case AIM -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+            case MOVE -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.MoveInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
             case SNEAK -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.SneakInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
             case LIE -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.CrawlInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
         }

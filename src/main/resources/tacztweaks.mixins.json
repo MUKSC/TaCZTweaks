@@ -44,6 +44,7 @@
     "gun.movement.LivingEntitySprintMixin",
     "gun.unload.AbstractGunItemMixin",
     "gun.unload.LivingEntityMixinMixin",
+    "modifiers.AdsModifierMixin",
     "modifiers.AmmoSpeedModifierMixin",
     "modifiers.ArmorIgnoreModifierMixin",
     "modifiers.AttachmentDataUtilsMixin",

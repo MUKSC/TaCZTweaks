@@ -150,8 +150,11 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             registerSyncable("speed", Speed)
             registerSyncable("gravity", Gravity)
             registerSyncable("friction", Friction)
+            registerSyncable("aimTime", AimTime)
             registerSyncable("inaccuracy", Inaccuracy)
+            registerSyncable("standInaccuracy", StandInaccuracy)
             registerSyncable("aimInaccuracy", AimInaccuracy)
+            registerSyncable("moveInaccuracy", MoveInaccuracy)
             registerSyncable("sneakInaccuracy", SneakInaccuracy)
             registerSyncable("crawlInaccuracy", CrawlInaccuracy)
             registerSyncable("rpm", RPM)
@@ -171,8 +174,11 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         object Speed : ModifierConfig()
         object Gravity : ModifierConfig()
         object Friction : ModifierConfig()
+        object AimTime : ModifierConfig()
         object Inaccuracy : ModifierConfig()
+        object StandInaccuracy : ModifierConfig()
         object AimInaccuracy : ModifierConfig()
+        object MoveInaccuracy : ModifierConfig()
         object SneakInaccuracy : ModifierConfig()
         object CrawlInaccuracy : ModifierConfig()
         object RPM : ModifierConfig()
@@ -645,8 +651,11 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 "speed" to Modifiers.Speed,
                 "gravity" to Modifiers.Gravity,
                 "friction" to Modifiers.Friction,
+                "aimTime" to Modifiers.AimTime,
                 "inaccuracy" to Modifiers.Inaccuracy,
+                "standInaccuracy" to Modifiers.StandInaccuracy,
                 "aimInaccuracy" to Modifiers.AimInaccuracy,
+                "moveInaccuracy" to Modifiers.MoveInaccuracy,
                 "sneakInaccuracy" to Modifiers.SneakInaccuracy,
                 "crawlInaccuracy" to Modifiers.CrawlInaccuracy,
                 "rpm" to Modifiers.RPM,
