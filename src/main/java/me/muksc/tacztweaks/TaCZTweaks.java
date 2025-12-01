@@ -1,5 +1,7 @@
 package me.muksc.tacztweaks;
 
+import com.tacz.guns.api.entity.IGunOperator;
+import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import me.muksc.tacztweaks.client.input.ReduceSensitivityKey;
 import me.muksc.tacztweaks.client.input.TiltGunKey;
 import me.muksc.tacztweaks.client.input.UnloadKey;
@@ -10,6 +12,7 @@ import me.muksc.tacztweaks.data.BulletInteractionManager;
 import me.muksc.tacztweaks.data.BulletParticlesManager;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
 import me.muksc.tacztweaks.data.MeleeInteractionManager;
+import me.muksc.tacztweaks.mixin.accessor.InaccuracyTypeAccessor;
 import me.muksc.tacztweaks.network.NetworkHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -17,6 +20,8 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -30,6 +35,10 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Mod(TaCZTweaks.MOD_ID)
 public class TaCZTweaks {
@@ -53,6 +62,27 @@ public class TaCZTweaks {
         PillagersGunCompat.INSTANCE.initialize();
         SoundPhysicsCompat.INSTANCE.initialize();
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static List<InaccuracyType> getInaccuracyTypes(LivingEntity entity) {
+        IGunOperator operator = IGunOperator.fromLivingEntity(entity);
+        List<InaccuracyType> list = new ArrayList<>();
+        if (InaccuracyTypeAccessor.isMove(entity)) list.add(InaccuracyType.MOVE);
+        if (entity.getPose() == Pose.CROUCHING) list.add(InaccuracyType.SNEAK);
+        if (entity.getPose() == Pose.SWIMMING && !entity.isSwimming()) list.add(InaccuracyType.LIE);
+        if (operator.getSynAimingProgress() >= 1.0F) list.add(InaccuracyType.AIM);
+        return list;
+    }
+
+    public static float getBetterInaccuracy(Map<InaccuracyType, Float> map, LivingEntity entity) {
+        List<InaccuracyType> inaccuracyTypes = getInaccuracyTypes(entity);
+        float base = map.get(InaccuracyType.STAND);
+        float inaccuracy = base;
+        if (inaccuracyTypes.contains(InaccuracyType.MOVE)) inaccuracy *= map.get(InaccuracyType.MOVE) / base;
+        if (inaccuracyTypes.contains(InaccuracyType.SNEAK)) inaccuracy *= map.get(InaccuracyType.SNEAK) / base;
+        if (inaccuracyTypes.contains(InaccuracyType.LIE)) inaccuracy *= map.get(InaccuracyType.LIE) / base;
+        if (inaccuracyTypes.contains(InaccuracyType.AIM)) inaccuracy *= map.get(InaccuracyType.AIM) / base;
+        return inaccuracy;
     }
 
     @SubscribeEvent

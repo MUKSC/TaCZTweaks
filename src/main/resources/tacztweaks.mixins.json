@@ -11,6 +11,7 @@
   "mixins": [
     "accessor.ClipContextAccessor",
     "accessor.EntityKineticBulletAccessor",
+    "accessor.InaccuracyTypeAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
     "compat.lrtactical.MeleeItemMixin",
