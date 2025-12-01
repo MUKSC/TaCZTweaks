@@ -2,7 +2,9 @@ package me.muksc.tacztweaks.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.tacz.guns.api.TimelessAPI
 import com.tacz.guns.api.entity.IGunOperator
+import com.tacz.guns.api.item.GunTabType
 import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.resource.modifier.custom.SilenceModifier
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair
@@ -15,6 +17,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.LivingEntity
+import java.util.Locale
+import kotlin.jvm.optionals.getOrNull
 
 sealed class Target(
     val type: ETargetType
@@ -29,6 +33,7 @@ sealed class Target(
         ANY_OF("any_of", { AnyOf.CODEC }),
         INVERTED("inverted", { Inverted.CODEC }),
         GUN("gun", { Gun.CODEC }),
+        CATEGORY("category", { Category.CODEC }),
         AMMO("ammo", { Ammo.CODEC }),
         REGEX("regex", { RegexPattern.CODEC }),
         PREDICATE("predicate", { Predicate.CODEC }),
@@ -86,6 +91,19 @@ sealed class Target(
             val CODEC = RecordCodecBuilder.create<Gun> { it.group(
                 Codec.list(ResourceLocation.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Gun::values)
             ).apply(it, ::Gun) }
+        }
+    }
+
+    class Category(val values: List<String>) : Target(ETargetType.CATEGORY) {
+        override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
+            val index = TimelessAPI.getCommonGunIndex(weaponId).getOrNull() ?: return false
+            return values.contains(index.type.lowercase(Locale.US))
+        }
+
+        companion object {
+            val CODEC = RecordCodecBuilder.create<Category> { it.group(
+                Codec.list(Codec.STRING).strictOptionalFieldOf("values", emptyList()).forGetter(Category::values)
+            ).apply(it, ::Category) }
         }
     }
 
