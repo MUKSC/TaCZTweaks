@@ -38,6 +38,7 @@
     "gun.GunAnimationStateContextMixin",
     "gun.LocalPlayerInspectMixin",
     "gun.ModernKineticGunScriptAPIMixin",
+    "gun.movement.AnimationManagerMixin",
     "gun.movement.LivingEntityAimMixin",
     "gun.movement.LivingEntityReloadMixin",
     "gun.movement.LivingEntityShootMixin",
