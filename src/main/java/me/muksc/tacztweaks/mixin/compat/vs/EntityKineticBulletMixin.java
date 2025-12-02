@@ -16,6 +16,7 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(value = EntityKineticBullet.class, remap = false)
 public abstract class EntityKineticBulletMixin {
+    @SuppressWarnings("deprecation")
     @WrapOperation(method = "onHitBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I", ordinal = 0, remap = true))
     private <T extends ParticleOptions> int tacztweaks$onHitBlock$transformPosition(
         ServerLevel instance, T pType,
@@ -27,7 +28,7 @@ public abstract class EntityKineticBulletMixin {
         @Local(argsOnly = true) BlockHitResult result
     ) {
         if (!Config.Compat.INSTANCE.vsCollisionCompat()) return original.call(instance, pType, pPosX, pPosY, pPosZ, pParticleCount, pXOffset, pYOffset, pZOffset, pSpeed);
-        Ship ship = VSGameUtilsKt.getLoadedShipManagingPos(instance, result.getBlockPos());
+        Ship ship = VSGameUtilsKt.getShipObjectManagingPos(instance, result.getBlockPos());
 
         Vector3d pos = new Vector3d(pPosX, pPosY, pPosZ);
         if (ship != null) pos = ship.getTransform().getWorldToShip().transformPosition(pos);
