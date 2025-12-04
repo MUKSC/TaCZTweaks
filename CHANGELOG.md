@@ -1,1 +1,1 @@
-- Fixed a crash when using VS 2.3.0, caused by my very stupid mistake :|
+- Fixed third person animation looking weird when shooting while crawling
