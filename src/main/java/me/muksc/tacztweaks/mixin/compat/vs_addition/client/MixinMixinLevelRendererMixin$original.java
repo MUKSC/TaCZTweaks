@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.valkyrienskies.core.api.ships.ClientShip;
 
 @Mixin(value = LevelRenderer.class, priority = 1500, remap = false)
-public abstract class MixinMixinLevelRendererMixin {
+public abstract class MixinMixinLevelRendererMixin$original {
     @TargetHandler(
         mixin = "forge.io.github.xiewuzhiying.vs_addition.mixin.valkyrienskies.client.MixinMixinLevelRenderer",
         name = "spawnParticleInWorld"
