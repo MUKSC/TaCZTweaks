@@ -45,7 +45,7 @@ class ServerMessageAirspaceSounds(
     }
 
     class AirspaceSound(
-        val packet: ClientboundSoundPacket?,
+        val packets: List<ClientboundSoundPacket>,
         val minAirspace: Float,
         val maxAirspace: Float,
         val minOcclusion: Float,
@@ -56,8 +56,8 @@ class ServerMessageAirspaceSounds(
         companion object {
             val STREAM_CODEC = StreamCodec.of(
                 encoder = { packet, buf ->
-                    buf.writeNullable(packet.packet) { buf, value ->
-                        value.write(buf)
+                    buf.writeCollection(packet.packets) { buf, element ->
+                        element.write(buf)
                     }
                     buf.writeFloat(packet.minAirspace)
                     buf.writeFloat(packet.maxAirspace)
@@ -67,14 +67,14 @@ class ServerMessageAirspaceSounds(
                     buf.writeFloat(packet.maxReflectivity)
                 },
                 decoder = { buf ->
-                    val packet = buf.readNullable(::ClientboundSoundPacket)
+                    val packets = buf.readCollection(Lists::newArrayListWithCapacity, ::ClientboundSoundPacket)
                     val minAirspace = buf.readFloat()
                     val maxAirspace = buf.readFloat()
                     val minOcclusion = buf.readFloat()
                     val maxOcclusion = buf.readFloat()
                     val minReflectivity = buf.readFloat()
                     val maxReflectivity = buf.readFloat()
-                    AirspaceSound(packet, minAirspace, maxAirspace, minOcclusion, maxOcclusion, minReflectivity, maxReflectivity)
+                    AirspaceSound(packets, minAirspace, maxAirspace, minOcclusion, maxOcclusion, minReflectivity, maxReflectivity)
                 }
             )
         }

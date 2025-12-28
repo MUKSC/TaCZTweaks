@@ -35,14 +35,12 @@ sealed class BulletSounds(
 
     class DistanceSound(
         val threshold: Double,
-        val sound: Sound?
+        val sound: List<Sound>
     ) {
-        constructor(threshold: Double, sound: Optional<Sound>) : this(threshold, sound.getOrNull())
-
         companion object {
             val CODEC = RecordCodecBuilder.create<DistanceSound> { it.group(
                 Codec.DOUBLE.fieldOf("threshold").forGetter(DistanceSound::threshold),
-                Sound.CODEC.strictOptionalFieldOf("sound").forGetter { Optional.ofNullable(it.sound) }
+                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("sound", emptyList()).forGetter(DistanceSound::sound)
             ).apply(it, ::DistanceSound) }
         }
     }

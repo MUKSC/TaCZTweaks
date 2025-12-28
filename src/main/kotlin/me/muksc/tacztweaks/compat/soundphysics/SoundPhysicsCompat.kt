@@ -39,10 +39,11 @@ object SoundPhysicsCompat {
                     && it.canPlayAtReflectivity(reflectivity)
         } ?: return
 
-        val packet = sound.packet ?: return
         val minecraft = Minecraft.getInstance()
         minecraft.execute {
-            minecraft.connection?.handleSoundEvent(packet)
+            for (packet in sound.packets) {
+                minecraft.connection?.handleSoundEvent(packet)
+            }
         }
     }
 

@@ -152,7 +152,9 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         val position = currentPosition.add(trajectory.scale(length))
         val distance = playerPosition.distanceTo(position)
         val whizz = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
-        whizz.sound?.play(player, position, entity)
+        for (sound in whizz.sound) {
+            sound.play(player, position, entity)
+        }
     }
 
     fun handleAirspace(level: ServerLevel, entity: EntityKineticBullet) {
@@ -167,21 +169,21 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
             }
             NetworkHandler.sendS2C(player, ServerMessageAirspaceSounds(candidates.map { (sounds, airspace) ->
                 @Suppress("DEPRECATION")
-                val packet = airspace.sound?.run {
-                    val soundEvent = if (range == null) SoundEvent.createVariableRangeEvent(sound) else SoundEvent.createFixedRangeEvent(sound, range)
+                val packets = airspace.sound.map {
+                    val soundEvent = if (it.range == null) SoundEvent.createVariableRangeEvent(it.sound) else SoundEvent.createFixedRangeEvent(it.sound, it.range)
                     ClientboundSoundPacket(
                         BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
                         entity.soundSource,
                         entity.x,
                         entity.y,
                         entity.z,
-                        volume,
-                        pitch,
+                        it.volume,
+                        it.pitch,
                         player.random.nextLong()
                     )
                 }
                 ServerMessageAirspaceSounds.AirspaceSound(
-                    packet,
+                    packets,
                     sounds.airspace.min.toFloat(),
                     sounds.airspace.max.toFloat(),
                     sounds.occlusion.min.toFloat(),
