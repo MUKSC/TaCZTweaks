@@ -9,6 +9,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
 import dev.isxander.yacl3.dsl.ControllerBuilderFactory
+import dev.isxander.yacl3.dsl.enumSwitch
 import dev.isxander.yacl3.dsl.numberField
 import dev.isxander.yacl3.dsl.slider
 import dev.isxander.yacl3.dsl.stringField
@@ -25,6 +26,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.StringRepresentable
 import java.text.DecimalFormat
 
 @Suppress("UnstableApiUsage")
@@ -201,14 +203,26 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val pitchLowerLimit by register(-10.0F, FLOAT)
         val dynamicPitchLimit by register(false, BOOL)
         val visualTweak by register(true, BOOL)
-        val tiltGun by register(false, BOOL)
+        val tiltGun by register(ETiltGun.DEFAULT, ETiltGun.CODEC)
+
+        enum class ETiltGun : StringRepresentable {
+            DEFAULT,
+            ALWAYS,
+            NEVER;
+
+            override fun getSerializedName(): String = name
+
+            companion object {
+                val CODEC = StringRepresentable.fromEnum(::values)
+            }
+        }
 
         fun enabled(): Boolean = enabled.syncedValue
         fun pitchUpperLimit(): Float = pitchUpperLimit.value
         fun pitchLowerLimit(): Float = pitchLowerLimit.value
         fun dynamicPitchLimit(): Boolean = dynamicPitchLimit.value
         fun visualTweak(): Boolean = visualTweak.value
-        fun tiltGun(): Boolean = tiltGun.value
+        fun tiltGun(): ETiltGun = tiltGun.value
     }
 
     object Compat : SyncableCodecConfig<Compat>() {
@@ -440,11 +454,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     binding(Crawl.visualTweak.asBinding())
                     controller(booleanController())
                 }.build())
-                option(Option.createBuilder<Boolean>().apply {
+                option(Option.createBuilder<Crawl.ETiltGun>().apply {
                     name(TaCZTweaks.translatable("config.crawl.tiltGun.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.tiltGun.description")))
                     binding(Crawl.tiltGun.asBinding())
-                    controller(booleanController())
+                    controller(enumSwitch {
+                        TaCZTweaks.translatable("config.label.ETiltGun.${it.name}")
+                    })
                 }.build())
             }.build())
             group(OptionGroup.createBuilder().apply {

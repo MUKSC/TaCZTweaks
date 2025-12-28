@@ -109,8 +109,8 @@
   "tacztweaks.config.crawl.dynamicPitchLimit.description": "Changes the pitch limit dynamically based on block collisions.",
   "tacztweaks.config.crawl.visualTweak.name": "Visual Tweak",
   "tacztweaks.config.crawl.visualTweak.description": "Tweaks the crawling animation to look more natural.",
-  "tacztweaks.config.crawl.tiltGun.name": "Tilt Gun",
-  "tacztweaks.config.crawl.tiltGun.description": "Automatically tilts the gun while in the crawling state.",
+  "tacztweaks.config.crawl.tiltGun.name": "Tilt Gun While Crawling",
+  "tacztweaks.config.crawl.tiltGun.description": "Controls the behaviour of the gun tilting while crawling.\n\nDefault: Tilts the gun if sneaking.\nAlways: Automatically tilts the gun.\nNever: Never tilts the gun.",
   "tacztweaks.config.tweaks": "Tweaks",
   "tacztweaks.config.tweaks.forceFirstPersonShootingSound.name": "Force First Person Shooting Sound",
   "tacztweaks.config.tweaks.forceFirstPersonShootingSound.description": "Uses the first person shooting sound instead of the third person one when other players shoot.\n\nNote: The first person sounds are typically in stereo, meaning it won't preserve the directionality when played.\nEnabling the `Stereo to Mono conversion` option will converts the sounds to mono and fixes this issue.",
@@ -147,5 +147,8 @@
   "tacztweaks.config.label.enabled": "Enabled",
   "tacztweaks.config.label.disabled": "Disabled",
   "tacztweaks.config.label.degree": "%1$s°",
-  "tacztweaks.config.label.multiplier": "%1$sx"
+  "tacztweaks.config.label.multiplier": "%1$sx",
+  "tacztweaks.config.label.ETiltGun.DEFAULT": "Default",
+  "tacztweaks.config.label.ETiltGun.ALWAYS": "Always",
+  "tacztweaks.config.label.ETiltGun.NEVER": "Never"
 }
