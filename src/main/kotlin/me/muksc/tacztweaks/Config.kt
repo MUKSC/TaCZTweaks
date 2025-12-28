@@ -79,6 +79,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val manualBolting by register(false, BOOL)
         val allowUnload by registerSyncable(
             default = true,
             codec = BOOL,
@@ -104,6 +105,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
         fun reloadDiscardsMagazineExclusions(): List<String> = reloadDiscardsMagazineExclusions.syncedValue
         fun fireSelectWhileShooting(): Boolean = fireSelectWhileShooting.syncedValue
+        fun manualBolting(): Boolean = manualBolting.value
         fun allowUnload(): Boolean = allowUnload.syncedValue
         fun unloadBulletInBarrel(): Boolean = unloadBulletInBarrel.syncedValue
         fun reduceSensitivityKeyMultiplier(): Double = reduceSensitivityKeyMultiplier.value
@@ -618,6 +620,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     binding(Gun.fireSelectWhileShooting.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.manualBolting.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.manualBolting.description")))
+                    binding(Gun.manualBolting.asBinding())
+                    controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.gun.allowUnload.name"))

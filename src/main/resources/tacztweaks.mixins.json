@@ -37,6 +37,7 @@
     "features.bullet_sounds.ModernKineticGunScriptAPIMixin",
     "features.melee_interactions.ModernKineticGunItemMixin",
     "gun.GunAnimationStateContextMixin",
+    "gun.LocalPlayerBoltMixin",
     "gun.LocalPlayerInspectMixin",
     "gun.ModernKineticGunScriptAPIMixin",
     "gun.movement.AnimationManagerMixin",
