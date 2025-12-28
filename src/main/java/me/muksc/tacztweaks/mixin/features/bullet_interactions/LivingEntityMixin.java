@@ -19,8 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Function;
 
@@ -87,7 +85,7 @@ public abstract class LivingEntityMixin implements ShieldInteractionBehaviour {
     @Definition(id = "is", method = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z")
     @Definition(id = "IS_PROJECTILE", field = "Lnet/minecraft/tags/DamageTypeTags;IS_PROJECTILE:Lnet/minecraft/tags/TagKey;")
     @Expression("?.is(IS_PROJECTILE)")
-    @WrapOperation(method = "hurt", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "hurt", at = @At("MIXINEXTRAS:EXPRESSION"), require = /* Arclight */ 0)
     private boolean tacztweaks$hurt$customShieldDisable(DamageSource instance, TagKey<DamageType> pDamageTypeKey, Operation<Boolean> original) {
         if (!tacztweaks$handlingBullets) return original.call(instance, pDamageTypeKey);
         var entity = LivingEntity.class.cast(this);
@@ -99,7 +97,7 @@ public abstract class LivingEntityMixin implements ShieldInteractionBehaviour {
 
     @Definition(id = "pAmount", local = @Local(type = float.class, argsOnly = true, ordinal = 0))
     @Expression("pAmount <= 0.0")
-    @WrapOperation(method = "hurt", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "hurt", at = @At("MIXINEXTRAS:EXPRESSION"), require = /* Arclight */ 0)
     private boolean tacztweaks$hurt$alwaysPlayBlockingSound(float left, float right, Operation<Boolean> original, @Share("originalAmount") LocalFloatRef originalAmountRef) {
         if (!tacztweaks$handlingBullets) return original.call(left, right);
         return true;
