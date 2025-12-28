@@ -37,6 +37,7 @@
     "features.bullet_sounds.ModernKineticGunScriptAPIMixin",
     "features.melee_interactions.ModernKineticGunItemMixin",
     "gun.GunAnimationStateContextMixin",
+    "gun.LivingEntityMixin",
     "gun.LocalPlayerBoltMixin",
     "gun.LocalPlayerInspectMixin",
     "gun.ModernKineticGunScriptAPIMixin",
@@ -64,6 +65,7 @@
     "modifiers.RPMModifierMixin",
     "tweaks.EnderManMixin",
     "tweaks.EntityKineticBulletMixin",
+    "tweaks.InaccuracyTypeMixin",
     "tweaks.ModernKineticGunScriptAPIMixin",
     "tweaks.ProtectionEnchantmentMixin"
   ],

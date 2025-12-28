@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks.network
 
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.network.message.ClientMessagePlayerShouldSlide
 import me.muksc.tacztweaks.network.message.ClientMessagePlayerUnload
 import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
 import me.muksc.tacztweaks.network.message.LoginIndexedMessage
@@ -49,6 +50,7 @@ object NetworkHandler {
     }
 
     fun register() {
+        registerC2S(ClientMessagePlayerShouldSlide.TYPE, ClientMessagePlayerShouldSlide.STREAM_CODEC, ClientMessagePlayerShouldSlide::handle)
         registerC2S(ClientMessagePlayerUnload.TYPE, ClientMessagePlayerUnload.STREAM_CODEC, ClientMessagePlayerUnload::handle)
         registerC2S(ClientMessageSyncConfig.TYPE, ClientMessageSyncConfig.STREAM_CODEC, ClientMessageSyncConfig::handle)
         registerS2C(ServerMessageSyncConfig.TYPE, ServerMessageSyncConfig.STREAM_CODEC, ServerMessageSyncConfig::handle)

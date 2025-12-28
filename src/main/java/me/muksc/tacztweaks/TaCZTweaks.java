@@ -13,6 +13,7 @@ import me.muksc.tacztweaks.data.BulletParticlesManager;
 import me.muksc.tacztweaks.data.BulletSoundsManager;
 import me.muksc.tacztweaks.data.MeleeInteractionManager;
 import me.muksc.tacztweaks.mixin.accessor.InaccuracyTypeAccessor;
+import me.muksc.tacztweaks.mixininterface.gun.SlideDataHolder;
 import me.muksc.tacztweaks.network.NetworkHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -82,6 +83,7 @@ public class TaCZTweaks {
         if (inaccuracyTypes.contains(InaccuracyType.SNEAK)) inaccuracy *= map.get(InaccuracyType.SNEAK) / base;
         if (inaccuracyTypes.contains(InaccuracyType.LIE)) inaccuracy *= map.get(InaccuracyType.LIE) / base;
         if (inaccuracyTypes.contains(InaccuracyType.AIM)) inaccuracy *= map.get(InaccuracyType.AIM) / base;
+        if (Config.Tweaks.INSTANCE.betterGunTilt() && ((SlideDataHolder) entity).tacztweaks$getShouldSlide()) inaccuracy *= map.get(InaccuracyType.SNEAK) / base;
         return inaccuracy;
     }
 

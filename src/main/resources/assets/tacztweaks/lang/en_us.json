@@ -124,6 +124,8 @@
   "tacztweaks.config.tweaks.betterMonoConversion.description": "Makes the stereo to mono sound converter in TaCZ better by mixing the two channels together, instead of discarding other channels.",
   "tacztweaks.config.tweaks.betterInaccuracy.name": "Better Inaccuracy",
   "tacztweaks.config.tweaks.betterInaccuracy.description": "Changes the calculation of the inaccuracy/spread value in a way that accounts for multiple states.\nFor example, sneaking while aiming will reduce the spread further than just aiming.",
+  "tacztweaks.config.tweaks.betterGunTilt.name": "Better Gun Tilt",
+  "tacztweaks.config.tweaks.betterGunTilt.description": "Makes the gun tilting an actual feature, instead of being a visual thing.\n- Sneaking no longer tilts the gun. You have to use the 'Tilt Gun' key to tilt the gun.\n- Tilting the gun reduces the spread.\n- If 'Better Inaccuracy' is enabled, sneaking + tilting reduces the spread even further.",
   "tacztweaks.config.tweaks.bulletProtection.name": "Bullet Protection",
   "tacztweaks.config.tweaks.bulletProtection.description": "Makes the Projectile Protection enchantment reduce bullet damage.",
   "tacztweaks.config.tweaks.endermenEvadeBullets.name": "Endermen Evade Bullets",
