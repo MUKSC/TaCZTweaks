@@ -44,6 +44,7 @@
     "gun.movement.LivingEntityReloadMixin",
     "gun.movement.LivingEntityShootMixin",
     "gun.movement.LivingEntitySprintMixin",
+    "gun.movement.LocalPlayerFireSelectMixin",
     "gun.unload.AbstractGunItemMixin",
     "gun.unload.LivingEntityMixinMixin",
     "modifiers.AdsModifierMixin",

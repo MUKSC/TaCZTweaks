@@ -38,8 +38,6 @@ public abstract class LocalPlayerReloadMixin {
     @ModifyExpressionValue(method = "lambda$reload$2", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/client/gameplay/LocalPlayerDataHolder;clientStateLock:Z"))
     private boolean tacztweaks$reload$allowReloadWhileShoot(boolean original, @Local(argsOnly = true) ItemStack mainHandItem, @Local(argsOnly = true) AbstractGunItem gunItem) {
         if (!Config.Gun.INSTANCE.reloadWhileShooting()) return original;
-        if (IGunOperator.fromLivingEntity(player).needCheckAmmo() && !gunItem.canReload(player, mainHandItem)) return original;
-
         IGunOperator operator = IGunOperator.fromLivingEntity(player);
         if (data.lockedCondition == LocalPlayerShootAccessor.getShootLockedCondition()) return false;
         if (data.lockedCondition == null && !operator.getSynReloadState().getStateType().isReloading()

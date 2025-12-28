@@ -73,6 +73,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeCollection(value, FriendlyByteBuf::writeUtf) },
             decoder = { buf -> buf.readCollection(Lists::newArrayListWithCapacity, FriendlyByteBuf::readUtf) }
         )
+        val fireSelectWhileShooting by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val allowUnload by registerSyncable(
             default = true,
             codec = BOOL,
@@ -91,6 +97,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun reloadWhileShooting(): Boolean = reloadWhileShooting.syncedValue
         fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
         fun reloadDiscardsMagazineExclusions(): List<String> = reloadDiscardsMagazineExclusions.syncedValue
+        fun fireSelectWhileShooting(): Boolean = fireSelectWhileShooting.syncedValue
         fun allowUnload(): Boolean = allowUnload.syncedValue
         fun reduceSensitivityKeyMultiplier(): Double = reduceSensitivityKeyMultiplier.value
         fun disableReduceSensitivityKeyWhileAiming(): Boolean = disableReduceSensitivityKeyWhileAiming.value
@@ -595,6 +602,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.gun.reloadDiscardsMagazine.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.reloadDiscardsMagazine.description")))
                     binding(Gun.reloadDiscardsMagazine.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.gun.fireSelectWhileShooting.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.fireSelectWhileShooting.description")))
+                    binding(Gun.fireSelectWhileShooting.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())
