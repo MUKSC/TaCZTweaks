@@ -85,6 +85,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = { buf, value -> buf.writeBoolean(value) },
             decoder = { buf -> buf.readBoolean() }
         )
+        val unloadBulletInBarrel by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = { buf, value -> buf.writeBoolean(value) },
+            decoder = { buf -> buf.readBoolean() }
+        )
         val reduceSensitivityKeyMultiplier by register(0.5, DOUBLE)
         val disableReduceSensitivityKeyWhileAiming by register(false, BOOL)
         val tiltGunKeyCancelsSprint by register(true, BOOL)
@@ -99,6 +105,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun reloadDiscardsMagazineExclusions(): List<String> = reloadDiscardsMagazineExclusions.syncedValue
         fun fireSelectWhileShooting(): Boolean = fireSelectWhileShooting.syncedValue
         fun allowUnload(): Boolean = allowUnload.syncedValue
+        fun unloadBulletInBarrel(): Boolean = unloadBulletInBarrel.syncedValue
         fun reduceSensitivityKeyMultiplier(): Double = reduceSensitivityKeyMultiplier.value
         fun disableReduceSensitivityKeyWhileAiming(): Boolean = disableReduceSensitivityKeyWhileAiming.value
         fun tiltGunKeyCancelsSprint(): Boolean = tiltGunKeyCancelsSprint.value
@@ -616,6 +623,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.gun.allowUnload.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.allowUnload.description")))
                     binding(Gun.allowUnload.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.gun.unloadBulletInBarrel.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.unloadBulletInBarrel.description")))
+                    binding(Gun.unloadBulletInBarrel.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())
