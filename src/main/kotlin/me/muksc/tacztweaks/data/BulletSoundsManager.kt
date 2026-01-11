@@ -35,9 +35,12 @@ private val GSON = GsonBuilder()
 object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_sounds") {
     private val LOGGER = LogUtils.getLogger()
     private var error = false
+    private var hasAirspaceSounds = false
     private var bulletSounds: Map<KClass<*>, Map<ResourceLocation, BulletSounds>> = emptyMap()
 
     fun hasError(): Boolean = error
+
+    fun hasAirspaceSounds(): Boolean = hasAirspaceSounds
 
     fun debug(msg: () -> String) {
         if (Config.Debug.bulletSounds()) LOGGER.info(msg.invoke())
@@ -76,11 +79,14 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         resourceManager: ResourceManager,
         profileFiller: ProfilerFiller,
     ) {
+        error = false
+        hasAirspaceSounds = false
         val bulletSounds = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletSounds>>()
         for ((resourceLocation, element) in map) {
             try {
                 val sounds = BulletSounds.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
                 bulletSounds.computeIfAbsent(sounds::class) { ImmutableMap.builder() }.put(resourceLocation, sounds)
+                if (sounds is BulletSounds.AirSpace) hasAirspaceSounds = true
             } catch (e: RuntimeException) {
                 LOGGER.error("Parsing error loading bullet sounds $resourceLocation $e")
                 error = true

@@ -75,6 +75,7 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         resourceManager: ResourceManager,
         profileFiller: ProfilerFiller,
     ) {
+        error = false
         val bulletParticles = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletParticles>>()
         for ((resourceLocation, element) in map) {
             try {

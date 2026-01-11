@@ -111,6 +111,13 @@ public class TaCZTweaks {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
+        if (BulletSoundsManager.INSTANCE.hasAirspaceSounds() && !SoundPhysicsCompat.INSTANCE.isEnabled()) {
+            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
+                .append(Component.literal(" "))
+                .append(TaCZTweaks.translatable("bullet_sounds.sound_physics_missing").withStyle(ChatFormatting.YELLOW));
+            e.getEntity().sendSystemMessage(text);
+        }
+
         if (BulletInteractionManager.INSTANCE.hasError()) {
             MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
                 .append(Component.literal(" "))
@@ -127,6 +134,12 @@ public class TaCZTweaks {
             MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
                 .append(Component.literal(" "))
                 .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED));
+            e.getEntity().sendSystemMessage(text);
+        }
+        if (MeleeInteractionManager.INSTANCE.hasError()) {
+            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
+                .append(Component.literal(" "))
+                .append(TaCZTweaks.translatable("melee_interactions.error").withStyle(ChatFormatting.RED));
             e.getEntity().sendSystemMessage(text);
         }
     }
