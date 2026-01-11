@@ -27,6 +27,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ClipContext
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
@@ -171,6 +172,10 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 if (cancelled) return@run
             }
             level.destroyBlock(blockPos, interaction.blockBreak.drop, ammo.owner)
+            val replaceWith = interaction.blockBreak.replaceWith
+            if (!replaceWith.state.isAir && replaceWith.place(level, blockPos, Block.UPDATE_CLIENTS)) {
+                level.blockUpdated(blockPos, replaceWith.state.block)
+            }
         }
         val pierce = shouldPierce(ammo, result, interaction.pierce, interaction.gunPierce, breakBlock, ext::`tacztweaks$incrementBlockPierce`, ext::`tacztweaks$getBlockPierce`)
         if (pierce && !breakBlock && interaction.pierce.renderBulletHole) {

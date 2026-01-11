@@ -3,11 +3,14 @@ package me.muksc.tacztweaks.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.blockInput
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
 import me.muksc.tacztweaks.singleOrListCodec
 import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.commands.arguments.blocks.BlockInput
 import net.minecraft.world.item.Tier
+import net.minecraft.world.level.block.Blocks
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -134,6 +137,7 @@ sealed class BulletInteraction(
     ) : BulletInteraction(EBulletInteractionType.BLOCK, target, priority) {
         sealed class BlockBreak(
             val type: EBlockBreakType,
+            val replaceWith: BlockInput,
             val hardness: ValueRange,
             val tier: Tier?,
             val drop: Boolean
@@ -154,17 +158,19 @@ sealed class BulletInteraction(
                 }
             }
 
-            object Never : BlockBreak(EBlockBreakType.NEVER, ValueRange.DEFAULT, null, false) {
+            object Never : BlockBreak(EBlockBreakType.NEVER, Blocks.AIR.defaultBlockState().blockInput(), ValueRange.DEFAULT, null, false) {
                 val CODEC = Codec.unit(Never)
             }
 
             class Instant(
+                replaceWith: BlockInput,
                 hardness: ValueRange,
                 tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.INSTANT, hardness, tier.getOrNull(), drop) {
+            ) : BlockBreak(EBlockBreakType.INSTANT, replaceWith, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Instant> { it.group(
+                        BlockInputCodec.strictOptionalFieldOf("replace_with", Blocks.AIR.defaultBlockState().blockInput()).forGetter(Instant::replaceWith),
                         ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(Instant::hardness),
                         TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(Instant::drop)
@@ -174,13 +180,15 @@ sealed class BulletInteraction(
 
             class Count(
                 val count: Int,
+                replaceWith: BlockInput,
                 hardness: ValueRange,
                 tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.COUNT, hardness, tier.getOrNull(), drop) {
+            ) : BlockBreak(EBlockBreakType.COUNT, replaceWith, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<Count> { it.group(
                         Codec.INT.fieldOf("count").forGetter(Count::count),
+                        BlockInputCodec.strictOptionalFieldOf("replace_with", Blocks.AIR.defaultBlockState().blockInput()).forGetter(Count::replaceWith),
                         ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(Count::hardness),
                         TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(Count::drop)
@@ -191,14 +199,16 @@ sealed class BulletInteraction(
             class FixedDamage(
                 val damage: Float,
                 val accumulate: Boolean,
+                replaceWith: BlockInput,
                 hardness: ValueRange,
                 tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.FIXED_DAMAGE, hardness, tier.getOrNull(), drop) {
+            ) : BlockBreak(EBlockBreakType.FIXED_DAMAGE, replaceWith, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<FixedDamage> { it.group(
                         Codec.FLOAT.fieldOf("damage").forGetter(FixedDamage::damage),
                         Codec.BOOL.strictOptionalFieldOf("accumulate", true).forGetter(FixedDamage::accumulate),
+                        BlockInputCodec.strictOptionalFieldOf("replace_with", Blocks.AIR.defaultBlockState().blockInput()).forGetter(FixedDamage::replaceWith),
                         ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(FixedDamage::hardness),
                         TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(FixedDamage::drop)
@@ -210,15 +220,17 @@ sealed class BulletInteraction(
                 val modifier: Float,
                 val multiplier: Float,
                 val accumulate: Boolean,
+                replaceWith: BlockInput,
                 hardness: ValueRange,
                 tier: Optional<Tier>,
                 drop: Boolean
-            ) : BlockBreak(EBlockBreakType.DYNAMIC_DAMAGE, hardness, tier.getOrNull(), drop) {
+            ) : BlockBreak(EBlockBreakType.DYNAMIC_DAMAGE, replaceWith, hardness, tier.getOrNull(), drop) {
                 companion object {
                     val CODEC = RecordCodecBuilder.create<DynamicDamage> { it.group(
                         Codec.FLOAT.strictOptionalFieldOf("modifier", 0.0F).forGetter(DynamicDamage::modifier),
                         Codec.FLOAT.strictOptionalFieldOf("multiplier", 1.0F).forGetter(DynamicDamage::multiplier),
                         Codec.BOOL.strictOptionalFieldOf("accumulate", true).forGetter(DynamicDamage::accumulate),
+                        BlockInputCodec.strictOptionalFieldOf("replace_with", Blocks.AIR.defaultBlockState().blockInput()).forGetter(DynamicDamage::replaceWith),
                         ValueRange.CODEC.strictOptionalFieldOf("hardness", ValueRange.DEFAULT).forGetter(DynamicDamage::hardness),
                         TierSortingRegistryCodec.strictOptionalFieldOf("tier").forGetter { Optional.ofNullable(it.tier) },
                         Codec.BOOL.strictOptionalFieldOf("drop", false).forGetter(DynamicDamage::drop)

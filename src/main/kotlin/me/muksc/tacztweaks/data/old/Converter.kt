@@ -1,8 +1,10 @@
 package me.muksc.tacztweaks.data.old
 
+import me.muksc.tacztweaks.blockInput
 import me.muksc.tacztweaks.data.BulletInteraction
 import me.muksc.tacztweaks.data.Target
 import me.muksc.tacztweaks.data.ValueRange
+import net.minecraft.world.level.block.Blocks
 import java.util.*
 import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction
 
@@ -13,6 +15,7 @@ fun OldBulletInteraction.convert() = BulletInteraction.Block(
         is OldBulletInteraction.BlockBreak.Never -> BulletInteraction.Block.BlockBreak.Never
         is OldBulletInteraction.BlockBreak.Count -> BulletInteraction.Block.BlockBreak.Count(
             count = blockBreak.count,
+            replaceWith = Blocks.AIR.defaultBlockState().blockInput(),
             hardness = ValueRange.DEFAULT,
             tier = Optional.empty(),
             drop = drop
@@ -20,6 +23,7 @@ fun OldBulletInteraction.convert() = BulletInteraction.Block(
         is OldBulletInteraction.BlockBreak.FixedDamage -> BulletInteraction.Block.BlockBreak.FixedDamage(
             damage = blockBreak.damage,
             accumulate = blockBreak.accumulate,
+            replaceWith = Blocks.AIR.defaultBlockState().blockInput(),
             hardness = ValueRange.DEFAULT,
             tier = Optional.empty(),
             drop = drop
@@ -28,6 +32,7 @@ fun OldBulletInteraction.convert() = BulletInteraction.Block(
             modifier = blockBreak.modifier,
             multiplier = blockBreak.multiplier,
             accumulate = blockBreak.accumulate,
+            replaceWith = Blocks.AIR.defaultBlockState().blockInput(),
             hardness = ValueRange.DEFAULT,
             tier = Optional.empty(),
             drop = drop

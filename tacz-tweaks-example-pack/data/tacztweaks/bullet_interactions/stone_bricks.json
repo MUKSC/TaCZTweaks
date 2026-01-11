@@ -1,0 +1,13 @@
+{
+  "type": "block",
+  "blocks": [
+    "minecraft:stone_bricks"
+  ],
+  "block_break": {
+    "type": "dynamic_damage",
+    "replace_with": "minecraft:cracked_stone_bricks"
+  },
+  "pierce": {
+    "type": "never"
+  }
+}
