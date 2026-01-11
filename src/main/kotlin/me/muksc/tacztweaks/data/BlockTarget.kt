@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.id
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
@@ -92,7 +93,7 @@ sealed class BlockTarget(
 
     class RegexPattern(val regex: Regex) : BlockTarget(EBlockTargetType.REGEX) {
         override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean =
-            regex.matches(ForgeRegistries.BLOCKS.getKey(state.block).toString())
+            regex.matches(state.block.id.toString())
 
         companion object {
             val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(

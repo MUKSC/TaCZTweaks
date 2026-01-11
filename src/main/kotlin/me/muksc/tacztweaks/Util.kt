@@ -5,6 +5,10 @@ import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import me.muksc.tacztweaks.data.StrictOptionalFieldCodec
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.level.block.Block
+import net.minecraftforge.registries.ForgeRegistries
 import java.util.*
 
 fun <T> identity(value: T): T = value
@@ -40,3 +44,9 @@ fun <T> singleOrListCodec(codec: Codec<T>): Codec<List<T>> =
 
 fun <T, R : Comparable<R>> Codec<List<T>>.sortedBy(selector: (T) -> R): Codec<List<T>> =
     xmap(::identity) { it.sortedBy(selector) }
+
+val Block.id: ResourceLocation?
+    get() = ForgeRegistries.BLOCKS.getKey(this)
+
+val EntityType<*>.id: ResourceLocation?
+    get() = ForgeRegistries.ENTITY_TYPES.getKey(this)

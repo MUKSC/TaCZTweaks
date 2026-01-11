@@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.Config
+import me.muksc.tacztweaks.id
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.thenPrioritizeBy
 import me.muksc.tacztweaks.toImmutableMap
@@ -27,8 +28,6 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
-import net.minecraftforge.registries.ForgeRegistries
-import kotlin.collections.firstOrNull
 import kotlin.reflect.KClass
 
 private val GSON = GsonBuilder()
@@ -126,7 +125,7 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         } ?: return
         debug { "Using block bullet particles: $id" }
         for (particle in type.getParticle(particles)) {
-            val id = ForgeRegistries.BLOCKS.getKey(state.block)?.toString()
+            val id = state.block.id?.toString()
             particle.summon(level.server, entity, id)
         }
     }

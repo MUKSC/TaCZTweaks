@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.id
 import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
@@ -94,7 +95,7 @@ sealed class EntityTarget(
 
     class RegexPattern(val regex: Regex) : EntityTarget(EEntityTargetType.REGEX) {
         override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
-            regex.matches(ForgeRegistries.ENTITY_TYPES.getKey(entity.type).toString())
+            regex.matches(entity.type.id.toString())
 
         companion object {
             val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(
