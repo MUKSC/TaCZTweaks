@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks;
 
 import com.tacz.guns.api.entity.IGunOperator;
+import com.tacz.guns.api.event.common.GunShootEvent;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import me.muksc.tacztweaks.client.input.ReduceSensitivityKey;
 import me.muksc.tacztweaks.client.input.TiltGunKey;
@@ -97,6 +98,12 @@ public class TaCZTweaks {
         if (inaccuracyTypes.contains(InaccuracyType.AIM)) inaccuracy *= map.get(InaccuracyType.AIM) / base;
         if (Config.Tweaks.INSTANCE.betterGunTilt() && ((SlideDataHolder) entity).tacztweaks$getShouldSlide()) inaccuracy *= map.get(InaccuracyType.SNEAK) / base;
         return inaccuracy;
+    }
+
+    @SubscribeEvent
+    public void onGunShoot(GunShootEvent e) {
+        if (!Config.Gun.INSTANCE.disableUnderwater()) return;
+        if (e.getShooter().isUnderWater()) e.setCanceled(true);
     }
 
     @SubscribeEvent

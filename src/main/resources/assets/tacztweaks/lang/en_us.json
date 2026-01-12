@@ -27,6 +27,8 @@
   "tacztweaks.config.gun.reloadDiscardsMagazineExclusions.description": "List of gun ids to excluded from the effect of the `Reload Discards Magazine` option.",
   "tacztweaks.config.gun.fireSelectWhileShooting.name": "Fire Select While Shooting",
   "tacztweaks.config.gun.fireSelectWhileShooting.description": "Allows changing the firing mode while shooting (i.e. fire selection takes priority over shooting).",
+  "tacztweaks.config.gun.disableUnderwater.name": "Disable Underwater",
+  "tacztweaks.config.gun.disableUnderwater.description": "Disables guns while underwater.",
   "tacztweaks.config.gun.manualBolting.name": "Manual Bolting",
   "tacztweaks.config.gun.manualBolting.description": "Disables the automatic bolting and makes you have to manually bolt every time by left clicking.",
   "tacztweaks.config.gun.allowUnload.name": "Allow Unload",

@@ -76,6 +76,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = FriendlyByteBuf::writeBoolean,
             decoder = FriendlyByteBuf::readBoolean
         )
+        val disableUnderwater by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
+        )
         val manualBolting by register(false, BOOL)
         val allowUnload by registerSyncable(
             default = true,
@@ -102,6 +108,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun reloadDiscardsMagazine(): Boolean = reloadDiscardsMagazine.syncedValue
         fun reloadDiscardsMagazineExclusions(): List<String> = reloadDiscardsMagazineExclusions.syncedValue
         fun fireSelectWhileShooting(): Boolean = fireSelectWhileShooting.syncedValue
+        fun disableUnderwater(): Boolean = disableUnderwater.syncedValue
         fun manualBolting(): Boolean = manualBolting.value
         fun allowUnload(): Boolean = allowUnload.syncedValue
         fun unloadBulletInBarrel(): Boolean = unloadBulletInBarrel.syncedValue
@@ -622,6 +629,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.gun.fireSelectWhileShooting.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.fireSelectWhileShooting.description")))
                     binding(Gun.fireSelectWhileShooting.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.gun.disableUnderwater.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableUnderwater.description")))
+                    binding(Gun.disableUnderwater.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())
