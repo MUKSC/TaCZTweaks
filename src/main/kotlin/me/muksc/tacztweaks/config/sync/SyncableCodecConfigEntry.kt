@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.config
+package me.muksc.tacztweaks.config.sync
 
 import dev.isxander.yacl3.config.v3.ConfigEntry
 import dev.isxander.yacl3.config.v3.EntryAddable

@@ -3,7 +3,7 @@ package me.muksc.tacztweaks.mixin.compat.firstaid;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.TacHitResult;
 import ichttt.mods.firstaid.common.EventHandler;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import org.spongepowered.asm.mixin.Mixin;

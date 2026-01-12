@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.gun.movement;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.entity.shooter.LivingEntityAim;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

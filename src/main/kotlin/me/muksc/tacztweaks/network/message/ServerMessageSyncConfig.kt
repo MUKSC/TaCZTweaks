@@ -2,10 +2,10 @@ package me.muksc.tacztweaks.network.message
 
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager
 import io.netty.buffer.Unpooled
-import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.config.ConfigManager
-import me.muksc.tacztweaks.config.ESyncDirection
+import me.muksc.tacztweaks.config.sync.ESyncDirection
 import me.muksc.tacztweaks.network.CustomPacketPayload
 import me.muksc.tacztweaks.network.StreamCodec
 import net.minecraft.client.Minecraft

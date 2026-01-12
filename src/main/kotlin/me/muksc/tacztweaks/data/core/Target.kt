@@ -1,16 +1,17 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.core
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.tacz.guns.api.TimelessAPI
 import com.tacz.guns.api.entity.IGunOperator
-import com.tacz.guns.api.item.GunTabType
 import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.resource.modifier.custom.SilenceModifier
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair
-import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.data.codec.DispatchCodec
+import me.muksc.tacztweaks.data.codec.EntityPredicateCodec
+import me.muksc.tacztweaks.data.codec.IntsMinMaxBounds
+import me.muksc.tacztweaks.data.codec.strictOptionalFieldOf
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
-import me.muksc.tacztweaks.strictOptionalFieldOf
 import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.advancements.critereon.MinMaxBounds
 import net.minecraft.resources.ResourceLocation
@@ -55,7 +56,7 @@ sealed class Target(
             terms.all { it.test(entity, weaponId, damage) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<AllOf> { it.group(
+            val CODEC: Codec<AllOf> = RecordCodecBuilder.create<AllOf> { it.group(
                 Codec.list(Target.CODEC).fieldOf("terms").forGetter(AllOf::terms)
             ).apply(it, ::AllOf) }
         }
@@ -66,7 +67,7 @@ sealed class Target(
             terms.any { it.test(entity, weaponId, damage) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<AnyOf> { it.group(
+            val CODEC: Codec<AnyOf> = RecordCodecBuilder.create<AnyOf> { it.group(
                 Codec.list(Target.CODEC).fieldOf("terms").forGetter(AnyOf::terms)
             ).apply(it, ::AnyOf) }
         }
@@ -77,7 +78,7 @@ sealed class Target(
             !term.test(entity, weaponId, damage)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Inverted> { it.group(
+            val CODEC: Codec<Inverted> = RecordCodecBuilder.create<Inverted> { it.group(
                 Target.CODEC.fieldOf("term").forGetter(Inverted::term)
             ).apply(it, ::Inverted) }
         }
@@ -88,7 +89,7 @@ sealed class Target(
             values.contains(weaponId)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Gun> { it.group(
+            val CODEC: Codec<Gun> = RecordCodecBuilder.create<Gun> { it.group(
                 Codec.list(ResourceLocation.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Gun::values)
             ).apply(it, ::Gun) }
         }
@@ -101,7 +102,7 @@ sealed class Target(
         }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Category> { it.group(
+            val CODEC: Codec<Category> = RecordCodecBuilder.create<Category> { it.group(
                 Codec.list(Codec.STRING).strictOptionalFieldOf("values", emptyList()).forGetter(Category::values)
             ).apply(it, ::Category) }
         }
@@ -112,7 +113,7 @@ sealed class Target(
             entity != null && values.contains(entity.ammoId)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Ammo> { it.group(
+            val CODEC: Codec<Ammo> = RecordCodecBuilder.create<Ammo> { it.group(
                 Codec.list(ResourceLocation.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Ammo::values)
             ).apply(it, ::Ammo) }
         }
@@ -126,7 +127,7 @@ sealed class Target(
             override fun getSerializedName(): String = name.lowercase()
 
             companion object {
-                val CODEC = StringRepresentable.fromEnum(::values)
+                val CODEC: Codec<EMatchType> = StringRepresentable.fromEnum(::values)
             }
         }
 
@@ -136,7 +137,7 @@ sealed class Target(
         })
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(
+            val CODEC: Codec<RegexPattern> = RecordCodecBuilder.create<RegexPattern> { it.group(
                 EMatchType.CODEC.fieldOf("match").forGetter(RegexPattern::match),
                 Codec.STRING.xmap(::Regex, Regex::pattern).fieldOf("regex").forGetter(RegexPattern::regex)
             ).apply(it, ::RegexPattern) }
@@ -148,7 +149,7 @@ sealed class Target(
             entity != null && predicate.matches(entity.level() as ServerLevel, entity.position(), entity)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Predicate> { it.group(
+            val CODEC: Codec<Predicate> = RecordCodecBuilder.create<Predicate> { it.group(
                 EntityPredicateCodec.fieldOf("predicate").forGetter(Predicate::predicate)
             ).apply(it, ::Predicate) }
         }
@@ -159,7 +160,7 @@ sealed class Target(
             entity != null && values.any { it.contains(damage) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Damage> { it.group(
+            val CODEC: Codec<Damage> = RecordCodecBuilder.create<Damage> { it.group(
                 Codec.list(ValueRange.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Damage::values)
             ).apply(it, ::Damage) }
         }
@@ -170,7 +171,7 @@ sealed class Target(
             entity != null && values.any { it.contains(entity.deltaMovement.length() * 10) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Speed> { it.group(
+            val CODEC: Codec<Speed> = RecordCodecBuilder.create<Speed> { it.group(
                 Codec.list(ValueRange.CODEC).strictOptionalFieldOf("values", emptyList()).forGetter(Speed::values)
             ).apply(it, ::Speed) }
         }
@@ -184,7 +185,7 @@ sealed class Target(
             return silence.right()
         }
 
-        val CODEC = Codec.unit(Silenced)
+        val CODEC: Codec<Silenced> = Codec.unit(Silenced)
     }
 
     class BurstIndex(
@@ -196,7 +197,7 @@ sealed class Target(
         }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<BurstIndex> { it.group(
+            val CODEC: Codec<BurstIndex> = RecordCodecBuilder.create<BurstIndex> { it.group(
                 IntsMinMaxBounds.fieldOf("index").forGetter(BurstIndex::index)
             ).apply(it, ::BurstIndex) }
         }
@@ -211,7 +212,7 @@ sealed class Target(
         }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<PelletIndex> { it.group(
+            val CODEC: Codec<PelletIndex> = RecordCodecBuilder.create<PelletIndex> { it.group(
                 IntsMinMaxBounds.fieldOf("index").forGetter(PelletIndex::index)
             ).apply(it, ::PelletIndex) }
         }
@@ -222,13 +223,13 @@ sealed class Target(
             entity != null && entity.random.nextFloat() < chance
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<RandomChance> { it.group(
+            val CODEC: Codec<RandomChance> = RecordCodecBuilder.create<RandomChance> { it.group(
                 Codec.FLOAT.fieldOf("chance").forGetter(RandomChance::chance)
             ).apply(it, ::RandomChance) }
         }
     }
 
     companion object {
-        val CODEC = ETargetType.CODEC.dispatch(Target::type) { it.codecProvider() }
+        val CODEC: Codec<Target> = ETargetType.CODEC.dispatch(Target::type) { it.codecProvider() }
     }
 }

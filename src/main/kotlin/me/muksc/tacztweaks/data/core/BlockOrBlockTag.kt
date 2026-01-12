@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.core
 
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
@@ -14,7 +14,7 @@ sealed interface BlockOrBlockTag : BlockTestable {
         override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean = state.`is`(block)
 
         companion object {
-            val CODEC = ForgeRegistries.BLOCKS.codec.xmap(::Block, Block::block)
+            val CODEC: Codec<Block> = ForgeRegistries.BLOCKS.codec.xmap(::Block, Block::block)
         }
     }
 
@@ -22,13 +22,13 @@ sealed interface BlockOrBlockTag : BlockTestable {
         override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean = state.`is`(tag)
 
         companion object {
-            val CODEC = TagKey.hashedCodec(Registries.BLOCK).xmap(::BlockTag, BlockTag::tag)
+            val CODEC: Codec<BlockTag> = TagKey.hashedCodec(Registries.BLOCK).xmap(::BlockTag, BlockTag::tag)
         }
     }
 
     companion object {
-        val CODEC = Codec.either(Block.CODEC, BlockTag.CODEC)
-            .xmap({ it.map({ it as BlockOrBlockTag }) { it as BlockOrBlockTag } }) { when (it) {
+        val CODEC: Codec<BlockOrBlockTag> = Codec.either(Block.CODEC, BlockTag.CODEC)
+            .xmap({ value -> value.map({ it as BlockOrBlockTag }) { it as BlockOrBlockTag } }) { when (it) {
                 is Block -> Either.left(it)
                 is BlockTag -> Either.right(it)
             } }

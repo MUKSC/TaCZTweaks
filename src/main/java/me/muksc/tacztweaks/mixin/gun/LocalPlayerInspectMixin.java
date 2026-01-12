@@ -7,7 +7,7 @@ import com.tacz.guns.client.gameplay.LocalPlayerInspect;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.sound.SoundPlayManager;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;

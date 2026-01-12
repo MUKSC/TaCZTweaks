@@ -1,16 +1,16 @@
-package me.muksc.tacztweaks
+package me.muksc.tacztweaks.core
 
 import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.util.EntityUtil
 import com.tacz.guns.util.TacHitResult
 import me.muksc.tacztweaks.compat.pillagers_gun.PillagersGunCompat
-import me.muksc.tacztweaks.data.BulletInteractionManager
-import me.muksc.tacztweaks.data.BulletParticlesManager
-import me.muksc.tacztweaks.data.BulletParticlesManager.EBlockParticleType
-import me.muksc.tacztweaks.data.BulletParticlesManager.EEntityParticleType
-import me.muksc.tacztweaks.data.BulletSoundsManager
-import me.muksc.tacztweaks.data.BulletSoundsManager.EBlockSoundType
-import me.muksc.tacztweaks.data.BulletSoundsManager.EEntitySoundType
+import me.muksc.tacztweaks.data.manager.BulletInteractionManager
+import me.muksc.tacztweaks.data.manager.BulletParticlesManager
+import me.muksc.tacztweaks.data.manager.BulletParticlesManager.EBlockParticleType
+import me.muksc.tacztweaks.data.manager.BulletParticlesManager.EEntityParticleType
+import me.muksc.tacztweaks.data.manager.BulletSoundsManager
+import me.muksc.tacztweaks.data.manager.BulletSoundsManager.EBlockSoundType
+import me.muksc.tacztweaks.data.manager.BulletSoundsManager.EEntitySoundType
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import net.minecraft.server.level.ServerLevel

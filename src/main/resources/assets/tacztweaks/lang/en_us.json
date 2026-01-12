@@ -5,7 +5,7 @@
   "tacztweaks.unload.done": "Unloaded",
   "tacztweaks.search": "Search...",
   "tacztweaks.packs.filter": "Filter",
-  "tacztweaks.bullet_sounds.sound_physics_missing": "Warning: Sound Physics Remastered is required for some of your installed packs to fully function, but it is not currently installed.",
+  "tacztweaks.bullet_sounds.sound_physics_missing": "Sound Physics Remastered is required for some of your installed packs to fully function, but it is not currently installed.",
   "tacztweaks.bullet_interactions.error": "There was an error while loading bullet interactions.\nCheck the logs for more detail.",
   "tacztweaks.bullet_particles.error": "There was an error while loading bullet particles.\nCheck the logs for more detail.",
   "tacztweaks.bullet_sounds.error": "There was an error while loading bullet sounds.\nCheck the logs for more detail.",

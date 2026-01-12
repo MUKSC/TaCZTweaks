@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks
+package me.muksc.tacztweaks.core
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap

@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.crawl;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Mixin;

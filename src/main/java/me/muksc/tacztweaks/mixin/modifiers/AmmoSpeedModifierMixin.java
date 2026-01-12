@@ -2,12 +2,11 @@ package me.muksc.tacztweaks.mixin.modifiers;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
-import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.AmmoSpeedModifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,7 +28,7 @@ public abstract class AmmoSpeedModifierMixin {
 
     @OnlyIn(Dist.CLIENT)
     @Inject(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;getCache(Ljava/lang/String;)Ljava/lang/Object;"))
-    private void tacztweaks$getPropertyDiagramsData$speedModifier(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty, CallbackInfoReturnable<List<IAttachmentModifier.DiagramsData>> cir, @Local(ordinal = 0) LocalFloatRef ammoSpeedRef) {
+    private void tacztweaks$getPropertyDiagramsData$speedModifier(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty, CallbackInfoReturnable<List<Object>> cir, @Local(ordinal = 0) LocalFloatRef ammoSpeedRef) {
         ammoSpeedRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.Speed.INSTANCE.toTaCZ(), ammoSpeedRef.get()));
     }
 }

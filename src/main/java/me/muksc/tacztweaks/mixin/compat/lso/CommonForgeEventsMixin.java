@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.entity.EntityKineticBullet;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;

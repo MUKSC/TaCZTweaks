@@ -1,30 +1,30 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.manager
 
-import com.google.common.collect.ImmutableMap
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.mojang.authlib.GameProfile
-import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import com.tacz.guns.init.ModDamageTypes
 import com.tacz.guns.particles.BulletHoleOption
 import com.tacz.guns.util.AttachmentDataUtils
 import com.tacz.guns.util.TacHitResult
-import me.muksc.tacztweaks.*
+import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.config.Config
+import me.muksc.tacztweaks.core.BlockBreakingManager
+import me.muksc.tacztweaks.core.Context
+import me.muksc.tacztweaks.data.BulletInteraction
 import me.muksc.tacztweaks.data.old.convert
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.DestroySpeedModifierHolder
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.ShieldInteractionBehaviour
+import me.muksc.tacztweaks.thenPrioritizeBy
+import net.minecraft.ChatFormatting
 import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
-import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.Block
@@ -43,33 +43,40 @@ import net.minecraftforge.fml.common.Mod
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.exp
-import kotlin.reflect.KClass
 import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction
 
-private val GSON = GsonBuilder()
-    .setPrettyPrinting()
-    .disableHtmlEscaping()
-    .create()
+private val COMPARATOR = compareBy<BulletInteraction> { it.priority }
+    .thenPrioritizeBy { it.target.isNotEmpty() }
+    .thenPrioritizeBy { when (it) {
+        is BulletInteraction.Block -> it.blocks.isNotEmpty()
+        is BulletInteraction.Entity -> it.entities.isNotEmpty()
+        is BulletInteraction.Shield -> it.predicate != ItemPredicate.ANY
+    } }
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TaCZTweaks.MOD_ID)
-object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet_interactions") {
-    private val LOGGER = LogUtils.getLogger()
+object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_interactions", COMPARATOR) {
     private val FAKE_PROFILE = GameProfile(UUID.fromString("BF8411E4-9730-4215-9AE8-1688EEDF9B72"), "[Minecraft]")
     private val DEFAULT = TaCZTweaks.id("default")
-    private var error = false
-    private var bulletInteractions: Map<KClass<*>, Map<ResourceLocation, BulletInteraction>> = emptyMap()
-
-    fun hasError(): Boolean = error
 
     init { BulletInteraction }
 
-    private fun debug(msg: () -> String) {
-        if (Config.Debug.bulletInteractions()) LOGGER.info(msg.invoke())
+    override fun notifyPlayer(player: ServerPlayer) {
+        if (hasError()) {
+            player.sendSystemMessage(TaCZTweaks.message()
+                .append(TaCZTweaks.translatable("bullet_interactions.error").withStyle(ChatFormatting.RED)))
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private inline fun <reified T : BulletInteraction> byType(): Map<ResourceLocation, T> =
-        bulletInteractions.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
+    override fun debugEnabled(): Boolean = Config.Debug.bulletInteractions()
+
+    override fun parseElement(json: JsonElement): BulletInteraction =
+        try {
+            BulletInteraction.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false) { /* Nothing */ }
+        } catch (e: RuntimeException) {
+            OldBulletInteraction.CODEC.parse(JsonOps.INSTANCE, json)
+                .resultOrPartial { /* Nothing */ }.getOrNull()
+                ?.convert() ?: throw e
+        }
 
     private inline fun <reified T : BulletInteraction, E> getBulletInteraction(
         entity: EntityKineticBullet,
@@ -90,40 +97,6 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
                 && predicate(interaction)
     }?.toPair()
 
-    @Suppress("UnstableApiUsage")
-    override fun apply(
-        map: Map<ResourceLocation, JsonElement>,
-        resourceManager: ResourceManager,
-        profileFiller: ProfilerFiller,
-    ) {
-        error = false
-        val bulletInteractions = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletInteraction>>()
-        for ((resourceLocation, element) in map) {
-            try {
-                val interaction = try {
-                    BulletInteraction.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
-                } catch (e: RuntimeException) {
-                    OldBulletInteraction.CODEC.parse(JsonOps.INSTANCE, element)
-                        .resultOrPartial { /* Nothing */ }.getOrNull()
-                        ?.convert() ?: throw e
-                }
-                bulletInteractions.computeIfAbsent(interaction::class) { ImmutableMap.builder() }.put(resourceLocation, interaction)
-            } catch (e: RuntimeException) {
-                LOGGER.error("Parsing error loading bullet interaction $resourceLocation", e)
-                error = true
-            }
-        }
-        this.bulletInteractions = bulletInteractions.mapValues { entry -> entry.value.orderEntriesByValue(
-            compareBy<BulletInteraction> { it.priority }
-                .thenPrioritizeBy { it.target.isNotEmpty() }
-                .thenPrioritizeBy { when (it) {
-                    is BulletInteraction.Block -> it.blocks.isNotEmpty()
-                    is BulletInteraction.Entity -> it.entities.isNotEmpty()
-                    is BulletInteraction.Shield -> it.predicate != ItemPredicate.ANY
-                } }
-        ).build() }.toImmutableMap()
-    }
-
     fun handleBlockInteraction(ammo: EntityKineticBullet, result: BlockHitResult, state: BlockState): InteractionResult {
         val level = ammo.level() as ServerLevel
         val blockPos = BlockPos(result.blockPos)
@@ -131,7 +104,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val (id, interaction) = getBulletInteraction(ammo, result.location, BulletInteraction.Block::blocks) {
             it.test(level, blockPos, state)
         } ?: (DEFAULT to BulletInteraction.Block.DEFAULT)
-        debug { "Using block bullet interaction: $id" }
+        logDebug { "Using block bullet interaction: $id" }
 
         val breakBlock = run {
             val hardness = state.getDestroySpeed(level, blockPos)
@@ -189,7 +162,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             level.sendParticles(bulletHoleOption, result.location.x, result.location.y, result.location.z, 1, 0.0, 0.0, 0.0, 0.0)
         }
         return InteractionResult(pierce, breakBlock)
-            .also { debug { it.toString() } }
+            .also { logDebug { it.toString() } }
     }
 
     fun handleEntityInteraction(ammo: EntityKineticBullet, result: TacHitResult, context: ClipContext): InteractionResult {
@@ -199,7 +172,7 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
         val (id, interaction) = getBulletInteraction(ammo, result.location, BulletInteraction.Entity::entities) {
             it.test(entity)
         } ?: (DEFAULT to BulletInteraction.Entity.DEFAULT)
-        debug { "Using entity bullet interaction: $id" }
+        logDebug { "Using entity bullet interaction: $id" }
 
         ext.`tacztweaks$addDamageModifier`(interaction.damage.modifier, interaction.damage.multiplier)
         try {
@@ -208,16 +181,16 @@ object BulletInteractionManager : SimpleJsonResourceReloadListener(GSON, "bullet
             ext.`tacztweaks$popDamageModifier`()
         }
         val isDead = !entity.isAlive
-        if (accessor.explosion) return InteractionResult(false, isDead).also { debug { it.toString() } }
+        if (accessor.explosion) return InteractionResult(false, isDead).also { logDebug { it.toString() } }
         return InteractionResult(shouldPierce(ammo, result, interaction.pierce, interaction.gunPierce, isDead, ext::`tacztweaks$incrementEntityPierce`, ext::`tacztweaks$getEntityPierce`), isDead)
-            .also { debug { it.toString() } }
+            .also { logDebug { it.toString() } }
     }
 
     fun handleShieldInteraction(ammo: EntityKineticBullet, location: Vec3, shield: ItemStack, originalDamage: Float): ShieldInteractionResult {
         val (id, interaction) = getBulletInteraction<BulletInteraction.Shield>(ammo, location) {
             it.predicate.matches(shield)
         } ?: (DEFAULT to BulletInteraction.Shield.DEFAULT)
-        debug { "Using shield bullet interaction: $id" }
+        logDebug { "Using shield bullet interaction: $id" }
 
         val damage = (originalDamage - interaction.damage.falloff) * interaction.damage.multiplier
         val durabilityDamage = lambda@ { durabilityDamage: Int ->

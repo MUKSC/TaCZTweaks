@@ -6,7 +6,7 @@ import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
-import me.muksc.tacztweaks.data.BulletSoundsManager;
+import me.muksc.tacztweaks.data.manager.BulletSoundsManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;

@@ -8,19 +8,18 @@ import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat;
 import me.muksc.tacztweaks.compat.pillagers_gun.PillagersGunCompat;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
-import me.muksc.tacztweaks.data.BulletInteractionManager;
-import me.muksc.tacztweaks.data.BulletParticlesManager;
-import me.muksc.tacztweaks.data.BulletSoundsManager;
-import me.muksc.tacztweaks.data.MeleeInteractionManager;
+import me.muksc.tacztweaks.config.Config;
+import me.muksc.tacztweaks.core.BlockBreakingManager;
+import me.muksc.tacztweaks.data.manager.*;
 import me.muksc.tacztweaks.mixin.accessor.InaccuracyTypeAccessor;
 import me.muksc.tacztweaks.mixininterface.gun.SlideDataHolder;
 import me.muksc.tacztweaks.network.NetworkHandler;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,6 +37,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -53,10 +53,22 @@ public class TaCZTweaks {
         return Component.translatable("%s.%s".formatted(MOD_ID, key), args);
     }
 
-    public final ModContainer container;
+    public static MutableComponent message() {
+        return ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName())).append(" ");
+    }
+
+    public static ModContainer container;
+
+    public static List<BaseDataManager<?>> managers = Collections.emptyList();
 
     public TaCZTweaks() {
         container = ModLoadingContext.get().getActiveContainer();
+        managers = List.of(
+            BulletInteractionManager.INSTANCE,
+            BulletParticlesManager.INSTANCE,
+            BulletSoundsManager.INSTANCE,
+            MeleeInteractionManager.INSTANCE
+        );
         Config.INSTANCE.touch();
         NetworkHandler.INSTANCE.register();
         LRTacticalCompat.INSTANCE.initialize();
@@ -89,10 +101,13 @@ public class TaCZTweaks {
 
     @SubscribeEvent
     public void registerReloadListeners(AddReloadListenerEvent e) {
-        e.addListener(BulletInteractionManager.INSTANCE);
-        e.addListener(BulletParticlesManager.INSTANCE);
-        e.addListener(BulletSoundsManager.INSTANCE);
-        e.addListener(MeleeInteractionManager.INSTANCE);
+        managers.forEach(e::addListener);
+    }
+
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
+        if (!(e.getEntity() instanceof ServerPlayer player)) return;
+        managers.forEach(manager -> manager.notifyPlayer(player));
     }
 
     @SubscribeEvent
@@ -107,41 +122,6 @@ public class TaCZTweaks {
     public void onBlockBreak(BlockEvent.BreakEvent e) {
         if (!(e.getLevel() instanceof ServerLevel level)) return;
         BlockBreakingManager.INSTANCE.onBlockBreak(level, e.getPos());
-    }
-
-    @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
-        if (BulletSoundsManager.INSTANCE.hasAirspaceSounds() && !SoundPhysicsCompat.INSTANCE.isEnabled()) {
-            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
-                .append(Component.literal(" "))
-                .append(TaCZTweaks.translatable("bullet_sounds.sound_physics_missing").withStyle(ChatFormatting.YELLOW));
-            e.getEntity().sendSystemMessage(text);
-        }
-
-        if (BulletInteractionManager.INSTANCE.hasError()) {
-            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
-                .append(Component.literal(" "))
-                .append(TaCZTweaks.translatable("bullet_interactions.error").withStyle(ChatFormatting.RED));
-            e.getEntity().sendSystemMessage(text);
-        }
-        if (BulletParticlesManager.INSTANCE.hasError()) {
-            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
-                .append(Component.literal(" "))
-                .append(TaCZTweaks.translatable("bullet_particles.error").withStyle(ChatFormatting.RED));
-            e.getEntity().sendSystemMessage(text);
-        }
-        if (BulletSoundsManager.INSTANCE.hasError()) {
-            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
-                .append(Component.literal(" "))
-                .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED));
-            e.getEntity().sendSystemMessage(text);
-        }
-        if (MeleeInteractionManager.INSTANCE.hasError()) {
-            MutableComponent text = ComponentUtils.wrapInSquareBrackets(Component.literal(container.getModInfo().getDisplayName()))
-                .append(Component.literal(" "))
-                .append(TaCZTweaks.translatable("melee_interactions.error").withStyle(ChatFormatting.RED));
-            e.getEntity().sendSystemMessage(text);
-        }
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MOD_ID, value = Dist.CLIENT)

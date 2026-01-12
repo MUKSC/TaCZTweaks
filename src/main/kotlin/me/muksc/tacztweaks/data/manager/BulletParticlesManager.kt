@@ -1,17 +1,16 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.manager
 
-import com.google.common.collect.ImmutableMap
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.mojang.brigadier.StringReader
-import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.Config
+import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.config.Config
+import me.muksc.tacztweaks.data.BulletParticles
 import me.muksc.tacztweaks.id
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.thenPrioritizeBy
-import me.muksc.tacztweaks.toImmutableMap
+import net.minecraft.ChatFormatting
 import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate
@@ -21,43 +20,33 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
-import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
-import kotlin.reflect.KClass
 
-private val GSON = GsonBuilder()
-    .setPrettyPrinting()
-    .disableHtmlEscaping()
-    .create()
+private val COMPARATOR = compareBy<BulletParticles> { it.priority }
+    .thenPrioritizeBy { it.target.isNotEmpty() }
+    .thenPrioritizeBy { when (it) {
+        is BulletParticles.Block -> it.blocks.isNotEmpty()
+        is BulletParticles.Entity -> it.entities.isNotEmpty()
+    } }
 
-object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_particles") {
-    private val LOGGER = LogUtils.getLogger()
-    private var error = false
-    private var bulletParticles: Map<KClass<*>, Map<ResourceLocation, BulletParticles>> = emptyMap()
+object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particles", COMPARATOR) {
     private val emitters: MutableList<ParticleEmitter> = mutableListOf()
 
-    private class ParticleEmitter(
-        val particle: BulletParticles.Particle,
-        val options: ParticleOptions,
-        val coordinates: Vec3,
-        val deltaCoordinates: Vec3,
-        var remainingDuration: Int
-    )
-
-    fun hasError(): Boolean = error
-
-    private fun debug(msg: () -> String) {
-        if (Config.Debug.bulletParticles()) LOGGER.info(msg.invoke())
+    override fun notifyPlayer(player: ServerPlayer) {
+        if (hasError()) {
+            player.sendSystemMessage(TaCZTweaks.message()
+                .append(TaCZTweaks.translatable("bullet_particles.error").withStyle(ChatFormatting.RED)))
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private inline fun <reified T : BulletParticles> byType(): Map<ResourceLocation, T> =
-        bulletParticles.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
+    override fun debugEnabled(): Boolean = Config.Debug.bulletParticles()
+
+    override fun parseElement(json: JsonElement): BulletParticles =
+        BulletParticles.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false) { /* Nothing */ }
 
     private inline fun <reified T : BulletParticles, E> getParticle(
         entity: EntityKineticBullet,
@@ -68,33 +57,6 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         (particles.target.isEmpty() || particles.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
                 && (selector(particles).isEmpty() || selector(particles).any(predicate))
     }?.toPair()
-
-    @Suppress("UnstableApiUsage")
-    override fun apply(
-        map: Map<ResourceLocation, JsonElement>,
-        resourceManager: ResourceManager,
-        profileFiller: ProfilerFiller,
-    ) {
-        error = false
-        val bulletParticles = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletParticles>>()
-        for ((resourceLocation, element) in map) {
-            try {
-                val particles = BulletParticles.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
-                bulletParticles.computeIfAbsent(particles::class) { ImmutableMap.builder() }.put(resourceLocation, particles)
-            } catch (e: RuntimeException) {
-                LOGGER.error("Parsing error loading bullet particles $resourceLocation $e")
-                error = true
-            }
-        }
-        this.bulletParticles = bulletParticles.mapValues { entry -> entry.value.orderEntriesByValue(
-            compareBy<BulletParticles> { it.priority }
-                .thenPrioritizeBy { it.target.isNotEmpty() }
-                .thenPrioritizeBy { when (it) {
-                    is BulletParticles.Block -> it.blocks.isNotEmpty()
-                    is BulletParticles.Entity -> it.entities.isNotEmpty()
-                } }
-        ).build() }.toImmutableMap()
-    }
 
     fun onLevelTick(level: ServerLevel) {
         val iterator = emitters.iterator()
@@ -124,7 +86,7 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         val (id, particles) = getParticle(entity, result.location, BulletParticles.Block::blocks) {
             it.test(level, result.blockPos, state)
         } ?: return
-        debug { "Using block bullet particles: $id" }
+        logDebug { "Using block bullet particles: $id" }
         for (particle in type.getParticle(particles)) {
             val id = state.block.id?.toString()
             particle.summon(level.server, entity, id)
@@ -135,7 +97,7 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         val (id, particles) = getParticle(entity, location, BulletParticles.Entity::entities) {
             it.test(target)
         } ?: return
-        debug { "Using entity bullet particles: $id" }
+        logDebug { "Using entity bullet particles: $id" }
         for (particle in type.getParticle(particles)) {
             particle.summon(level.server, entity)
         }
@@ -202,4 +164,12 @@ object BulletParticlesManager : SimpleJsonResourceReloadListener(GSON, "bullet_p
         PIERCE(BulletParticles.Entity::pierce),
         KILL(BulletParticles.Entity::kill)
     }
+
+    private class ParticleEmitter(
+        val particle: BulletParticles.Particle,
+        val options: ParticleOptions,
+        val coordinates: Vec3,
+        val deltaCoordinates: Vec3,
+        var remainingDuration: Int
+    )
 }

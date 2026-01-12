@@ -1,8 +1,9 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.core
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.data.codec.DispatchCodec
+import me.muksc.tacztweaks.data.codec.EntityPredicateCodec
 import me.muksc.tacztweaks.id
 import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.core.registries.Registries
@@ -43,7 +44,7 @@ sealed class EntityTarget(
             terms.all { it.test(entity) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<AllOf> { it.group(
+            val CODEC: Codec<AllOf> = RecordCodecBuilder.create<AllOf> { it.group(
                 Codec.list(EntityTarget.CODEC).fieldOf("terms").forGetter(AllOf::terms)
             ).apply(it, ::AllOf) }
         }
@@ -54,7 +55,7 @@ sealed class EntityTarget(
             terms.any { it.test(entity) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<AnyOf> { it.group(
+            val CODEC: Codec<AnyOf> = RecordCodecBuilder.create<AnyOf> { it.group(
                 Codec.list(EntityTarget.CODEC).fieldOf("terms").forGetter(AnyOf::terms)
             ).apply(it, ::AnyOf) }
         }
@@ -65,7 +66,7 @@ sealed class EntityTarget(
             !term.test(entity)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Inverted> { it.group(
+            val CODEC: Codec<Inverted> = RecordCodecBuilder.create<Inverted> { it.group(
                 EntityTarget.CODEC.fieldOf("term").forGetter(Inverted::term)
             ).apply(it, ::Inverted) }
         }
@@ -76,7 +77,7 @@ sealed class EntityTarget(
             values.any { entity.type == it }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Entity> { it.group(
+            val CODEC: Codec<Entity> = RecordCodecBuilder.create<Entity> { it.group(
                 Codec.list(ForgeRegistries.ENTITY_TYPES.codec).fieldOf("values").forGetter(Entity::values)
             ).apply(it, ::Entity) }
         }
@@ -87,7 +88,7 @@ sealed class EntityTarget(
             values.any { entity.type.`is`(it) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<EntityTag> { it.group(
+            val CODEC: Codec<EntityTag> = RecordCodecBuilder.create<EntityTag> { it.group(
                 Codec.list(TagKey.hashedCodec(Registries.ENTITY_TYPE)).fieldOf("values").forGetter(EntityTag::values)
             ).apply(it, ::EntityTag) }
         }
@@ -98,7 +99,7 @@ sealed class EntityTarget(
             regex.matches(entity.type.id.toString())
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(
+            val CODEC: Codec<RegexPattern> = RecordCodecBuilder.create<RegexPattern> { it.group(
                 Codec.STRING.xmap(::Regex, Regex::pattern).fieldOf("regex").forGetter(RegexPattern::regex)
             ).apply(it, ::RegexPattern) }
         }
@@ -109,7 +110,7 @@ sealed class EntityTarget(
             predicate.matches(entity.level() as ServerLevel, entity.position(), entity)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Predicate> { it.group(
+            val CODEC: Codec<Predicate> = RecordCodecBuilder.create<Predicate> { it.group(
                 EntityPredicateCodec.fieldOf("predicate").forGetter(Predicate::predicate)
             ).apply(it, ::Predicate) }
         }
@@ -123,7 +124,7 @@ sealed class EntityTarget(
             override fun getSerializedName(): String = name.lowercase()
 
             companion object {
-                val CODEC = StringRepresentable.fromEnum(::values)
+                val CODEC: Codec<EHealthUnit> = StringRepresentable.fromEnum(::values)
             }
         }
 
@@ -134,7 +135,7 @@ sealed class EntityTarget(
             } in range
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Health> { it.group(
+            val CODEC: Codec<Health> = RecordCodecBuilder.create<Health> { it.group(
                 EHealthUnit.CODEC.fieldOf("unit").forGetter(Health::unit),
                 ValueRange.CODEC.fieldOf("range").forGetter(Health::range)
             ).apply(it, ::Health) }
@@ -146,7 +147,7 @@ sealed class EntityTarget(
             entity is LivingEntity && entity.getAttributeValue(Attributes.ARMOR) in range
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Armor> { it.group(
+            val CODEC: Codec<Armor> = RecordCodecBuilder.create<Armor> { it.group(
                 ValueRange.CODEC.fieldOf("range").forGetter(Armor::range)
             ).apply(it, ::Armor) }
         }
@@ -157,13 +158,13 @@ sealed class EntityTarget(
             entity is LivingEntity && entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS) in range
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<ArmorToughness> { it.group(
+            val CODEC: Codec<ArmorToughness> = RecordCodecBuilder.create<ArmorToughness> { it.group(
                 ValueRange.CODEC.fieldOf("range").forGetter(ArmorToughness::range)
             ).apply(it, ::ArmorToughness) }
         }
     }
 
     companion object {
-        val CODEC = EEntityTargetType.CODEC.dispatch(EntityTarget::type) { it.codecProvider() }
+        val CODEC: Codec<EntityTarget> = EEntityTargetType.CODEC.dispatch(EntityTarget::type) { it.codecProvider() }
     }
 }

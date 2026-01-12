@@ -1,45 +1,44 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.manager
 
-import com.google.common.collect.ImmutableMap
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
-import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
-import me.muksc.tacztweaks.*
+import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat
-import me.muksc.tacztweaks.data.BulletInteractionManager.calcBlockBreakingDelta
+import me.muksc.tacztweaks.config.Config
+import me.muksc.tacztweaks.core.BlockBreakingManager
+import me.muksc.tacztweaks.core.Context
+import me.muksc.tacztweaks.data.BulletInteraction
+import me.muksc.tacztweaks.data.MeleeInteraction
+import me.muksc.tacztweaks.data.manager.BulletInteractionManager.calcBlockBreakingDelta
+import me.muksc.tacztweaks.thenPrioritizeBy
+import net.minecraft.ChatFormatting
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
-import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.TierSortingRegistry
 import net.minecraftforge.event.level.BlockEvent
-import kotlin.reflect.KClass
 
-private val GSON = GsonBuilder()
-    .setPrettyPrinting()
-    .disableHtmlEscaping()
-    .create()
+private val COMPARATOR = compareBy<MeleeInteraction> { it.priority }
+    .thenPrioritizeBy { it.target.isNotEmpty() }
+    .thenPrioritizeBy { when (it) {
+        is MeleeInteraction.Block -> it.blocks.isNotEmpty()
+    } }
 
-object MeleeInteractionManager : SimpleJsonResourceReloadListener(GSON, "melee_interactions") {
-    private val LOGGER = LogUtils.getLogger()
-    private var error = false
-    private var meleeInteractions: Map<KClass<*>, Map<ResourceLocation, MeleeInteraction>> = emptyMap()
-
-    fun hasError(): Boolean = error
-
-    private fun debug(msg: () -> String) {
-        if (Config.Debug.meleeInteractions()) LOGGER.info(msg.invoke())
+object MeleeInteractionManager : BaseDataManager<MeleeInteraction>("melee_interactions", COMPARATOR) {
+    override fun notifyPlayer(player: ServerPlayer) {
+        if (hasError()) {
+            player.sendSystemMessage(TaCZTweaks.message()
+                .append(TaCZTweaks.translatable("melee_interactions.error").withStyle(ChatFormatting.RED)))
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private inline fun <reified T : MeleeInteraction> byType(): Map<ResourceLocation, T> =
-        meleeInteractions.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
+    override fun debugEnabled(): Boolean = Config.Debug.meleeInteractions()
+
+    override fun parseElement(json: JsonElement): MeleeInteraction =
+        MeleeInteraction.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false) { /* Nothing */ }
 
     private inline fun <reified T : MeleeInteraction, E> getMeleeInteraction(
         weaponId: ResourceLocation,
@@ -50,31 +49,6 @@ object MeleeInteractionManager : SimpleJsonResourceReloadListener(GSON, "melee_i
         (interaction.target.isEmpty() || interaction.target.any { it.test(null, weaponId, damage) })
                 && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
     }?.toPair()
-
-    override fun apply(
-        map: Map<ResourceLocation, JsonElement>,
-        resourceManager: ResourceManager,
-        profilerFilter: ProfilerFiller,
-    ) {
-        error = false
-        val meleeInteractions = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, MeleeInteraction>>()
-        for ((resourceLocation, element) in map) {
-            try {
-                val interaction = MeleeInteraction.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
-                meleeInteractions.computeIfAbsent(interaction::class) { ImmutableMap.builder() }.put(resourceLocation, interaction)
-            } catch (e: RuntimeException) {
-                LOGGER.error("Parsing error loading melee interaction $resourceLocation", e)
-                error = true
-            }
-        }
-        this.meleeInteractions = meleeInteractions.mapValues { entry -> entry.value.orderEntriesByValue(
-            compareBy<MeleeInteraction> { it.priority }
-                .thenPrioritizeBy { it.target.isNotEmpty() }
-                .thenPrioritizeBy { when (it) {
-                    is MeleeInteraction.Block -> it.blocks.isNotEmpty()
-                } }
-        ).build() }.toImmutableMap()
-    }
 
     fun handleBlockInteraction(player: ServerPlayer, reach: Double, damage: Float) {
         val level = player.level() as? ServerLevel ?: return
@@ -88,7 +62,7 @@ object MeleeInteractionManager : SimpleJsonResourceReloadListener(GSON, "melee_i
         val (id, interaction) = getMeleeInteraction(weaponId, damage, MeleeInteraction.Block::blocks) {
             it.test(level, result.blockPos, state)
         } ?: return
-        debug { "Using block melee interaction: $id" }
+        logDebug { "Using block melee interaction: $id" }
 
         val breakBlock = run {
             val hardness = state.getDestroySpeed(level, blockPos)

@@ -2,8 +2,8 @@ package me.muksc.tacztweaks.data.old
 
 import me.muksc.tacztweaks.blockInput
 import me.muksc.tacztweaks.data.BulletInteraction
-import me.muksc.tacztweaks.data.Target
-import me.muksc.tacztweaks.data.ValueRange
+import me.muksc.tacztweaks.data.core.Target
+import me.muksc.tacztweaks.data.core.ValueRange
 import net.minecraft.world.level.block.Blocks
 import java.util.*
 import me.muksc.tacztweaks.data.old.BulletInteraction as OldBulletInteraction

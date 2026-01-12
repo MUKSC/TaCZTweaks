@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.gun;
 
 import com.tacz.guns.client.renderer.entity.EntityBulletRenderer;
 import com.tacz.guns.entity.EntityKineticBullet;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.renderer.culling.Frustum;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

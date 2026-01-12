@@ -1,7 +1,7 @@
 package me.muksc.tacztweaks.mixin.crawl.pitch;
 
 import com.bawnorton.mixinsquared.TargetHandler;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;

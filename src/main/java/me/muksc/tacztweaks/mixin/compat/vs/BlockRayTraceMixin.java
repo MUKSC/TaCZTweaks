@@ -1,7 +1,7 @@
 package me.muksc.tacztweaks.mixin.compat.vs;
 
 import com.tacz.guns.util.block.BlockRayTrace;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor;
 import me.muksc.tacztweaks.mixininterface.compat.vs.ClipContextExtension;
 import net.minecraft.core.BlockPos;

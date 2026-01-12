@@ -3,7 +3,7 @@ package me.muksc.tacztweaks.mixin.compat.vs;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.config.common.AmmoConfig;
 import com.tacz.guns.util.block.ProjectileExplosion;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.compat.vs.ExplosionInvoker;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;

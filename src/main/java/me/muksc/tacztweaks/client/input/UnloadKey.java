@@ -1,8 +1,8 @@
 package me.muksc.tacztweaks.client.input;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import me.muksc.tacztweaks.Config;
 import me.muksc.tacztweaks.TaCZTweaks;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.network.NetworkHandler;
 import me.muksc.tacztweaks.network.message.ClientMessagePlayerUnload;
 import net.minecraft.client.KeyMapping;

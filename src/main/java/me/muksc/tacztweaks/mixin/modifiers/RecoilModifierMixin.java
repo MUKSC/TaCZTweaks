@@ -3,7 +3,7 @@ package me.muksc.tacztweaks.mixin.modifiers;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.RecoilModifier;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;

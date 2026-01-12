@@ -2,8 +2,8 @@ package me.muksc.tacztweaks.network.message
 
 import com.tacz.guns.api.item.IAmmoBox
 import com.tacz.guns.api.item.IGun
-import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.mixininterface.gun.unload.ShooterDataHolderProvider
 import me.muksc.tacztweaks.mixininterface.gun.unload.UnloadableAbstractGunItem
 import me.muksc.tacztweaks.network.CustomPacketPayload

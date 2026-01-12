@@ -1,8 +1,8 @@
-package me.muksc.tacztweaks.config
+package me.muksc.tacztweaks.config.sync
 
 import com.mojang.serialization.Codec
 import dev.isxander.yacl3.config.v3.JsonFileCodecConfig
-import me.muksc.tacztweaks.config.SyncableCodecConfigEntry.Companion.toSyncable
+import me.muksc.tacztweaks.config.sync.SyncableCodecConfigEntry.Companion.toSyncable
 import net.minecraft.network.FriendlyByteBuf
 import java.nio.file.Path
 

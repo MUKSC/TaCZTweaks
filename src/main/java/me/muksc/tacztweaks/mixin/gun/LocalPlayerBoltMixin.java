@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.gun;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.tacz.guns.client.gameplay.LocalPlayerBolt;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

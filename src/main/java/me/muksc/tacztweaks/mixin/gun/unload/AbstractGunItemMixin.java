@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.resource.index.CommonAmmoIndex;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.gun.unload.UnloadableAbstractGunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;

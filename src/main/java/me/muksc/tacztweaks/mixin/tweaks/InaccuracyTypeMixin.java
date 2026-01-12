@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.gun.SlideDataHolder;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;

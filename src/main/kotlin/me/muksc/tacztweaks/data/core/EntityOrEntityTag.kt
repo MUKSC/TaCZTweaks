@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.core
 
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
@@ -12,7 +12,7 @@ sealed interface EntityOrEntityTag : EntityTestable {
         override fun test(entity: net.minecraft.world.entity.Entity): Boolean = entity.type == type
 
         companion object {
-            val CODEC = ForgeRegistries.ENTITY_TYPES.codec.xmap(::Entity, Entity::type)
+            val CODEC: Codec<Entity> = ForgeRegistries.ENTITY_TYPES.codec.xmap(::Entity, Entity::type)
         }
     }
 
@@ -20,13 +20,13 @@ sealed interface EntityOrEntityTag : EntityTestable {
         override fun test(entity: net.minecraft.world.entity.Entity): Boolean = entity.type.`is`(tag)
 
         companion object {
-            val CODEC = TagKey.hashedCodec(Registries.ENTITY_TYPE).xmap(::EntityTag, EntityTag::tag)
+            val CODEC: Codec<EntityTag> = TagKey.hashedCodec(Registries.ENTITY_TYPE).xmap(::EntityTag, EntityTag::tag)
         }
     }
 
     companion object {
-        val CODEC = Codec.either(Entity.CODEC, EntityTag.CODEC)
-            .xmap({ it.map({ it as EntityOrEntityTag }) { it as EntityOrEntityTag } }) { when (it) {
+        val CODEC: Codec<EntityOrEntityTag> = Codec.either(Entity.CODEC, EntityTag.CODEC)
+            .xmap({ value -> value.map({ it as EntityOrEntityTag }) { it as EntityOrEntityTag } }) { when (it) {
                 is Entity -> Either.left(it)
                 is EntityTag -> Either.right(it)
             } }

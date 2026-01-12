@@ -11,7 +11,7 @@ import com.tacz.guns.client.gameplay.LocalPlayerReload;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixin.accessor.LocalPlayerShootAccessor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;

@@ -2,9 +2,12 @@ package me.muksc.tacztweaks.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import me.muksc.tacztweaks.DispatchCodec
-import me.muksc.tacztweaks.singleOrListCodec
-import me.muksc.tacztweaks.strictOptionalFieldOf
+import me.muksc.tacztweaks.data.codec.DispatchCodec
+import me.muksc.tacztweaks.data.codec.singleOrListCodec
+import me.muksc.tacztweaks.data.codec.strictOptionalFieldOf
+import me.muksc.tacztweaks.data.core.BlockTestable
+import me.muksc.tacztweaks.data.core.EntityTestable
+import me.muksc.tacztweaks.data.core.Target
 
 sealed class BulletParticles(
     val type: EBulletParticlesType,
@@ -46,7 +49,7 @@ sealed class BulletParticles(
                 z: Double
             ) : Coordinates(ECoordinatesType.ABSOLUTE, x, y, z) {
                 companion object {
-                    val CODEC = RecordCodecBuilder.create<Absolute> { it.group(
+                    val CODEC: Codec<Absolute> = RecordCodecBuilder.create<Absolute> { it.group(
                         Codec.DOUBLE.strictOptionalFieldOf("x", 0.0).forGetter(Absolute::x),
                         Codec.DOUBLE.strictOptionalFieldOf("y", 0.0).forGetter(Absolute::y),
                         Codec.DOUBLE.strictOptionalFieldOf("z", 0.0).forGetter(Absolute::z)
@@ -60,7 +63,7 @@ sealed class BulletParticles(
                 z: Double
             ) : Coordinates(ECoordinatesType.RELATIVE, x, y, z) {
                 companion object {
-                    val CODEC = RecordCodecBuilder.create<Relative> { it.group(
+                    val CODEC: Codec<Relative> = RecordCodecBuilder.create<Relative> { it.group(
                         Codec.DOUBLE.strictOptionalFieldOf("x", 0.0).forGetter(Relative::x),
                         Codec.DOUBLE.strictOptionalFieldOf("y", 0.0).forGetter(Relative::y),
                         Codec.DOUBLE.strictOptionalFieldOf("z", 0.0).forGetter(Relative::z)
@@ -74,7 +77,7 @@ sealed class BulletParticles(
                 z: Double
             ) : Coordinates(ECoordinatesType.LOCAL, x, y, z) {
                 companion object {
-                    val CODEC = RecordCodecBuilder.create<Local> { it.group(
+                    val CODEC: Codec<Local> = RecordCodecBuilder.create<Local> { it.group(
                         Codec.DOUBLE.strictOptionalFieldOf("x", 0.0).forGetter(Local::x),
                         Codec.DOUBLE.strictOptionalFieldOf("y", 0.0).forGetter(Local::y),
                         Codec.DOUBLE.strictOptionalFieldOf("z", 0.0).forGetter(Local::z)
@@ -83,12 +86,12 @@ sealed class BulletParticles(
             }
 
             companion object {
-                val CODEC = ECoordinatesType.CODEC.dispatch(Coordinates::type) { it.codecProvider() }
+                val CODEC: Codec<Coordinates> = ECoordinatesType.CODEC.dispatch(Coordinates::type) { it.codecProvider() }
             }
         }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Particle> { it.group(
+            val CODEC: Codec<Particle> = RecordCodecBuilder.create<Particle> { it.group(
                 Codec.STRING.fieldOf("particle").forGetter(Particle::particle),
                 Coordinates.CODEC.strictOptionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(Particle::position),
                 Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(Particle::delta),
@@ -122,7 +125,7 @@ sealed class BulletParticles(
         priority: Int
     ) : BulletParticles(EBulletParticlesType.BLOCK, target, priority) {
         companion object {
-            val CODEC = RecordCodecBuilder.create<Block> { it.group(
+            val CODEC: Codec<Block> = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
@@ -142,7 +145,7 @@ sealed class BulletParticles(
         priority: Int
     ) : BulletParticles(EBulletParticlesType.ENTITY, target, priority) {
         companion object {
-            val CODEC = RecordCodecBuilder.create<Entity> { it.group(
+            val CODEC: Codec<Entity> = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
                 singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
@@ -154,6 +157,6 @@ sealed class BulletParticles(
     }
 
     companion object {
-        val CODEC = EBulletParticlesType.CODEC.dispatch(BulletParticles::type) { it.codecProvider() }
+        val CODEC: Codec<BulletParticles> = EBulletParticlesType.CODEC.dispatch(BulletParticles::type) { it.codecProvider() }
     }
 }

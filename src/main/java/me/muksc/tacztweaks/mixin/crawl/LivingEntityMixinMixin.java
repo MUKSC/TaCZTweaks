@@ -3,7 +3,7 @@ package me.muksc.tacztweaks.mixin.crawl;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.tacz.guns.entity.shooter.LivingEntityCrawl;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;

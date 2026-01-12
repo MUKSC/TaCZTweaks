@@ -1,7 +1,7 @@
 package me.muksc.tacztweaks.config
 
-import me.muksc.tacztweaks.Config
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.config.sync.ESyncDirection
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.player.Player
 import net.minecraftforge.api.distmarker.Dist

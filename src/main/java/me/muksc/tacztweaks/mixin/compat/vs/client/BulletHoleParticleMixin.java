@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.tacz.guns.client.particle.BulletHoleParticle;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.compat.vs.ParticleWithShip;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

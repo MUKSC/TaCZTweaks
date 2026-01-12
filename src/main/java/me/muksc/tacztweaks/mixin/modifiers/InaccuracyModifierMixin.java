@@ -3,14 +3,15 @@ package me.muksc.tacztweaks.mixin.modifiers;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
-import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,6 +32,7 @@ public abstract class InaccuracyModifierMixin {
         return inaccuracy;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Inject(method = "buildNormal", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;getCache(Ljava/lang/String;)Ljava/lang/Object;"))
     private void tacztweaks$buildNormal$inaccuracyModifier(
         GunData gunData,
@@ -39,18 +41,19 @@ public abstract class InaccuracyModifierMixin {
         InaccuracyType type,
         String titleKey,
         double referenceValue,
-        CallbackInfoReturnable<IAttachmentModifier.DiagramsData> cir,
+        CallbackInfoReturnable<Object> cir,
         @Local(ordinal = 0) LocalFloatRef inaccuracyRef
     ) {
         inaccuracyRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), inaccuracyRef.get()));
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Inject(method = "buildAim", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;getCache(Ljava/lang/String;)Ljava/lang/Object;"))
     private void tacztweaks$buildAim$inaccuracyModifier(
         GunData gunData,
         AttachmentCacheProperty cacheProperty,
         GunFireModeAdjustData fireModeAdjustData,
-        CallbackInfoReturnable<IAttachmentModifier.DiagramsData> cir,
+        CallbackInfoReturnable<Object> cir,
         @Local(ordinal = 0) LocalFloatRef inaccuracyRef
     ) {
         float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), 1.0F - inaccuracyRef.get());

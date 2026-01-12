@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks
+package me.muksc.tacztweaks.data.codec
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult

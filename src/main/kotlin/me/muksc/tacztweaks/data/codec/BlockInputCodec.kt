@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.codec
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.serialization.Codec

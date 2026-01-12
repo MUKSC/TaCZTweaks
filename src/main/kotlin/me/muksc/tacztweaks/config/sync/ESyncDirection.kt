@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.config
+package me.muksc.tacztweaks.config.sync
 
 enum class ESyncDirection {
     NONE,

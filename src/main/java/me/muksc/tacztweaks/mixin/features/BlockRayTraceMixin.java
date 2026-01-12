@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.block.BlockRayTrace;
-import me.muksc.tacztweaks.BulletRayTracer;
+import me.muksc.tacztweaks.core.BulletRayTracer;
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

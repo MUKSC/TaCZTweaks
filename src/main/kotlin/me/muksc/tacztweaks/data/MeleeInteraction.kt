@@ -2,10 +2,12 @@ package me.muksc.tacztweaks.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import me.muksc.tacztweaks.DispatchCodec
-import me.muksc.tacztweaks.singleOrListCodec
-import me.muksc.tacztweaks.strictOptionalFieldOf
+import me.muksc.tacztweaks.data.codec.DispatchCodec
 import me.muksc.tacztweaks.data.BulletInteraction.Block.BlockBreak
+import me.muksc.tacztweaks.data.codec.singleOrListCodec
+import me.muksc.tacztweaks.data.codec.strictOptionalFieldOf
+import me.muksc.tacztweaks.data.core.BlockTestable
+import me.muksc.tacztweaks.data.core.Target
 
 sealed class MeleeInteraction(
     val type: EMeleeInteractionType,
@@ -31,7 +33,7 @@ sealed class MeleeInteraction(
         priority: Int
     ) : MeleeInteraction(EMeleeInteractionType.BLOCK, target, priority) {
         companion object {
-            val CODEC = RecordCodecBuilder.create<Block> { it.group(
+            val CODEC: Codec<Block> = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
                 BlockBreak.CODEC.strictOptionalFieldOf("block_break", BlockBreak.Never).forGetter(Block::blockBreak),
@@ -41,6 +43,6 @@ sealed class MeleeInteraction(
     }
 
     companion object {
-        val CODEC = EMeleeInteractionType.CODEC.dispatch(MeleeInteraction::type) { it.codecProvider() }
+        val CODEC: Codec<MeleeInteraction> = EMeleeInteractionType.CODEC.dispatch(MeleeInteraction::type) { it.codecProvider() }
     }
 }

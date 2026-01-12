@@ -12,7 +12,7 @@ import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.client.event.CameraSetupEvent;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.modifiers.GunRecoilExtension;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.spongepowered.asm.mixin.Mixin;

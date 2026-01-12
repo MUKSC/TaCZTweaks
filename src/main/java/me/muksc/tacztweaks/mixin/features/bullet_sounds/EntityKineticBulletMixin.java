@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.features.bullet_sounds;
 
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.TacHitResult;
-import me.muksc.tacztweaks.data.BulletSoundsManager;
+import me.muksc.tacztweaks.data.manager.BulletSoundsManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;

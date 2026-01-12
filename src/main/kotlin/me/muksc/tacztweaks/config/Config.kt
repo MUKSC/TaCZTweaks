@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks
+package me.muksc.tacztweaks.config
 
 import com.google.common.collect.Lists
 import com.mojang.serialization.Codec
@@ -8,18 +8,15 @@ import dev.isxander.yacl3.api.*
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.config.v3.register
 import dev.isxander.yacl3.config.v3.value
-import dev.isxander.yacl3.dsl.ControllerBuilderFactory
-import dev.isxander.yacl3.dsl.enumSwitch
-import dev.isxander.yacl3.dsl.numberField
-import dev.isxander.yacl3.dsl.slider
-import dev.isxander.yacl3.dsl.stringField
+import dev.isxander.yacl3.dsl.*
 import dev.isxander.yacl3.platform.YACLPlatform
-import me.muksc.tacztweaks.config.ConfigManager
-import me.muksc.tacztweaks.config.ESyncDirection
-import me.muksc.tacztweaks.config.SyncableCodecConfig
-import me.muksc.tacztweaks.config.SyncableJsonFileCodecConfig
+import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.config.sync.ESyncDirection
+import me.muksc.tacztweaks.config.sync.SyncableCodecConfig
+import me.muksc.tacztweaks.config.sync.SyncableJsonFileCodecConfig
 import me.muksc.tacztweaks.network.NetworkHandler
 import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
+import me.muksc.tacztweaks.setPrivateField
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -46,26 +43,26 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val shootWhileSprinting by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val sprintWhileReloading by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val reloadWhileShooting by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val reloadDiscardsMagazine by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val reloadDiscardsMagazineExclusions by registerSyncable(
             default = listOf("tacz:m870", "tacz:db_short", "tacz:db_long"),
@@ -76,21 +73,21 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val fireSelectWhileShooting by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val manualBolting by register(false, BOOL)
         val allowUnload by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val unloadBulletInBarrel by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val reduceSensitivityKeyMultiplier by register(0.5, DOUBLE)
         val disableReduceSensitivityKeyWhileAiming by register(false, BOOL)
@@ -120,20 +117,20 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val addend by registerSyncable(
             default = 0.0F,
             codec = FLOAT,
-            encoder = { buf, value -> buf.writeFloat(value) },
-            decoder = { buf -> buf.readFloat() }
+            encoder = FriendlyByteBuf::writeFloat,
+            decoder = FriendlyByteBuf::readFloat
         )
         val multiplier by registerSyncable(
             default = 1.0F,
             codec = FLOAT,
-            encoder = { buf, value -> buf.writeFloat(value) },
-            decoder = { buf -> buf.readFloat() }
+            encoder = FriendlyByteBuf::writeFloat,
+            decoder = FriendlyByteBuf::readFloat
         )
         val function by registerSyncable<String>(
             default = "",
             codec = STRING,
-            encoder = { buf, value -> buf.writeUtf(value) },
-            decoder = { buf -> buf.readUtf() }
+            encoder = FriendlyByteBuf::writeUtf,
+            decoder = FriendlyByteBuf::readUtf
         )
 
         fun toTaCZ(): Modifier {
@@ -212,8 +209,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val enabled by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val pitchUpperLimit by register(25.0F, FLOAT)
         val pitchLowerLimit by register(-10.0F, FLOAT)
@@ -229,7 +226,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             override fun getSerializedName(): String = name
 
             companion object {
-                val CODEC = StringRepresentable.fromEnum(::values)
+                val CODEC: Codec<ETiltGun> = StringRepresentable.fromEnum(::values)
             }
         }
 
@@ -245,32 +242,32 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val firstAidCompat by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val lsoCompat by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val vsCollisionCompat by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val vsExplosionCompat by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val mtsFix by registerSyncable(
             default = true,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
 
         fun firstAidCompat(): Boolean = firstAidCompat.syncedValue
@@ -284,39 +281,39 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val forceFirstPersonShootingSound by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val betterMonoConversion by register(false, BOOL)
         val betterInaccuracy by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val betterGunTilt by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val bulletProtection by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val endermenEvadeBullets by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val disableRefitOnAdventure by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val alwaysFilterByHand by register(true, BOOL)
         val suppressHeadHitSounds by register(false, BOOL)
@@ -342,26 +339,26 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val bulletInteractions by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val bulletParticles by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val bulletSounds by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
         val meleeInteractions by registerSyncable(
             default = false,
             codec = BOOL,
-            encoder = { buf, value -> buf.writeBoolean(value) },
-            decoder = { buf -> buf.readBoolean() }
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
         )
 
         fun bulletInteractions(): Boolean = bulletInteractions.syncedValue

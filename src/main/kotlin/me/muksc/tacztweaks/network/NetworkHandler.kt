@@ -1,11 +1,7 @@
 package me.muksc.tacztweaks.network
 
 import me.muksc.tacztweaks.TaCZTweaks
-import me.muksc.tacztweaks.network.message.ClientMessagePlayerShouldSlide
-import me.muksc.tacztweaks.network.message.ClientMessagePlayerUnload
-import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
-import me.muksc.tacztweaks.network.message.LoginIndexedMessage
-import me.muksc.tacztweaks.network.message.ServerMessageSyncConfig
+import me.muksc.tacztweaks.network.message.*
 import net.minecraft.client.Minecraft
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -23,7 +19,7 @@ import java.util.function.BiConsumer
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TaCZTweaks.MOD_ID)
 object NetworkHandler {
     private var server: MinecraftServer? = null
-    private val version = "1"
+    private val version = TaCZTweaks.container.modInfo.version.run { "$majorVersion.$minorVersion" }
     private val channel = NetworkRegistry.ChannelBuilder.named(TaCZTweaks.id("channel"))
         .networkProtocolVersion(::version)
         .clientAcceptedVersions(version::equals)

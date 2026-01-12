@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.codec
 
 import com.mojang.serialization.*
 import java.util.*
@@ -34,3 +34,12 @@ class StrictOptionalFieldCodec<A : Any>(
     override fun toString(): String =
         "StrictOptionalFieldCodec[$name: $elementCodec]"
 }
+
+fun <T : Any> Codec<T>.strictOptionalFieldOf(name: String): MapCodec<Optional<T>> =
+    StrictOptionalFieldCodec(name, this)
+
+fun <T : Any> Codec<T>.strictOptionalFieldOf(name: String, defaultValue: T): MapCodec<T> =
+    StrictOptionalFieldCodec(name, this).xmap(
+        { it.orElse(defaultValue) },
+        { if (it == defaultValue) Optional.empty() else Optional.of(it) }
+    )

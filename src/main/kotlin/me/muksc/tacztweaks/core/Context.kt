@@ -1,4 +1,4 @@
-package me.muksc.tacztweaks
+package me.muksc.tacztweaks.core
 
 import com.tacz.guns.api.TimelessAPI
 import com.tacz.guns.api.item.IGun

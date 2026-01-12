@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.gun;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

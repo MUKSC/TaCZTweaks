@@ -1,8 +1,10 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.core
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import me.muksc.tacztweaks.DispatchCodec
+import me.muksc.tacztweaks.data.codec.DispatchCodec
+import me.muksc.tacztweaks.data.codec.BlockPredicateCodec
+import me.muksc.tacztweaks.data.codec.TierSortingRegistryCodec
 import me.muksc.tacztweaks.id
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.core.BlockPos
@@ -42,7 +44,7 @@ sealed class BlockTarget(
             terms.all { it.test(level, pos, state) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<AllOf> { it.group(
+            val CODEC: Codec<AllOf> = RecordCodecBuilder.create<AllOf> { it.group(
                 Codec.list(BlockTarget.CODEC).fieldOf("terms").forGetter(AllOf::terms)
             ).apply(it, ::AllOf) }
         }
@@ -53,7 +55,7 @@ sealed class BlockTarget(
             terms.any { it.test(level, pos, state) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<AnyOf> { it.group(
+            val CODEC: Codec<AnyOf> = RecordCodecBuilder.create<AnyOf> { it.group(
                 Codec.list(BlockTarget.CODEC).fieldOf("terms").forGetter(AnyOf::terms)
             ).apply(it, ::AnyOf) }
         }
@@ -63,7 +65,7 @@ sealed class BlockTarget(
         override fun test(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean = !term.test(level, pos, state)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Inverted> { it.group(
+            val CODEC: Codec<Inverted> = RecordCodecBuilder.create<Inverted> { it.group(
                 BlockTarget.CODEC.fieldOf("term").forGetter(Inverted::term)
             ).apply(it, ::Inverted) }
         }
@@ -74,7 +76,7 @@ sealed class BlockTarget(
             values.any { state.`is`(it) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Block> { it.group(
+            val CODEC: Codec<Block> = RecordCodecBuilder.create<Block> { it.group(
                 Codec.list(ForgeRegistries.BLOCKS.codec).fieldOf("values").forGetter(Block::values)
             ).apply(it, ::Block) }
         }
@@ -85,7 +87,7 @@ sealed class BlockTarget(
             values.any { state.`is`(it) }
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<BlockTag> { it.group(
+            val CODEC: Codec<BlockTag> = RecordCodecBuilder.create<BlockTag> { it.group(
                 Codec.list(TagKey.hashedCodec(Registries.BLOCK)).fieldOf("values").forGetter(BlockTag::values)
             ).apply(it, ::BlockTag) }
         }
@@ -96,7 +98,7 @@ sealed class BlockTarget(
             regex.matches(state.block.id.toString())
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<RegexPattern> { it.group(
+            val CODEC: Codec<RegexPattern> = RecordCodecBuilder.create<RegexPattern> { it.group(
                 Codec.STRING.xmap(::Regex, Regex::pattern).fieldOf("regex").forGetter(RegexPattern::regex)
             ).apply(it, ::RegexPattern) }
         }
@@ -107,7 +109,7 @@ sealed class BlockTarget(
             predicate.matches(level, pos)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Predicate> { it.group(
+            val CODEC: Codec<Predicate> = RecordCodecBuilder.create<Predicate> { it.group(
                 BlockPredicateCodec.fieldOf("predicate").forGetter(Predicate::predicate)
             ).apply(it, ::Predicate) }
         }
@@ -118,7 +120,7 @@ sealed class BlockTarget(
             TierSortingRegistry.isCorrectTierForDrops(tier, state)
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<HardnessTier> { it.group(
+            val CODEC: Codec<HardnessTier> = RecordCodecBuilder.create<HardnessTier> { it.group(
                 TierSortingRegistryCodec.fieldOf("tier").forGetter(HardnessTier::tier)
             ).apply(it, ::HardnessTier) }
         }
@@ -129,13 +131,13 @@ sealed class BlockTarget(
             state.getDestroySpeed(level, pos) in range
 
         companion object {
-            val CODEC = RecordCodecBuilder.create<Hardness> { it.group(
+            val CODEC: Codec<Hardness> = RecordCodecBuilder.create<Hardness> { it.group(
                 ValueRange.CODEC.fieldOf("range").forGetter(Hardness::range)
             ).apply(it, ::Hardness) }
         }
     }
 
     companion object {
-        val CODEC = EBlockTargetType.CODEC.dispatch(BlockTarget::type) { it.codecProvider() }
+        val CODEC: Codec<BlockTarget> = EBlockTargetType.CODEC.dispatch(BlockTarget::type) { it.codecProvider() }
     }
 }

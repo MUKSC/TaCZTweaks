@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.client.gameplay.LocalPlayerDataHolder;
 import com.tacz.guns.client.gameplay.LocalPlayerFireSelect;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixin.accessor.LocalPlayerShootAccessor;
 import net.minecraft.client.player.LocalPlayer;
 import org.objectweb.asm.Opcodes;

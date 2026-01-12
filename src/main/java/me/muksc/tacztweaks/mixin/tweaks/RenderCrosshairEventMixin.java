@@ -2,7 +2,7 @@ package me.muksc.tacztweaks.mixin.tweaks;
 
 import com.mojang.blaze3d.platform.Window;
 import com.tacz.guns.client.event.RenderCrosshairEvent;
-import me.muksc.tacztweaks.Config;
+import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

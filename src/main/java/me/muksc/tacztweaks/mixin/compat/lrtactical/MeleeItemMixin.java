@@ -7,7 +7,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
-import me.muksc.tacztweaks.data.MeleeInteractionManager;
+import me.muksc.tacztweaks.data.manager.MeleeInteractionManager;
 import me.xjqsh.lrtactical.api.melee.MeleeAction;
 import me.xjqsh.lrtactical.item.MeleeItem;
 import me.xjqsh.lrtactical.item.index.MeleeWeaponIndex;

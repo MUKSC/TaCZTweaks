@@ -1,54 +1,51 @@
-package me.muksc.tacztweaks.data
+package me.muksc.tacztweaks.data.manager
 
-import com.google.common.collect.ImmutableMap
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
-import com.mojang.logging.LogUtils
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.Config
+import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
+import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequiredStatus
+import me.muksc.tacztweaks.config.Config
+import me.muksc.tacztweaks.data.BulletSounds
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.network.NetworkHandler
 import me.muksc.tacztweaks.thenPrioritizeBy
-import me.muksc.tacztweaks.toImmutableMap
+import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
-import kotlin.reflect.KClass
 
-private val GSON = GsonBuilder()
-    .setPrettyPrinting()
-    .disableHtmlEscaping()
-    .create()
+private val COMPARATOR = compareBy<BulletSounds> { it.priority }
+    .thenPrioritizeBy { it.target.isNotEmpty() }
+    .thenPrioritizeBy { when (it) {
+        is BulletSounds.Block -> it.blocks.isNotEmpty()
+        is BulletSounds.Entity -> it.entities.isNotEmpty()
+        is BulletSounds.Whizz -> false
+        is BulletSounds.Constant -> false
+        is BulletSounds.AirSpace -> false
+    } }
 
-object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_sounds") {
-    private val LOGGER = LogUtils.getLogger()
-    private var error = false
-    private var hasAirspaceSounds = false
-    private var bulletSounds: Map<KClass<*>, Map<ResourceLocation, BulletSounds>> = emptyMap()
-
-    fun hasError(): Boolean = error
-
-    fun hasAirspaceSounds(): Boolean = hasAirspaceSounds
-
-    fun debug(msg: () -> String) {
-        if (Config.Debug.bulletSounds()) LOGGER.info(msg.invoke())
+object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMPARATOR) {
+    override fun notifyPlayer(player: ServerPlayer) {
+        if (byType<BulletSounds.AirSpace>().isNotEmpty()) NetworkHandler.sendS2C(player, ServerMessageSoundPhysicsRequiredStatus)
+        if (hasError()) {
+            player.sendSystemMessage(TaCZTweaks.message()
+                .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED)))
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private inline fun <reified T : BulletSounds> byType(): Map<ResourceLocation, T> =
-        bulletSounds.getOrElse(T::class) { emptyMap() } as Map<ResourceLocation, T>
+    override fun debugEnabled(): Boolean = Config.Debug.bulletSounds()
+
+    override fun parseElement(json: JsonElement): BulletSounds =
+        BulletSounds.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false) { /* Nothing */ }
 
     private inline fun <reified T : BulletSounds> getSounds(
         entity: EntityKineticBullet,
@@ -74,42 +71,11 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
                 && (selector(sounds).isEmpty() || selector(sounds).any(predicate))
     }?.toPair()
 
-    override fun apply(
-        map: Map<ResourceLocation, JsonElement>,
-        resourceManager: ResourceManager,
-        profileFiller: ProfilerFiller,
-    ) {
-        error = false
-        hasAirspaceSounds = false
-        val bulletSounds = mutableMapOf<KClass<*>, ImmutableMap.Builder<ResourceLocation, BulletSounds>>()
-        for ((resourceLocation, element) in map) {
-            try {
-                val sounds = BulletSounds.CODEC.parse(JsonOps.INSTANCE, element).getOrThrow(false) { /* Nothing */ }
-                bulletSounds.computeIfAbsent(sounds::class) { ImmutableMap.builder() }.put(resourceLocation, sounds)
-                if (sounds is BulletSounds.AirSpace) hasAirspaceSounds = true
-            } catch (e: RuntimeException) {
-                LOGGER.error("Parsing error loading bullet sounds $resourceLocation $e")
-                error = true
-            }
-        }
-        this.bulletSounds = bulletSounds.mapValues { entry -> entry.value.orderEntriesByValue(
-            compareBy<BulletSounds> { it.priority }
-                .thenPrioritizeBy { it.target.isNotEmpty() }
-                .thenPrioritizeBy { when (it) {
-                    is BulletSounds.Block -> it.blocks.isNotEmpty()
-                    is BulletSounds.Entity -> it.entities.isNotEmpty()
-                    is BulletSounds.Whizz -> false
-                    is BulletSounds.Constant -> false
-                    is BulletSounds.AirSpace -> false
-                } }
-        ).build() }.toImmutableMap()
-    }
-
     fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
         val (id, sounds) = getSound(entity, result.location, BulletSounds.Block::blocks) {
             it.test(level, result.blockPos, state)
         } ?: return
-        debug { "Using block bullet sounds: $id" }
+        logDebug { "Using block bullet sounds: $id" }
         for (sound in type.getSound(sounds)) {
             sound.play(level, result.location, entity)
         }
@@ -119,7 +85,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         val (id, sounds) = getSound(entity, location, BulletSounds.Entity::entities) {
             it.test(target)
         } ?: return
-        debug { "Using entity bullet sounds: $id" }
+        logDebug { "Using entity bullet sounds: $id" }
         for (sound in type.getSound(sounds)) {
             sound.play(level, location, entity)
         }
@@ -128,7 +94,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
     fun handleConstant(level: ServerLevel, entity: EntityKineticBullet) {
         val location = entity.position()
         val (id, sounds) = getSound<BulletSounds.Constant>(entity, location) ?: return
-        debug { "Using constant bullet sounds: $id" }
+        logDebug { "Using constant bullet sounds: $id" }
         if (entity.tickCount % sounds.interval != 0) return
         for (sound in sounds.sounds) {
             sound.play(level, location, entity)
@@ -147,7 +113,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
         val ext = entity as EntityKineticBulletExtension
         val destination = ext.`tacztweaks$getPosition`()
         val (id, sounds) = getSound<BulletSounds.Whizz>(entity, destination) ?: return
-        debug { "Using whizz bullet sounds '$id' for player '$player'" }
+        logDebug { "Using whizz bullet sounds '$id' for player '$player'" }
 
         val currentPosition = entity.position()
         val playerPosition = player.eyePosition
@@ -170,7 +136,7 @@ object BulletSoundsManager : SimpleJsonResourceReloadListener(GSON, "bullet_soun
             val distance = player.position().distanceTo(entity.position())
             val candidates = soundsList.mapNotNull { (id, sounds) ->
                 val sound = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return@mapNotNull null
-                debug { "Using airspace bullet sounds '$id' for player '$player'" }
+                logDebug { "Using airspace bullet sounds '$id' for player '$player'" }
                 sounds to sound
             }
             NetworkHandler.sendS2C(player, ServerMessageAirspaceSounds(candidates.map { (sounds, airspace) ->
