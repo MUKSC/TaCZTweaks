@@ -1,9 +1,9 @@
 package me.muksc.tacztweaks.network.message
 
-import com.tacz.guns.api.item.IAmmoBox
 import com.tacz.guns.api.item.IGun
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.config.Config
+import me.muksc.tacztweaks.core.Context.hasInfiniteAmmo
 import me.muksc.tacztweaks.mixininterface.gun.unload.ShooterDataHolderProvider
 import me.muksc.tacztweaks.mixininterface.gun.unload.UnloadableAbstractGunItem
 import me.muksc.tacztweaks.network.CustomPacketPayload
@@ -26,14 +26,7 @@ object ClientMessagePlayerUnload : CustomPacketPayload {
             if (player == null) return@execute
             val data = (player as ShooterDataHolderProvider).`tacztweaks$getShooterDataHolder`()
             val gunStack = data.currentGunItem?.get() ?: return@execute
-            val hasInfiniteAmmo = (0..player.inventory.containerSize).any { index ->
-                val stack = player.inventory.getItem(index)
-                val item = stack.item
-                if (item !is IAmmoBox) return@any false
-                if (!item.isAmmoBoxOfGun(gunStack, stack)) return@any false
-                item.isAllTypeCreative(stack) || item.isCreative(stack)
-            }
-            if (hasInfiniteAmmo) return@execute
+            if (player.inventory.hasInfiniteAmmo(gunStack)) return@execute
 
             val gun = IGun.getIGunOrNull(gunStack) ?: return@execute
             val ext = gun as? UnloadableAbstractGunItem ?: return@execute

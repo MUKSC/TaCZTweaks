@@ -66,6 +66,7 @@
     "tweaks.EnderManMixin",
     "tweaks.EntityKineticBulletMixin",
     "tweaks.InaccuracyTypeMixin",
+    "tweaks.LivingEntityAmmoCheckMixin",
     "tweaks.ModernKineticGunScriptAPIMixin",
     "tweaks.ProtectionEnchantmentMixin"
   ],

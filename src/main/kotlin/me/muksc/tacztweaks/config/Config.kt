@@ -322,6 +322,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = FriendlyByteBuf::writeBoolean,
             decoder = FriendlyByteBuf::readBoolean
         )
+        val infiniteAmmoDisablesConsumption by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
+        )
         val alwaysFilterByHand by register(true, BOOL)
         val suppressHeadHitSounds by register(false, BOOL)
         val suppressFleshHitSounds by register(false, BOOL)
@@ -335,6 +341,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun bulletProtection(): Boolean = bulletProtection.syncedValue
         fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
         fun disableRefitOnAdventure(): Boolean = disableRefitOnAdventure.syncedValue
+        fun infiniteAmmoDisablesConsumption(): Boolean = infiniteAmmoDisablesConsumption.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
         fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
@@ -748,6 +755,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     nameSynced(TaCZTweaks.translatable("config.tweaks.disableRefitOnAdventure.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.disableRefitOnAdventure.description")))
                     binding(Tweaks.disableRefitOnAdventure.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.tweaks.infiniteAmmoDisablesConsumption.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.infiniteAmmoDisablesConsumption.description")))
+                    binding(Tweaks.infiniteAmmoDisablesConsumption.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
                 }.build())

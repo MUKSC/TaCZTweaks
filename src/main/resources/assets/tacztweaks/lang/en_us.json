@@ -1,4 +1,5 @@
 {
+  "effect.tacztweaks.endless_ammo": "Endless Ammo",
   "tacztweaks.key.unload": "Unload",
   "tacztweaks.key.reduceSensitivity":"Reduce Sensitivity",
   "tacztweaks.key.tiltGun":"Tilt Gun",
@@ -136,6 +137,8 @@
   "tacztweaks.config.tweaks.endermenEvadeBullets.description": "Makes endermen teleport away from bullets, avoiding getting hit.",
   "tacztweaks.config.tweaks.disableRefitOnAdventure.name": "Disable Refit on Adventure",
   "tacztweaks.config.tweaks.disableRefitOnAdventure.description": "Disables the refit (attachment modification) function on adventure mode.",
+  "tacztweaks.config.tweaks.infiniteAmmoDisablesConsumption.name": "Infinite Ammo No Consumption",
+  "tacztweaks.config.tweaks.infiniteAmmoDisablesConsumption.description": "Disables ammo consumption when the player has a creative ammo box.",
   "tacztweaks.config.tweaks.alwaysFilterByHand.name": "Always Filter by Hand",
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "Always enable filter by hand option in the gun smith table.",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "Suppress Head Hit Sounds",
