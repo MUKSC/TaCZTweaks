@@ -4,6 +4,7 @@ import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequiredStatus
 import me.muksc.tacztweaks.config.Config
@@ -51,14 +52,14 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         entity: EntityKineticBullet,
         location: Vec3
     ) : List<Pair<ResourceLocation, T>> = byType<T>().entries.filter { (_, sounds) ->
-        sounds.target.isEmpty() || sounds.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) }
+        sounds.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }
     }.map { it.toPair() }
 
     private inline fun <reified T : BulletSounds> getSound(
         entity: EntityKineticBullet,
         location: Vec3
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, sounds) ->
-        sounds.target.isEmpty() || sounds.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) }
+        sounds.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }
     }?.toPair()
 
     private inline fun <reified T : BulletSounds, E> getSound(
@@ -67,8 +68,8 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, sounds) ->
-        (sounds.target.isEmpty() || sounds.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
-                && (selector(sounds).isEmpty() || selector(sounds).any(predicate))
+        sounds.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }
+                && selector(sounds).anyOrEmpty(predicate)
     }?.toPair()
 
     fun handleBlockSound(type: EBlockSoundType, level: ServerLevel, entity: EntityKineticBullet, result: BlockHitResult, state: BlockState) {
@@ -77,6 +78,8 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         } ?: return
         logDebug { "Using block bullet sounds: $id" }
         for (sound in type.getSound(sounds)) {
+            if (!sound.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(result.location)) }) continue
+            if (!sound.blocks.anyOrEmpty { it.test(level, result.blockPos, state) }) continue
             sound.play(level, result.location, entity)
         }
     }
@@ -87,6 +90,8 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         } ?: return
         logDebug { "Using entity bullet sounds: $id" }
         for (sound in type.getSound(sounds)) {
+            if (!sound.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }) continue
+            if (!sound.entities.anyOrEmpty { it.test(target) }) continue
             sound.play(level, location, entity)
         }
     }
@@ -97,6 +102,7 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         logDebug { "Using constant bullet sounds: $id" }
         if (entity.tickCount % sounds.interval != 0) return
         for (sound in sounds.sounds) {
+            if (!sound.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }) continue
             sound.play(level, location, entity)
         }
     }
@@ -125,6 +131,7 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         val distance = playerPosition.distanceTo(position)
         val whizz = sounds.sounds.firstOrNull { distance <= it.threshold } ?: return
         for (sound in whizz.sound) {
+            if (!sound.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(destination)) }) continue
             sound.play(player, position, entity)
         }
     }
@@ -141,7 +148,9 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
             }
             NetworkHandler.sendS2C(player, ServerMessageAirspaceSounds(candidates.map { (sounds, airspace) ->
                 @Suppress("DEPRECATION")
-                val packets = airspace.sound.map {
+                val packets = airspace.sound.filter { sound ->
+                    sound.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(entity.position())) }
+                }.map {
                     val soundEvent = if (it.range == null) SoundEvent.createVariableRangeEvent(it.sound) else SoundEvent.createFixedRangeEvent(it.sound, it.range)
                     ClientboundSoundPacket(
                         BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
@@ -187,13 +196,13 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
         level.playSound(null, position.x, position.y, position.z, soundEvent, entity.soundSource, volume, pitch)
     }
 
-    enum class EBlockSoundType(val getSound: (BulletSounds.Block) -> List<BulletSounds.Sound>) {
+    enum class EBlockSoundType(val getSound: (BulletSounds.Block) -> List<BulletSounds.Block.BlockSound>) {
         HIT(BulletSounds.Block::hit),
         PIERCE(BulletSounds.Block::pierce),
         BREAK(BulletSounds.Block::`break`)
     }
 
-    enum class EEntitySoundType(val getSound: (BulletSounds.Entity) -> List<BulletSounds.Sound>) {
+    enum class EEntitySoundType(val getSound: (BulletSounds.Entity) -> List<BulletSounds.Entity.EntitySound>) {
         HIT(BulletSounds.Entity::hit),
         PIERCE(BulletSounds.Entity::pierce),
         KILL(BulletSounds.Entity::kill)

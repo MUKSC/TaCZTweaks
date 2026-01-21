@@ -14,7 +14,8 @@ sealed class BulletParticles(
     val target: List<Target>,
     val priority: Int
 ) {
-    class Particle(
+    abstract class Particle(
+        val target: List<Target>,
         val particle: String,
         val position: Coordinates,
         val delta: Coordinates,
@@ -89,18 +90,6 @@ sealed class BulletParticles(
                 val CODEC: Codec<Coordinates> = ECoordinatesType.CODEC.dispatch(Coordinates::type) { it.codecProvider() }
             }
         }
-
-        companion object {
-            val CODEC: Codec<Particle> = RecordCodecBuilder.create<Particle> { it.group(
-                Codec.STRING.fieldOf("particle").forGetter(Particle::particle),
-                Coordinates.CODEC.strictOptionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(Particle::position),
-                Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(Particle::delta),
-                Codec.DOUBLE.strictOptionalFieldOf("speed", 0.0).forGetter(Particle::speed),
-                Codec.INT.strictOptionalFieldOf("count", 1).forGetter(Particle::count),
-                Codec.BOOL.strictOptionalFieldOf("force", false).forGetter(Particle::force),
-                Codec.INT.strictOptionalFieldOf("duration", 1).forGetter(Particle::duration)
-            ).apply(it, ::Particle) }
-        }
     }
 
     enum class EBulletParticlesType(
@@ -119,18 +108,44 @@ sealed class BulletParticles(
     class Block(
         target: List<Target>,
         val blocks: List<BlockTestable>,
-        val hit: List<Particle>,
-        val pierce: List<Particle>,
-        val `break`: List<Particle>,
+        val hit: List<BlockParticle>,
+        val pierce: List<BlockParticle>,
+        val `break`: List<BlockParticle>,
         priority: Int
     ) : BulletParticles(EBulletParticlesType.BLOCK, target, priority) {
+        class BlockParticle(
+            target: List<Target>,
+            val blocks: List<BlockTestable>,
+            particle: String,
+            position: Coordinates,
+            delta: Coordinates,
+            speed: Double,
+            count: Int,
+            force: Boolean,
+            duration: Int
+        ) : Particle(target, particle, position, delta, speed, count, force, duration) {
+            companion object {
+                val CODEC: Codec<BlockParticle> = RecordCodecBuilder.create<BlockParticle> { it.group(
+                    singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(BlockParticle::target),
+                    Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(BlockParticle::blocks),
+                    Codec.STRING.fieldOf("particle").forGetter(BlockParticle::particle),
+                    Coordinates.CODEC.strictOptionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(BlockParticle::position),
+                    Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(BlockParticle::delta),
+                    Codec.DOUBLE.strictOptionalFieldOf("speed", 0.0).forGetter(BlockParticle::speed),
+                    Codec.INT.strictOptionalFieldOf("count", 1).forGetter(BlockParticle::count),
+                    Codec.BOOL.strictOptionalFieldOf("force", false).forGetter(BlockParticle::force),
+                    Codec.INT.strictOptionalFieldOf("duration", 1).forGetter(BlockParticle::duration)
+                ).apply(it, ::BlockParticle) }
+            }
+        }
+
         companion object {
             val CODEC: Codec<Block> = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`),
+                singleOrListCodec(BlockParticle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
+                singleOrListCodec(BlockParticle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
+                singleOrListCodec(BlockParticle.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Block::priority)
             ).apply(it, ::Block) }
         }
@@ -139,18 +154,44 @@ sealed class BulletParticles(
     class Entity(
         target: List<Target>,
         val entities: List<EntityTestable>,
-        val hit: List<Particle>,
-        val pierce: List<Particle>,
-        val kill: List<Particle>,
+        val hit: List<EntityParticle>,
+        val pierce: List<EntityParticle>,
+        val kill: List<EntityParticle>,
         priority: Int
     ) : BulletParticles(EBulletParticlesType.ENTITY, target, priority) {
+        class EntityParticle(
+            target: List<Target>,
+            val entities: List<EntityTestable>,
+            particle: String,
+            position: Coordinates,
+            delta: Coordinates,
+            speed: Double,
+            count: Int,
+            force: Boolean,
+            duration: Int
+        ) : Particle(target, particle, position, delta, speed, count, force, duration) {
+            companion object {
+                val CODEC: Codec<EntityParticle> = RecordCodecBuilder.create<EntityParticle> { it.group(
+                    singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(EntityParticle::target),
+                    Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(EntityParticle::entities),
+                    Codec.STRING.fieldOf("particle").forGetter(EntityParticle::particle),
+                    Coordinates.CODEC.strictOptionalFieldOf("position", Coordinates.Relative(0.0, 0.0, 0.0)).forGetter(EntityParticle::position),
+                    Coordinates.CODEC.strictOptionalFieldOf("delta", Coordinates.Absolute(0.0, 0.0, 0.0)).forGetter(EntityParticle::delta),
+                    Codec.DOUBLE.strictOptionalFieldOf("speed", 0.0).forGetter(EntityParticle::speed),
+                    Codec.INT.strictOptionalFieldOf("count", 1).forGetter(EntityParticle::count),
+                    Codec.BOOL.strictOptionalFieldOf("force", false).forGetter(EntityParticle::force),
+                    Codec.INT.strictOptionalFieldOf("duration", 1).forGetter(EntityParticle::duration)
+                ).apply(it, ::EntityParticle) }
+            }
+        }
+
         companion object {
             val CODEC: Codec<Entity> = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
-                singleOrListCodec(Particle.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
+                singleOrListCodec(EntityParticle.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
+                singleOrListCodec(EntityParticle.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
+                singleOrListCodec(EntityParticle.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Entity::priority)
             ).apply(it, ::Entity) }
         }

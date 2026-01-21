@@ -5,6 +5,7 @@ import com.mojang.brigadier.StringReader
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.data.BulletParticles
 import me.muksc.tacztweaks.id
@@ -54,8 +55,8 @@ object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particl
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, particles) ->
-        (particles.target.isEmpty() || particles.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
-                && (selector(particles).isEmpty() || selector(particles).any(predicate))
+        particles.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }
+                && selector(particles).anyOrEmpty(predicate)
     }?.toPair()
 
     fun onLevelTick(level: ServerLevel) {
@@ -88,6 +89,8 @@ object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particl
         } ?: return
         logDebug { "Using block bullet particles: $id" }
         for (particle in type.getParticle(particles)) {
+            if (!particle.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(result.location)) }) continue
+            if (!particle.blocks.anyOrEmpty { it.test(level, result.blockPos, state) }) continue
             val id = state.block.id?.toString()
             particle.summon(level.server, entity, id)
         }
@@ -99,6 +102,8 @@ object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particl
         } ?: return
         logDebug { "Using entity bullet particles: $id" }
         for (particle in type.getParticle(particles)) {
+            if (!particle.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }) continue
+            if (!particle.entities.anyOrEmpty { it.test(target) }) continue
             particle.summon(level.server, entity)
         }
     }
@@ -153,13 +158,13 @@ object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particl
         ))
     }
 
-    enum class EBlockParticleType(val getParticle: (BulletParticles.Block) -> List<BulletParticles.Particle>) {
+    enum class EBlockParticleType(val getParticle: (BulletParticles.Block) -> List<BulletParticles.Block.BlockParticle>) {
         HIT(BulletParticles.Block::hit),
         PIERCE(BulletParticles.Block::pierce),
         BREAK(BulletParticles.Block::`break`)
     }
 
-    enum class EEntityParticleType(val getParticle: (BulletParticles.Entity) -> List<BulletParticles.Particle>) {
+    enum class EEntityParticleType(val getParticle: (BulletParticles.Entity) -> List<BulletParticles.Entity.EntityParticle>) {
         HIT(BulletParticles.Entity::hit),
         PIERCE(BulletParticles.Entity::pierce),
         KILL(BulletParticles.Entity::kill)

@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.data.manager
 import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.core.BlockBreakingManager
@@ -46,8 +47,8 @@ object MeleeInteractionManager : BaseDataManager<MeleeInteraction>("melee_intera
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
-        (interaction.target.isEmpty() || interaction.target.any { it.test(null, weaponId, damage) })
-                && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
+        interaction.target.anyOrEmpty { it.test(null, weaponId, damage) }
+                && selector(interaction).anyOrEmpty(predicate)
     }?.toPair()
 
     fun handleBlockInteraction(player: ServerPlayer, reach: Double, damage: Float) {

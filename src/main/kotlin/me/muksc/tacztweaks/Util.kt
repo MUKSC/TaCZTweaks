@@ -10,6 +10,8 @@ import net.minecraftforge.registries.ForgeRegistries
 
 fun <T> identity(value: T): T = value
 
+inline fun <T> Collection<T>.anyOrEmpty(predicate: (T) -> Boolean): Boolean = isEmpty() || any(predicate)
+
 fun <K, V> Map<K, V>.toImmutableMap(): ImmutableMap<K, V> =
     ImmutableMap.copyOf(this)
 

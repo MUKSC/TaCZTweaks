@@ -9,6 +9,7 @@ import com.tacz.guns.particles.BulletHoleOption
 import com.tacz.guns.util.AttachmentDataUtils
 import com.tacz.guns.util.TacHitResult
 import me.muksc.tacztweaks.TaCZTweaks
+import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.core.BlockBreakingManager
 import me.muksc.tacztweaks.core.Context
@@ -84,8 +85,8 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         selector: (T) -> List<E>,
         predicate: (E) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
-        (interaction.target.isEmpty() || interaction.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
-                && (selector(interaction).isEmpty() || selector(interaction).any(predicate))
+        interaction.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }
+                && selector(interaction).anyOrEmpty(predicate)
     }?.toPair()
 
     private inline fun <reified T : BulletInteraction> getBulletInteraction(
@@ -93,7 +94,7 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         location: Vec3,
         predicate: (T) -> Boolean
     ): Pair<ResourceLocation, T>? = byType<T>().entries.firstOrNull { (_, interaction) ->
-        (interaction.target.isEmpty() || interaction.target.any { it.test(entity, entity.gunId, entity.getDamage(location)) })
+        interaction.target.anyOrEmpty { it.test(entity, entity.gunId, entity.getDamage(location)) }
                 && predicate(interaction)
     }?.toPair()
 

@@ -19,16 +19,18 @@ sealed class BulletSounds(
     val target: List<Target>,
     val priority: Int
 ) {
-    class Sound(
+    open class Sound(
+        val target: List<Target>,
         val sound: ResourceLocation,
         val volume: Float,
         val pitch: Float,
         val range: Float?
     ) {
-        constructor(sound: ResourceLocation, volume: Float, pitch: Float, range: Optional<Float>) : this(sound, volume, pitch, range.getOrNull())
+        constructor(target: List<Target>, sound: ResourceLocation, volume: Float, pitch: Float, range: Optional<Float>) : this(target, sound, volume, pitch, range.getOrNull())
 
         companion object {
             val CODEC: Codec<Sound> = RecordCodecBuilder.create<Sound> { instance -> instance.group(
+                singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Sound::target),
                 ResourceLocation.CODEC.fieldOf("sound").forGetter(Sound::sound),
                 Codec.FLOAT.strictOptionalFieldOf("volume", 1.0F).forGetter(Sound::volume),
                 Codec.FLOAT.strictOptionalFieldOf("pitch", 1.0F).forGetter(Sound::pitch),
@@ -68,18 +70,40 @@ sealed class BulletSounds(
     class Block(
         target: List<Target>,
         val blocks: List<BlockTestable>,
-        val hit: List<Sound>,
-        val pierce: List<Sound>,
-        val `break`: List<Sound>,
+        val hit: List<BlockSound>,
+        val pierce: List<BlockSound>,
+        val `break`: List<BlockSound>,
         priority: Int
     ) : BulletSounds(EBulletSoundsType.BLOCK, target, priority) {
+        class BlockSound(
+            target: List<Target>,
+            val blocks: List<BlockTestable>,
+            sound: ResourceLocation,
+            volume: Float,
+            pitch: Float,
+            range: Float?
+        ) : Sound(target, sound, volume, pitch, range) {
+            constructor(target: List<Target>, blocks: List<BlockTestable>, sound: ResourceLocation, volume: Float, pitch: Float, range: Optional<Float>) : this(target, blocks, sound, volume, pitch, range.getOrNull())
+
+            companion object {
+                val CODEC: Codec<BlockSound> = RecordCodecBuilder.create<BlockSound> { instance -> instance.group(
+                    singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(BlockSound::target),
+                    Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(BlockSound::blocks),
+                    ResourceLocation.CODEC.fieldOf("sound").forGetter(BlockSound::sound),
+                    Codec.FLOAT.strictOptionalFieldOf("volume", 1.0F).forGetter(BlockSound::volume),
+                    Codec.FLOAT.strictOptionalFieldOf("pitch", 1.0F).forGetter(BlockSound::pitch),
+                    Codec.FLOAT.strictOptionalFieldOf("range").forGetter { Optional.ofNullable(it.range) }
+                ).apply(instance, ::BlockSound) }
+            }
+        }
+
         companion object {
             val CODEC: Codec<Block> = RecordCodecBuilder.create<Block> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Block::target),
                 Codec.list(BlockTestable.CODEC).strictOptionalFieldOf("blocks", emptyList()).forGetter(Block::blocks),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`),
+                singleOrListCodec(BlockSound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Block::hit),
+                singleOrListCodec(BlockSound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Block::pierce),
+                singleOrListCodec(BlockSound.CODEC).strictOptionalFieldOf("break", emptyList()).forGetter(Block::`break`),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Block::priority)
             ).apply(it, ::Block) }
         }
@@ -88,18 +112,40 @@ sealed class BulletSounds(
     class Entity(
         target: List<Target>,
         val entities: List<EntityTestable>,
-        val hit: List<Sound>,
-        val pierce: List<Sound>,
-        val kill: List<Sound>,
+        val hit: List<EntitySound>,
+        val pierce: List<EntitySound>,
+        val kill: List<EntitySound>,
         priority: Int
     ) : BulletSounds(EBulletSoundsType.ENTITY, target, priority) {
+        class EntitySound(
+            target: List<Target>,
+            val entities: List<EntityTestable>,
+            sound: ResourceLocation,
+            volume: Float,
+            pitch: Float,
+            range: Float?
+        ) : Sound(target, sound, volume, pitch, range) {
+            constructor(target: List<Target>, entities: List<EntityTestable>, sound: ResourceLocation, volume: Float, pitch: Float, range: Optional<Float>) : this(target, entities, sound, volume, pitch, range.getOrNull())
+
+            companion object {
+                val CODEC: Codec<EntitySound> = RecordCodecBuilder.create<EntitySound> { instance -> instance.group(
+                    singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(EntitySound::target),
+                    Codec.list(EntityTestable.CODEC).fieldOf("entities").forGetter(EntitySound::entities),
+                    ResourceLocation.CODEC.fieldOf("sound").forGetter(EntitySound::sound),
+                    Codec.FLOAT.strictOptionalFieldOf("volume", 1.0F).forGetter(EntitySound::volume),
+                    Codec.FLOAT.strictOptionalFieldOf("pitch", 1.0F).forGetter(EntitySound::pitch),
+                    Codec.FLOAT.strictOptionalFieldOf("range").forGetter { Optional.ofNullable(it.range) }
+                ).apply(instance, ::EntitySound) }
+            }
+        }
+
         companion object {
             val CODEC: Codec<Entity> = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
                 Codec.list(EntityTestable.CODEC).fieldOf("entities").forGetter(Entity::entities),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
-                singleOrListCodec(Sound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
+                singleOrListCodec(EntitySound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
+                singleOrListCodec(EntitySound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
+                singleOrListCodec(EntitySound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Entity::priority)
             ).apply(it, ::Entity) }
         }
