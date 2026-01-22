@@ -35,4 +35,8 @@ public interface EntityKineticBulletExtension {
 
     void tacztweaks$setPelletIndex(int index);
 
+    Vec3 tacztweaks$getLastHitLocation();
+
+    void tacztweaks$setLastHitLocation(Vec3 location);
+
 }

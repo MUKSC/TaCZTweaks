@@ -100,6 +100,19 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
         tacztweaks$pelletIndex = index;
     }
 
+    @Unique
+    private Vec3 tacztweaks$lastHitLocation = null;
+
+    @Override
+    public Vec3 tacztweaks$getLastHitLocation() {
+        return tacztweaks$lastHitLocation;
+    }
+
+    @Override
+    public void tacztweaks$setLastHitLocation(Vec3 location) {
+        tacztweaks$lastHitLocation = location;
+    }
+
     @Override
     public void tacztweaks$addDamageModifier(float flat, float multiplier) {
         tacztweaks$damageModifiers.add(new DamageModifier(flat, multiplier));

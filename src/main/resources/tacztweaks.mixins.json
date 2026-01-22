@@ -14,6 +14,8 @@
     "accessor.InaccuracyTypeAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
+    "compat.firstaid.EntityKineticBulletHitCaptureMixin",
+    "compat.firstaid.FirstAidEventHandlerMixin",
     "compat.lrtactical.MeleeItemMixin",
     "compat.lso.CommonForgeEventsMixin",
     "compat.mts.EntityUtilMixin",
