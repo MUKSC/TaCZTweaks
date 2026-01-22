@@ -6,7 +6,7 @@ import com.tacz.guns.entity.EntityKineticBullet
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
-import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequiredStatus
+import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequired
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.data.BulletSounds
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
@@ -36,7 +36,7 @@ private val COMPARATOR = compareBy<BulletSounds> { it.priority }
 
 object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMPARATOR) {
     override fun notifyPlayer(player: ServerPlayer) {
-        if (byType<BulletSounds.AirSpace>().isNotEmpty()) NetworkHandler.sendS2C(player, ServerMessageSoundPhysicsRequiredStatus)
+        if (byType<BulletSounds.AirSpace>().isNotEmpty()) NetworkHandler.sendS2C(player, ServerMessageSoundPhysicsRequired)
         if (hasError()) {
             player.sendSystemMessage(TaCZTweaks.message()
                 .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED)))

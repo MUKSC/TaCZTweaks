@@ -1,7 +1,7 @@
 package me.muksc.tacztweaks.compat.soundphysics
 
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
-import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequiredStatus
+import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequired
 import me.muksc.tacztweaks.data.manager.BulletSoundsManager
 import me.muksc.tacztweaks.network.NetworkHandler
 import net.minecraft.client.Minecraft
@@ -18,7 +18,7 @@ object SoundPhysicsCompat {
     fun initialize() {
         if (ModList.get().isLoaded("sound_physics_remastered")) enabled = true
         NetworkHandler.registerS2C(ServerMessageAirspaceSounds.TYPE, ServerMessageAirspaceSounds.STREAM_CODEC, ServerMessageAirspaceSounds::handle)
-        NetworkHandler.registerS2C(ServerMessageSoundPhysicsRequiredStatus.TYPE, ServerMessageSoundPhysicsRequiredStatus.STREAM_CODEC, ServerMessageSoundPhysicsRequiredStatus::handle)
+        NetworkHandler.registerS2C(ServerMessageSoundPhysicsRequired.TYPE, ServerMessageSoundPhysicsRequired.STREAM_CODEC, ServerMessageSoundPhysicsRequired::handle)
     }
 
     fun play(minecraft: Minecraft, packet: ServerMessageAirspaceSounds) {
