@@ -130,7 +130,7 @@ sealed class BulletSounds(
             companion object {
                 val CODEC: Codec<EntitySound> = RecordCodecBuilder.create<EntitySound> { instance -> instance.group(
                     singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(EntitySound::target),
-                    Codec.list(EntityTestable.CODEC).fieldOf("entities").forGetter(EntitySound::entities),
+                    Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(EntitySound::entities),
                     ResourceLocation.CODEC.fieldOf("sound").forGetter(EntitySound::sound),
                     Codec.FLOAT.strictOptionalFieldOf("volume", 1.0F).forGetter(EntitySound::volume),
                     Codec.FLOAT.strictOptionalFieldOf("pitch", 1.0F).forGetter(EntitySound::pitch),
@@ -142,7 +142,7 @@ sealed class BulletSounds(
         companion object {
             val CODEC: Codec<Entity> = RecordCodecBuilder.create<Entity> { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Entity::target),
-                Codec.list(EntityTestable.CODEC).fieldOf("entities").forGetter(Entity::entities),
+                Codec.list(EntityTestable.CODEC).strictOptionalFieldOf("entities", emptyList()).forGetter(Entity::entities),
                 singleOrListCodec(EntitySound.CODEC).strictOptionalFieldOf("hit", emptyList()).forGetter(Entity::hit),
                 singleOrListCodec(EntitySound.CODEC).strictOptionalFieldOf("pierce", emptyList()).forGetter(Entity::pierce),
                 singleOrListCodec(EntitySound.CODEC).strictOptionalFieldOf("kill", emptyList()).forGetter(Entity::kill),
