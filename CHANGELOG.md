@@ -1,1 +1,1 @@
-- Fixed an issue where the 'Sound Physics Remastered is missing' warning was displayed regardless of whether it was actually installed 
+- Fixed the `entities` field in entity bullet sounds being a required field
