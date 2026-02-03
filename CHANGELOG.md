@@ -1,1 +1,3 @@
-- Fixed the `entities` field in entity bullet sounds being a required field
+- Added new `audibleFirstPersonGunSounds` and `thirdPersonGunRenderingFix` options
+- To fix an issue with the manual bolting feature, the gun now bolts automatically before it starts reloading
+- 日本語の言語ファイルを追加しました (added Japanese translation)
