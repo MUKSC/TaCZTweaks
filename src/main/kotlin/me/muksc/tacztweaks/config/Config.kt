@@ -101,6 +101,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val tiltGunKeyTriggersReduceSensitivity by register(true, BOOL)
         val cancelInspection by register(false, BOOL)
         val disableBulletCulling by register(false, BOOL)
+        val thirdPersonGunRenderingFix by register(true, BOOL)
 
         fun shootWhileSprinting(): Boolean = shootWhileSprinting.syncedValue
         fun sprintWhileReloading(): Boolean = sprintWhileReloading.syncedValue
@@ -118,6 +119,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun tiltGunKeyTriggersReduceSensitivity(): Boolean = tiltGunKeyTriggersReduceSensitivity.value
         fun cancelInspection(): Boolean = cancelInspection.value
         fun disableBulletCulling(): Boolean = disableBulletCulling.value
+        fun thirdPersonGunRenderingFix(): Boolean = thirdPersonGunRenderingFix.value
     }
 
     abstract class ModifierConfig : SyncableCodecConfig<ModifierConfig>() {
@@ -484,6 +486,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.gun.disableBulletCulling.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.gun.disableBulletCulling.description")))
                     binding(Gun.disableBulletCulling.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.gun.thirdPersonGunRenderingFix.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.gun.thirdPersonGunRenderingFix.description")))
+                    binding(Gun.thirdPersonGunRenderingFix.asBinding())
                     controller(booleanController())
                 }.build())
             }.build())

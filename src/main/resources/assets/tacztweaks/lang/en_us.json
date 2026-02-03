@@ -44,6 +44,8 @@
   "tacztweaks.config.gun.cancelInspection.description": "Allows you to cancel the gun inspection animation by pressing the inspect key again within 3 seconds, instead of replaying the animation from the start.\nNote: Some guns might not work correctly due to the flexibility of the gun pack scripting system.",
   "tacztweaks.config.gun.disableBulletCulling.name": "Disable Bullet Culling",
   "tacztweaks.config.gun.disableBulletCulling.description": "Improves the accuracy of bullet rendering at close range.\nPotentially impacts performance in intense scenarios, such as large-scale multiplayer gunfights.",
+  "tacztweaks.config.gun.thirdPersonGunRenderingFix.name": "Third Person Gun Rendering Fix",
+  "tacztweaks.config.gun.thirdPersonGunRenderingFix.description": "Fixes an TaCZ bug where hotbar guns only render while holding an item in hand.",
   "tacztweaks.config.modifier.addend.name": "Addend",
   "tacztweaks.config.modifier.addend.description": "Adds this value.",
   "tacztweaks.config.modifier.multiplier.name": "Multiplier",

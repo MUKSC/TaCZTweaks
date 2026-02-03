@@ -83,6 +83,7 @@
     "crawl.PlayerRendererMixin",
     "crawl.pitch.MouseHandlerMixinMixin",
     "gun.EntityBulletRendererMixin",
+    "gun.ItemInHandLayerMixin",
     "gun.LocalPlayerMixin",
     "gun.MouseHandlerMixinMixin",
     "gun.movement.LocalPlayerMixinMixin",
