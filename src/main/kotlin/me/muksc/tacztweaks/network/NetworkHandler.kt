@@ -46,9 +46,11 @@ object NetworkHandler {
     }
 
     fun register() {
+        registerC2S(ClientMessageBroadcastSound.TYPE, ClientMessageBroadcastSound.STREAM_CODEC, ClientMessageBroadcastSound::handle)
         registerC2S(ClientMessagePlayerShouldSlide.TYPE, ClientMessagePlayerShouldSlide.STREAM_CODEC, ClientMessagePlayerShouldSlide::handle)
         registerC2S(ClientMessagePlayerUnload.TYPE, ClientMessagePlayerUnload.STREAM_CODEC, ClientMessagePlayerUnload::handle)
         registerC2S(ClientMessageSyncConfig.TYPE, ClientMessageSyncConfig.STREAM_CODEC, ClientMessageSyncConfig::handle)
+        registerS2C(ServerMessageBroadcastSound.TYPE, ServerMessageBroadcastSound.STREAM_CODEC, ServerMessageBroadcastSound::handle)
         registerS2C(ServerMessageSyncConfig.TYPE, ServerMessageSyncConfig.STREAM_CODEC, ServerMessageSyncConfig::handle)
         registerLoginS2C(ServerMessageSyncConfig.TYPE, ServerMessageSyncConfig.STREAM_CODEC, ServerMessageSyncConfig::handleLogin)
     }

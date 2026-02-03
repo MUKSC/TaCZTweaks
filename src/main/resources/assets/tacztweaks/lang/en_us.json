@@ -123,6 +123,8 @@
   "tacztweaks.config.crawl.tiltGun.name": "Tilt Gun While Crawling",
   "tacztweaks.config.crawl.tiltGun.description": "Controls the behaviour of the gun tilting while crawling.\n\nDefault: Tilts the gun if sneaking.\nAlways: Automatically tilts the gun.\nNever: Never tilts the gun.",
   "tacztweaks.config.tweaks": "Tweaks",
+  "tacztweaks.config.tweaks.audibleFirstPersonGunSounds.name": "Shared Gun Sounds",
+  "tacztweaks.config.tweaks.audibleFirstPersonGunSounds.description": "Makes the first person gun sounds, such as reloading or fire selecting, audible to other players in multiplayer.",
   "tacztweaks.config.tweaks.forceFirstPersonShootingSound.name": "Force First Person Shooting Sound",
   "tacztweaks.config.tweaks.forceFirstPersonShootingSound.description": "Uses the first person shooting sound instead of the third person one when other players shoot.\n\nNote: The first person sounds are typically in stereo, meaning it won't preserve the directionality when played.\nEnabling the `Stereo to Mono conversion` option will converts the sounds to mono and fixes this issue.",
   "tacztweaks.config.tweaks.betterMonoConversion.name": "Stereo to Mono Conversion",

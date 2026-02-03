@@ -285,6 +285,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     }
 
     object Tweaks : SyncableCodecConfig<Tweaks>() {
+        val audibleFirstPersonGunSounds by registerSyncable(
+            default = false,
+            codec = BOOL,
+            encoder = FriendlyByteBuf::writeBoolean,
+            decoder = FriendlyByteBuf::readBoolean
+        )
         val forceFirstPersonShootingSound by registerSyncable(
             default = false,
             codec = BOOL,
@@ -334,6 +340,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         val suppressKillSounds by register(false, BOOL)
         val hideHitMarkers by register(false, BOOL)
 
+        fun audibleFirstPersonGunSounds(): Boolean = audibleFirstPersonGunSounds.syncedValue
         fun forceFirstPersonShootingSound(): Boolean = forceFirstPersonShootingSound.syncedValue
         fun betterMonoConversion(): Boolean = betterMonoConversion.value
         fun betterInaccuracy(): Boolean = betterInaccuracy.syncedValue
@@ -710,6 +717,13 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             }.build())
             group(OptionGroup.createBuilder().apply {
                 name(TaCZTweaks.translatable("config.tweaks"))
+                option(Option.createBuilder<Boolean>().apply {
+                    nameSynced(TaCZTweaks.translatable("config.tweaks.audibleFirstPersonGunSounds.name"))
+                    descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.audibleFirstPersonGunSounds.description")))
+                    binding(Tweaks.audibleFirstPersonGunSounds.asSyncedBinding())
+                    controller(booleanController())
+                    available(canUpdateServerConfig)
+                }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.tweaks.forceFirstPersonShootingSound.name"))
                     descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.forceFirstPersonShootingSound.description")))

@@ -68,6 +68,7 @@
     "tweaks.InaccuracyTypeMixin",
     "tweaks.LivingEntityAmmoCheckMixin",
     "tweaks.ModernKineticGunScriptAPIMixin",
+    "tweaks.ObjectAnimationSoundChannelMixin",
     "tweaks.ProtectionEnchantmentMixin"
   ],
   "client": [
