@@ -20,7 +20,6 @@ import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.DestroySpeedModifierHolder
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.ShieldInteractionBehaviour
 import me.muksc.tacztweaks.thenPrioritizeBy
-import net.minecraft.ChatFormatting
 import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
@@ -60,13 +59,6 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
     private val DEFAULT = TaCZTweaks.id("default")
 
     init { BulletInteraction }
-
-    override fun notifyPlayer(player: ServerPlayer) {
-        if (hasError()) {
-            player.sendSystemMessage(TaCZTweaks.message()
-                .append(TaCZTweaks.translatable("bullet_interactions.error").withStyle(ChatFormatting.RED)))
-        }
-    }
 
     override fun debugEnabled(): Boolean = Config.Debug.bulletInteractions()
 

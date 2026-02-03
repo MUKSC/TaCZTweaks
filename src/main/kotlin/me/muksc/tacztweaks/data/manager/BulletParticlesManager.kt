@@ -4,14 +4,12 @@ import com.google.gson.JsonElement
 import com.mojang.brigadier.StringReader
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.data.BulletParticles
 import me.muksc.tacztweaks.id
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.thenPrioritizeBy
-import net.minecraft.ChatFormatting
 import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate
@@ -21,7 +19,6 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
@@ -36,13 +33,6 @@ private val COMPARATOR = compareBy<BulletParticles> { it.priority }
 
 object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particles", COMPARATOR) {
     private val emitters: MutableList<ParticleEmitter> = mutableListOf()
-
-    override fun notifyPlayer(player: ServerPlayer) {
-        if (hasError()) {
-            player.sendSystemMessage(TaCZTweaks.message()
-                .append(TaCZTweaks.translatable("bullet_particles.error").withStyle(ChatFormatting.RED)))
-        }
-    }
 
     override fun debugEnabled(): Boolean = Config.Debug.bulletParticles()
 

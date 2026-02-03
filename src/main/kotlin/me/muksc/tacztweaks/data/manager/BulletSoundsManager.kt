@@ -3,7 +3,6 @@ package me.muksc.tacztweaks.data.manager
 import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
 import com.tacz.guns.entity.EntityKineticBullet
-import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageAirspaceSounds
 import me.muksc.tacztweaks.compat.soundphysics.network.message.ServerMessageSoundPhysicsRequired
@@ -12,7 +11,6 @@ import me.muksc.tacztweaks.data.BulletSounds
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension
 import me.muksc.tacztweaks.network.NetworkHandler
 import me.muksc.tacztweaks.thenPrioritizeBy
-import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.resources.ResourceLocation
@@ -37,10 +35,7 @@ private val COMPARATOR = compareBy<BulletSounds> { it.priority }
 object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMPARATOR) {
     override fun notifyPlayer(player: ServerPlayer) {
         if (byType<BulletSounds.AirSpace>().isNotEmpty()) NetworkHandler.sendS2C(player, ServerMessageSoundPhysicsRequired)
-        if (hasError()) {
-            player.sendSystemMessage(TaCZTweaks.message()
-                .append(TaCZTweaks.translatable("bullet_sounds.error").withStyle(ChatFormatting.RED)))
-        }
+        super.notifyPlayer(player)
     }
 
     override fun debugEnabled(): Boolean = Config.Debug.bulletSounds()

@@ -2,7 +2,6 @@ package me.muksc.tacztweaks.data.manager
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
-import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.anyOrEmpty
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat
 import me.muksc.tacztweaks.config.Config
@@ -12,7 +11,6 @@ import me.muksc.tacztweaks.data.BulletInteraction
 import me.muksc.tacztweaks.data.MeleeInteraction
 import me.muksc.tacztweaks.data.manager.BulletInteractionManager.calcBlockBreakingDelta
 import me.muksc.tacztweaks.thenPrioritizeBy
-import net.minecraft.ChatFormatting
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -29,13 +27,6 @@ private val COMPARATOR = compareBy<MeleeInteraction> { it.priority }
     } }
 
 object MeleeInteractionManager : BaseDataManager<MeleeInteraction>("melee_interactions", COMPARATOR) {
-    override fun notifyPlayer(player: ServerPlayer) {
-        if (hasError()) {
-            player.sendSystemMessage(TaCZTweaks.message()
-                .append(TaCZTweaks.translatable("melee_interactions.error").withStyle(ChatFormatting.RED)))
-        }
-    }
-
     override fun debugEnabled(): Boolean = Config.Debug.meleeInteractions()
 
     override fun parseElement(json: JsonElement): MeleeInteraction =

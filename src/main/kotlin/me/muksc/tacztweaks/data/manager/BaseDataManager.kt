@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.mojang.logging.LogUtils
+import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.toImmutableMap
+import net.minecraft.ChatFormatting
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.resources.ResourceManager
@@ -27,7 +29,12 @@ abstract class BaseDataManager<E : Any>(
     protected var map: Map<KClass<*>, Map<ResourceLocation, E>> = emptyMap()
     private var hasError = false
 
-    abstract fun notifyPlayer(player: ServerPlayer)
+    open fun notifyPlayer(player: ServerPlayer) {
+        if (hasError()) {
+            player.sendSystemMessage(TaCZTweaks.message()
+                .append(TaCZTweaks.translatable("data_manager.error", directory).withStyle(ChatFormatting.RED)))
+        }
+    }
 
     abstract fun debugEnabled(): Boolean
 
