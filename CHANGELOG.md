@@ -1,3 +1,2 @@
-- Added new `audibleFirstPersonGunSounds` and `thirdPersonGunRenderingFix` options
-- To fix an issue with the manual bolting feature, the gun now bolts automatically before it starts reloading
-- 日本語の言語ファイルを追加しました (added Japanese translation)
+- Fixed guns with an inaccuracy value of 0 failing to shoot when `Better Inaccuracy` option is enabled
+- Hopefully fixed CME crash when the `Shared Gun Sounds` option is enabled
