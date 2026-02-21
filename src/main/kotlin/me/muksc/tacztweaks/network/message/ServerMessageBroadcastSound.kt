@@ -41,14 +41,16 @@ class ServerMessageBroadcastSound(
 
         fun handle(packet: ServerMessageBroadcastSound, minecraft: Minecraft) {
             val entity = minecraft.level?.getEntity(packet.entityId) ?: return
-            SoundPlayManager.playClientSound(
-                entity,
-                packet.soundName,
-                packet.volume,
-                packet.pitch,
-                packet.distance,
-                true
-            )
+            minecraft.execute {
+                SoundPlayManager.playClientSound(
+                    entity,
+                    packet.soundName,
+                    packet.volume,
+                    packet.pitch,
+                    packet.distance,
+                    true
+                )
+            }
         }
     }
 
