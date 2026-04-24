@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(value = MeleeItem.class, remap = false)
-public abstract class MeleeItemMixin {
+public abstract class MeleeItemMixin$0_3_0 {
     @Definition(id = "attackInfo", local = @Local(type = CombatData.MeleeAttackInfo.class))
     @Definition(id = "getFactor", method = "Lme/xjqsh/lrtactical/item/melee/CombatData$MeleeAttackInfo;getFactor()F")
     @Expression("? * attackInfo.getFactor()")
@@ -41,8 +42,9 @@ public abstract class MeleeItemMixin {
         return original;
     }
 
+    @Dynamic
     @Inject(method = "lambda$attack$10", at = @At(value = "INVOKE", target = "Lme/xjqsh/lrtactical/item/MeleeItem;performAttack(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;FF)Lme/xjqsh/lrtactical/api/melee/AttackResult;"))
-    private void tacztweaks$doMelee$setHit(
+    private void tacztweaks$attack$setHit(
         MeleeAction action,
         Player attacker,
         float base,
@@ -55,6 +57,7 @@ public abstract class MeleeItemMixin {
         hitRef.set(true);
     }
 
+    @Dynamic
     @Inject(method = "lambda$attack$10", at = @At("TAIL"))
     private void tacztweaks$attack$handle(
         MeleeAction action,

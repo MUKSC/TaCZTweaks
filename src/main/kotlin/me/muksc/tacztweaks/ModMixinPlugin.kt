@@ -14,18 +14,20 @@ class ModMixinPlugin : IMixinConfigPlugin {
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean = when {
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.firstaid.") -> isModLoaded("firstaid")
-        mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lrtactical.") -> isModLoaded("lrtactical")
+        mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lrtactical.") -> isModLoaded("lrtactical") && when (mixinClassName) {
+            "me.muksc.tacztweaks.mixin.compat.lrtactical.MeleeItemMixin$0_4_0" -> versionCheck("lrtactical", "[0.4.0,)")
+            "me.muksc.tacztweaks.mixin.compat.lrtactical.MeleeItemMixin$0_3_0" -> versionCheck("lrtactical", "[0.3.0,0.4.0)")
+            else -> true
+        }
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.lso.") -> isModLoaded("legendarysurvivaloverhaul")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.mts.") -> isModLoaded("mts")
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.soundphysics.") -> isModLoaded("sound_physics_remastered") && when (mixinClassName) {
             "me.muksc.tacztweaks.mixin.compat.soundphysics.SoundPhysicsMixin$1_5_x" -> versionCheck("sound_physics_remastered", "[1.20.1-1.5.0,)")
-            "me.muksc.tacztweaks.mixin.compat.soundphysics.SoundPhysicsMixin$1_1_x" -> versionCheck("sound_physics_remastered", "(,1.20.1-1.5.0)")
+            "me.muksc.tacztweaks.mixin.compat.soundphysics.SoundPhysicsMixin$1_1_x" -> versionCheck("sound_physics_remastered", "[1.20.1-1.1.0,1.20.1-1.5.0)")
             else -> true
         }
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs.") -> isModLoaded("valkyrienskies") && when (mixinClassName) {
             "me.muksc.tacztweaks.mixin.compat.vs.client.MixinLevelRendererMixin" -> !isModLoaded("vs_addition")
-            "me.muksc.tacztweaks.mixin.compat.vs.RaycastUtilsKtMixin$2_3_0_beta11" -> versionCheck("valkyrienskies", "[2.3.0-beta.11,)")
-            "me.muksc.tacztweaks.mixin.compat.vs.RaycastUtilsKtMixin$2_3_0_beta5" -> versionCheck("valkyrienskies", "(,2.3.0-beta.11)")
             else -> true
         }
         mixinClassName.startsWith("me.muksc.tacztweaks.mixin.compat.vs_addition.") -> isModLoaded("vs_addition") && when (mixinClassName) {
