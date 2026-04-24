@@ -1,2 +1,1 @@
-- Fixed guns with an inaccuracy value of 0 failing to shoot when `Better Inaccuracy` option is enabled
-- Hopefully fixed CME crash when the `Shared Gun Sounds` option is enabled
+- Fixed a crash with LRTactical 0.4.0
