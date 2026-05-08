@@ -1,1 +1,4 @@
-- Fixed a crash with LRTactical 0.4.0
+- TaCZ 1.1.8
+- Added new `rps` and `forceDefaultHitAndKillSounds` options
+- Fixed the unloading feature doesn't work when you only have one round left
+- Fixed compatibility with other mod's shields
