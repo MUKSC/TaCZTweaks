@@ -205,19 +205,16 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
     }
 
     @JvmStatic
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     fun onShieldBlock(e: ShieldBlockEvent) {
         if (!e.damageSource.`is`(ModDamageTypes.BULLETS_TAG)) return
         val ammo = e.damageSource.directEntity as? EntityKineticBullet ?: return
         val location = e.damageSource.sourcePosition ?: return
         val behaviour = e.entity as ShieldInteractionBehaviour
-        val result = handleShieldInteraction(ammo, location, e.entity.useItem, e.originalBlockedDamage)
+        val result = handleShieldInteraction(ammo, location, e.entity.useItem, e.blockedDamage)
 
-        if (result.blockedDamage <= 0) {
-            e.isCanceled = true
-            return
-        }
-        e.blockedDamage = result.blockedDamage
+        if (result.blockedDamage <= 0) return
+        e.blockedDamage += result.blockedDamage
         e.setShieldTakesDamage(true)
         behaviour.`tacztweaks$setCustomShieldDurabilityDamage`(result.durabilityDamage)
         behaviour.`tacztweaks$setCustomShieldDisableDuration`(result.disableDuration)
