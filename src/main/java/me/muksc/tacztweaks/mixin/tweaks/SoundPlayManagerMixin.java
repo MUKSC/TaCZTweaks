@@ -2,9 +2,11 @@ package me.muksc.tacztweaks.mixin.tweaks;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.client.sound.GunSoundInstance;
 import com.tacz.guns.client.sound.SoundPlayManager;
 import com.tacz.guns.sound.SoundManager;
@@ -31,6 +33,27 @@ public abstract class SoundPlayManagerMixin {
     @WrapWithCondition(method = "playKillSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;playClientSound(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/resources/ResourceLocation;FFI)Lcom/tacz/guns/client/sound/GunSoundInstance;"))
     private static boolean tacztweaks$playKillSound$conditional(Entity entity, ResourceLocation name, float volume, float pitch, int distance) {
         return !Config.Tweaks.INSTANCE.suppressKillSounds();
+    }
+
+    @ModifyExpressionValue(method = "playHeadHitSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/resource/GunDisplayInstance;getSounds(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"))
+    private static ResourceLocation tacztweaks$playHeadHitSounds$forceDefaultSound(ResourceLocation original) {
+        return original != null && Config.Tweaks.INSTANCE.forceDefaultHitAndKillSounds()
+            ? new ResourceLocation(GunMod.MOD_ID, "head_hit")
+            : original;
+    }
+
+    @ModifyExpressionValue(method = "playFleshHitSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/resource/GunDisplayInstance;getSounds(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"))
+    private static ResourceLocation tacztweaks$playFleshHitSounds$forceDefaultSound(ResourceLocation original) {
+        return original != null && Config.Tweaks.INSTANCE.forceDefaultHitAndKillSounds()
+            ? new ResourceLocation(GunMod.MOD_ID, "flesh_hit")
+            : original;
+    }
+
+    @ModifyExpressionValue(method = "playKillSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/resource/GunDisplayInstance;getSounds(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"))
+    private static ResourceLocation tacztweaks$playKillSounds$forceDefaultSound(ResourceLocation original) {
+        return original != null && Config.Tweaks.INSTANCE.forceDefaultHitAndKillSounds()
+            ? new ResourceLocation(GunMod.MOD_ID, "kill")
+            : original;
     }
 
     @Definition(id = "SHOOT_3P_SOUND", field = "Lcom/tacz/guns/sound/SoundManager;SHOOT_3P_SOUND:Ljava/lang/String;")

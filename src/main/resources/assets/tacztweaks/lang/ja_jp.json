@@ -143,6 +143,8 @@
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "ガンスミステーブルで常に「持っているアイテム」のフィルターを有効します。",
   "tacztweaks.config.tweaks.rps.name": "RPS",
   "tacztweaks.config.tweaks.rps.description": "銃のステータス表記のRPM（分間発射速度）をRPS（秒間発射速度）に置き換えます.",
+  "tacztweaks.config.tweaks.forceDefaultHitAndKillSounds.name": "デフォルトの命中/キル音を強制",
+  "tacztweaks.config.tweaks.forceDefaultHitAndKillSounds.description": "銃の命中/キル音を上書きし、常にデフォルトの音を使用するようにします。",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "ヘッドショット音を抑制",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.description": "ヘッドショットした時の音を無効にします。",
   "tacztweaks.config.tweaks.suppressFleshHitSounds.name": "命中音を抑制",

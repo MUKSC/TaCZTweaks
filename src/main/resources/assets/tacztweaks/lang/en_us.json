@@ -143,6 +143,8 @@
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "Always enable filter by hand option in the gun smith table.",
   "tacztweaks.config.tweaks.rps.name": "RPS",
   "tacztweaks.config.tweaks.rps.description": "Replaces the RPM (rounds per minute) in the gun stats with RPS (rounds per second).",
+  "tacztweaks.config.tweaks.forceDefaultHitAndKillSounds.name": "Force Default Hit and Kill Sounds",
+  "tacztweaks.config.tweaks.forceDefaultHitAndKillSounds.description": "Overrides the gun's hit and kill sounds and forces them to use the default ones.",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "Suppress Head Hit Sounds",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.description": "Suppresses the sound that plays when you land a headshot.",
   "tacztweaks.config.tweaks.suppressFleshHitSounds.name": "Suppress Flesh Hit Sounds",
