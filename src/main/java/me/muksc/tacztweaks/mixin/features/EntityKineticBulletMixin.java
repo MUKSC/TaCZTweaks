@@ -1,7 +1,6 @@
 package me.muksc.tacztweaks.mixin.features;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
@@ -116,7 +115,7 @@ public abstract class EntityKineticBulletMixin implements EntityKineticBulletExt
     }
 
     @ModifyExpressionValue(method = "getDamage", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/ExtraDamage$DistanceDamagePair;getDamage()F"))
-    private float tacztweaks$getDamage$applyDamageModifiers(float original, @Local double playerDistance) {
+    private float tacztweaks$getDamage$applyDamageModifiers(float original) {
         float damage = original;
         for (DamageModifier modifier : tacztweaks$damageModifiers) {
             damage = (damage + modifier.flat()) * modifier.multiplier();

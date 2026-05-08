@@ -7,8 +7,6 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.tacz.guns.init.ModDamageTypes;
 import me.muksc.tacztweaks.mixininterface.features.bullet_interaction.ShieldInteractionBehaviour;
 import net.minecraft.tags.TagKey;
@@ -77,7 +75,7 @@ public abstract class LivingEntityMixin implements ShieldInteractionBehaviour {
     @Definition(id = "BYPASSES_SHIELD", field = "Lnet/minecraft/tags/DamageTypeTags;BYPASSES_SHIELD:Lnet/minecraft/tags/TagKey;")
     @Expression("?.is(BYPASSES_SHIELD)")
     @ModifyExpressionValue(method = "isDamageSourceBlocked", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean tacztweaks$isDamageSourceBlocked$blockableBullets(boolean original, @Local(argsOnly = true, ordinal = 0) DamageSource pDamageSource) {
+    private boolean tacztweaks$isDamageSourceBlocked$blockableBullets(boolean original) {
         if (!tacztweaks$handlingBullets) return original;
         return false;
     }
@@ -98,7 +96,7 @@ public abstract class LivingEntityMixin implements ShieldInteractionBehaviour {
     @Definition(id = "pAmount", local = @Local(type = float.class, argsOnly = true, ordinal = 0))
     @Expression("pAmount <= 0.0")
     @WrapOperation(method = "hurt", at = @At("MIXINEXTRAS:EXPRESSION"), require = /* Arclight */ 0)
-    private boolean tacztweaks$hurt$alwaysPlayBlockingSound(float left, float right, Operation<Boolean> original, @Share("originalAmount") LocalFloatRef originalAmountRef) {
+    private boolean tacztweaks$hurt$alwaysPlayBlockingSound(float left, float right, Operation<Boolean> original) {
         if (!tacztweaks$handlingBullets) return original.call(left, right);
         return true;
     }

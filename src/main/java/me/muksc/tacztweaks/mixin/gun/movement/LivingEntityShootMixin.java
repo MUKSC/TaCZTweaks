@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = LivingEntityShoot.class, remap = false)
 public abstract class LivingEntityShootMixin {
-    @ModifyExpressionValue(method = "shoot", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;sprintTimeS:F"))
+    @ModifyExpressionValue(method = "shoot(Ljava/util/function/Supplier;Ljava/util/function/Supplier;JFZ)Lcom/tacz/guns/api/entity/ShootResult;", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lcom/tacz/guns/entity/shooter/ShooterDataHolder;sprintTimeS:F"))
     private float tacztweaks$shoot$shootWhileSprinting(float original) {
         if (!Config.Gun.INSTANCE.shootWhileSprinting()) return original;
         return 0.0F;

@@ -760,6 +760,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.betterMonoConversion.description")))
                     binding(Tweaks.betterMonoConversion.asBinding())
                     controller(booleanController())
+                    flag(OptionFlag.ASSET_RELOAD)
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     nameSynced(TaCZTweaks.translatable("config.tweaks.betterInaccuracy.name"))

@@ -20,13 +20,13 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = SoundPlayManager.class, remap = false)
 public abstract class SoundPlayManagerMixin {
-    @WrapWithCondition(method = "playHeadHitSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;playClientSound(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/resources/ResourceLocation;FFI)Lcom/tacz/guns/client/sound/GunSoundInstance;"))
-    private static boolean tacztweaks$playHeadHitSound$conditional(Entity entity, ResourceLocation name, float volume, float pitch, int distance) {
+    @WrapWithCondition(method = "playHeadHitSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;playClientSound(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/resources/ResourceLocation;FFIZIZZ)Lcom/tacz/guns/client/sound/GunSoundInstance;"))
+    private static boolean tacztweaks$playHeadHitSound$conditional(Entity entity, ResourceLocation name, float volume, float pitch, int distance, boolean mono, int concurrencyLimit, boolean trackEntity, boolean relative) {
         return !Config.Tweaks.INSTANCE.suppressHeadHitSounds();
     }
 
-    @WrapWithCondition(method = "playFleshHitSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;playClientSound(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/resources/ResourceLocation;FFI)Lcom/tacz/guns/client/sound/GunSoundInstance;"))
-    private static boolean tacztweaks$playFleshHitSound$conditional(Entity entity, ResourceLocation name, float volume, float pitch, int distance) {
+    @WrapWithCondition(method = "playFleshHitSound", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/sound/SoundPlayManager;playClientSound(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/resources/ResourceLocation;FFIZIZZ)Lcom/tacz/guns/client/sound/GunSoundInstance;"))
+    private static boolean tacztweaks$playFleshHitSound$conditional(Entity entity, ResourceLocation name, float volume, float pitch, int distance, boolean mono, int concurrencyLimit, boolean trackEntity, boolean relative) {
         return !Config.Tweaks.INSTANCE.suppressFleshHitSounds();
     }
 

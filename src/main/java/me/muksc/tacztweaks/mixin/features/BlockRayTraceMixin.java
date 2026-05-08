@@ -6,7 +6,6 @@ import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.block.BlockRayTrace;
 import me.muksc.tacztweaks.core.BulletRayTracer;
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -40,8 +39,6 @@ public abstract class BlockRayTraceMixin {
     @ModifyReturnValue(method = "lambda$rayTraceBlocks$1", at = @At("RETURN"))
     private static BlockHitResult tacztweaks$rayTraceBlocks$handle(
         @Nullable BlockHitResult original,
-        @Local(argsOnly = true) ClipContext context,
-        @Local(argsOnly = true) BlockPos blockPos,
         @Nullable @Local BlockState blockState
     ) {
         if (tacztweaks$rayTracer == null) return original;

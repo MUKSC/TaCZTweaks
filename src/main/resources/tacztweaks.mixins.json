@@ -45,7 +45,6 @@
     "gun.LocalPlayerInspectMixin",
     "gun.LocalPlayerReloadMixin",
     "gun.ModernKineticGunScriptAPIMixin",
-    "tweaks.RPMModifierMixin",
     "gun.movement.AnimationManagerMixin",
     "gun.movement.LivingEntityAimMixin",
     "gun.movement.LivingEntityReloadMixin",
@@ -74,7 +73,9 @@
     "tweaks.LivingEntityAmmoCheckMixin",
     "tweaks.ModernKineticGunScriptAPIMixin",
     "tweaks.ObjectAnimationSoundChannelMixin",
-    "tweaks.ProtectionEnchantmentMixin"
+    "tweaks.ProtectionEnchantmentMixin",
+    "tweaks.ResourceLocationMixin",
+    "tweaks.RPMModifierMixin"
   ],
   "client": [
     "accessor.LocalPlayerShootAccessor",
@@ -98,9 +99,11 @@
     "gun.movement.TickAnimationEventMixin",
     "tweaks.GunPackListMixin",
     "tweaks.GunSmithTableScreenMixin",
+    "tweaks.GunSoundInstance$TaczSoundMixin",
     "tweaks.GunSoundInstanceMixin",
     "tweaks.RefitKeyMixin",
     "tweaks.RenderCrosshairEventMixin",
+    "tweaks.SoundBufferLibraryMixin",
     "tweaks.SoundPlayManagerMixin"
   ],
   "injectors": {

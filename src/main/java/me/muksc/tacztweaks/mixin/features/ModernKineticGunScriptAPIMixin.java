@@ -29,10 +29,10 @@ public abstract class ModernKineticGunScriptAPIMixin {
     }
 
     @WrapMethod(method = "lambda$shootOnce$2")
-    private boolean tacztweaks$shootOnce$onInitBurst(boolean consumeAmmo, GunData gunData, int bulletAmount, BulletData bulletData, IGunOperator gunOperator, float processedSpeed, float inaccuracy, int soundDistance, boolean useSilenceSound, Operation<Boolean> original) {
+    private boolean tacztweaks$shootOnce$onInitBurst(boolean consumeAmmo, GunData gunData, int bulletAmount, BulletData bulletData, IGunOperator gunOperator, float shotDamageMultiplier, float processedSpeed, float inaccuracy, int soundDistance, boolean useSilenceSound, Operation<Boolean> original) {
         try {
             tacztweaks$pelletIndex = 0;
-            return original.call(consumeAmmo, gunData, bulletAmount, bulletData, gunOperator, processedSpeed, inaccuracy, soundDistance, useSilenceSound);
+            return original.call(consumeAmmo, gunData, bulletAmount, bulletData, gunOperator, shotDamageMultiplier, processedSpeed, inaccuracy, soundDistance, useSilenceSound);
         } finally {
             tacztweaks$burstIndex++;
         }
