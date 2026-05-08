@@ -141,6 +141,8 @@
   "tacztweaks.config.tweaks.infiniteAmmoDisablesConsumption.description": "クリエイティブ弾薬箱などでプレイヤーの弾薬が無限な場合、弾の消費を無効にします。",
   "tacztweaks.config.tweaks.alwaysFilterByHand.name": "常に持っているアイテムでフィルター",
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "ガンスミステーブルで常に「持っているアイテム」のフィルターを有効します。",
+  "tacztweaks.config.tweaks.rps.name": "RPS",
+  "tacztweaks.config.tweaks.rps.description": "銃のステータス表記のRPM（分間発射速度）をRPS（秒間発射速度）に置き換えます.",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "ヘッドショット音を抑制",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.description": "ヘッドショットした時の音を無効にします。",
   "tacztweaks.config.tweaks.suppressFleshHitSounds.name": "命中音を抑制",
@@ -165,5 +167,6 @@
   "tacztweaks.config.label.multiplier": "%1$s倍",
   "tacztweaks.config.label.ETiltGun.DEFAULT": "デフォルト",
   "tacztweaks.config.label.ETiltGun.ALWAYS": "常時",
-  "tacztweaks.config.label.ETiltGun.NEVER": "無効"
+  "tacztweaks.config.label.ETiltGun.NEVER": "無効",
+  "tacztweaks.property_diagrams.rps": "RPS"
 }

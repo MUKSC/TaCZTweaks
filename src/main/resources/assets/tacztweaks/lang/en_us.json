@@ -141,6 +141,8 @@
   "tacztweaks.config.tweaks.infiniteAmmoDisablesConsumption.description": "Disables ammo consumption when the player has infinite ammo (e.g. from the creative ammo box).",
   "tacztweaks.config.tweaks.alwaysFilterByHand.name": "Always Filter by Hand",
   "tacztweaks.config.tweaks.alwaysFilterByHand.description": "Always enable filter by hand option in the gun smith table.",
+  "tacztweaks.config.tweaks.rps.name": "RPS",
+  "tacztweaks.config.tweaks.rps.description": "Replaces the RPM (rounds per minute) in the gun stats with RPS (rounds per second).",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.name": "Suppress Head Hit Sounds",
   "tacztweaks.config.tweaks.suppressHeadHitSounds.description": "Suppresses the sound that plays when you land a headshot.",
   "tacztweaks.config.tweaks.suppressFleshHitSounds.name": "Suppress Flesh Hit Sounds",
@@ -165,5 +167,6 @@
   "tacztweaks.config.label.multiplier": "%1$sx",
   "tacztweaks.config.label.ETiltGun.DEFAULT": "Default",
   "tacztweaks.config.label.ETiltGun.ALWAYS": "Always",
-  "tacztweaks.config.label.ETiltGun.NEVER": "Never"
+  "tacztweaks.config.label.ETiltGun.NEVER": "Never",
+  "tacztweaks.property_diagrams.rps": "RPS"
 }

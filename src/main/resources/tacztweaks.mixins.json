@@ -45,6 +45,7 @@
     "gun.LocalPlayerInspectMixin",
     "gun.LocalPlayerReloadMixin",
     "gun.ModernKineticGunScriptAPIMixin",
+    "tweaks.RPMModifierMixin",
     "gun.movement.AnimationManagerMixin",
     "gun.movement.LivingEntityAimMixin",
     "gun.movement.LivingEntityReloadMixin",

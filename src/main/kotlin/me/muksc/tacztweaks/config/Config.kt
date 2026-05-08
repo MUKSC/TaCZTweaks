@@ -337,6 +337,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             decoder = FriendlyByteBuf::readBoolean
         )
         val alwaysFilterByHand by register(true, BOOL)
+        val rps by register(false, BOOL)
         val suppressHeadHitSounds by register(false, BOOL)
         val suppressFleshHitSounds by register(false, BOOL)
         val suppressKillSounds by register(false, BOOL)
@@ -352,6 +353,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         fun disableRefitOnAdventure(): Boolean = disableRefitOnAdventure.syncedValue
         fun infiniteAmmoDisablesConsumption(): Boolean = infiniteAmmoDisablesConsumption.syncedValue
         fun alwaysFilterByHand(): Boolean = alwaysFilterByHand.value
+        fun rps(): Boolean = rps.value
         fun suppressHeadHitSounds(): Boolean = suppressHeadHitSounds.value
         fun suppressFleshHitSounds(): Boolean = suppressFleshHitSounds.value
         fun suppressKillSounds(): Boolean = suppressKillSounds.value
@@ -556,6 +558,12 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.tweaks.alwaysFilterByHand.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.alwaysFilterByHand.description")))
                     binding(Tweaks.alwaysFilterByHand.asBinding())
+                    controller(booleanController())
+                }.build())
+                option(Option.createBuilder<Boolean>().apply {
+                    name(TaCZTweaks.translatable("config.tweaks.rps.name"))
+                    description(OptionDescription.of(TaCZTweaks.translatable("config.tweaks.rps.description")))
+                    binding(Tweaks.rps.asBinding())
                     controller(booleanController())
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
