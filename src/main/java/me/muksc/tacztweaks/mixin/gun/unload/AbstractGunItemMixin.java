@@ -1,10 +1,15 @@
 package me.muksc.tacztweaks.mixin.gun.unload;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.resource.index.CommonAmmoIndex;
@@ -28,6 +33,25 @@ public abstract class AbstractGunItemMixin implements UnloadableAbstractGunItem 
     @Override
     public void tacztweaks$setUnloading() {
         tacztweaks$unloading = true;
+    }
+
+    @Definition(id = "ammoCount", local = @Local(type = int.class, name = "ammoCount"))
+    @Expression("ammoCount > 0")
+    @ModifyExpressionValue(method = "dropAllAmmo", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private boolean tacztweaks$dropAllAmmo$countBulletInBarrel(boolean original, @Local(argsOnly = true) ItemStack gunItem) {
+        var instance = AbstractGunItem.class.cast(this);
+        return original || (Config.Gun.INSTANCE.unloadBulletInBarrel() && instance.hasBulletInBarrel(gunItem));
+    }
+
+    @WrapOperation(method = "lambda$dropAllAmmo$2", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/item/builder/AmmoItemBuilder;setCount(I)Lcom/tacz/guns/api/item/builder/AmmoItemBuilder;"))
+    private AmmoItemBuilder tacztweaks$dropAllAmmo$storeCount(AmmoItemBuilder instance, int count, Operation<AmmoItemBuilder> original, @Share("count") LocalIntRef countRef) {
+        countRef.set(count);
+        return original.call(instance, count);
+    }
+
+    @WrapOperation(method = "lambda$dropAllAmmo$2", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemHandlerHelper;giveItemToPlayer(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)V"))
+    private void tacztweaks$dropAllAmmo$skipIfZero(Player player, ItemStack stack, Operation<Void> original, @Share("count") LocalIntRef countRef) {
+        if (countRef.get() > 0) original.call(player, stack);
     }
 
     @ModifyExpressionValue(method = "lambda$dropAllAmmo$3", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isCreative()Z", remap = true))
