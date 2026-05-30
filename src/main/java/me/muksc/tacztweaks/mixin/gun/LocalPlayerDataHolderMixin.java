@@ -11,20 +11,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = LocalPlayerDataHolder.class, remap = false)
 public abstract class LocalPlayerDataHolderMixin implements LocalPlayerDataHolderExtension {
     @Unique
-    boolean tacztweaks$shouldStartReloading = false;
+    boolean tacztweaks$boltBeforeReload = false;
 
     @Override
-    public boolean tacztweaks$getShouldStartReloading() {
-        return tacztweaks$shouldStartReloading;
+    public boolean tacztweaks$getBoltBeforeReload() {
+        return tacztweaks$boltBeforeReload;
     }
 
     @Override
-    public void tacztweaks$setShouldStartReloading(boolean shouldStartReloading) {
-        tacztweaks$shouldStartReloading = shouldStartReloading;
+    public void tacztweaks$setBoltBeforeReload(boolean boltBeforeReload) {
+        tacztweaks$boltBeforeReload = boltBeforeReload;
     }
 
     @Inject(method = "reset", at = @At("TAIL"))
     private void tacztweaks$reset(CallbackInfo ci) {
-        tacztweaks$shouldStartReloading = false;
+        tacztweaks$boltBeforeReload = false;
     }
 }

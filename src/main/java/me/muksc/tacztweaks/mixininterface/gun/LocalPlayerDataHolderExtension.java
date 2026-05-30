@@ -1,7 +1,7 @@
 package me.muksc.tacztweaks.mixininterface.gun;
 
 public interface LocalPlayerDataHolderExtension {
-    boolean tacztweaks$getShouldStartReloading();
+    boolean tacztweaks$getBoltBeforeReload();
 
-    void tacztweaks$setShouldStartReloading(boolean shouldStartReloading);
+    void tacztweaks$setBoltBeforeReload(boolean boltBeforeReload);
 }

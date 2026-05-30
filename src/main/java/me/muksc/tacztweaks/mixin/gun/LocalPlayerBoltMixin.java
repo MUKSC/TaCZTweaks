@@ -31,12 +31,12 @@ public abstract class LocalPlayerBoltMixin {
     private void tacztweaks$tickAutoBolt$boltBeforeReload(CallbackInfo ci) {
         if (!Config.Gun.INSTANCE.manualBolting()) return;
         LocalPlayerDataHolderExtension ext = (LocalPlayerDataHolderExtension) data;
-        if (!ext.tacztweaks$getShouldStartReloading()) return;
+        if (!ext.tacztweaks$getBoltBeforeReload()) return;
 
         bolt();
         if (!data.isBolting && !data.clientStateLock) {
+            ext.tacztweaks$setBoltBeforeReload(false);
             IClientPlayerGunOperator.fromLocalPlayer(player).reload();
-            ext.tacztweaks$setShouldStartReloading(false);
         }
     }
 }

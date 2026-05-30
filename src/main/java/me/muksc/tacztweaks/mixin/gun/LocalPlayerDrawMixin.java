@@ -17,6 +17,6 @@ public abstract class LocalPlayerDrawMixin {
     @Inject(method = "resetData", at = @At("TAIL"))
     private void tacztweaks$resetData(CallbackInfo ci) {
         LocalPlayerDataHolderExtension ext = (LocalPlayerDataHolderExtension) data;
-        ext.tacztweaks$setShouldStartReloading(false);
+        ext.tacztweaks$setBoltBeforeReload(false);
     }
 }
