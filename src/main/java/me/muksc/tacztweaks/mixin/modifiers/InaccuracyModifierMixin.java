@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
@@ -21,13 +20,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class InaccuracyModifierMixin {
     @ModifyExpressionValue(method = "lambda$initCache$0", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getInaccuracy(Lcom/tacz/guns/resource/pojo/data/gun/InaccuracyType;F)F"))
     private static float tacztweaks$initCache$inaccuracyModifier(float original, @Local(argsOnly = true) InaccuracyType type) {
-        float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), original);
+        float inaccuracy = (float) Config.Modifiers.Inaccuracy.INSTANCE.eval(original);
         switch (type) {
-            case STAND -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.StandInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
-            case AIM -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
-            case MOVE -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.MoveInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
-            case SNEAK -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.SneakInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
-            case LIE -> inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.CrawlInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+            case STAND -> inaccuracy = (float) Config.Modifiers.StandInaccuracy.INSTANCE.eval(inaccuracy);
+            case AIM -> inaccuracy = (float) Config.Modifiers.AimInaccuracy.INSTANCE.eval(inaccuracy);
+            case MOVE -> inaccuracy = (float) Config.Modifiers.MoveInaccuracy.INSTANCE.eval(inaccuracy);
+            case SNEAK -> inaccuracy = (float) Config.Modifiers.SneakInaccuracy.INSTANCE.eval(inaccuracy);
+            case LIE -> inaccuracy = (float) Config.Modifiers.CrawlInaccuracy.INSTANCE.eval(inaccuracy);
         }
         return inaccuracy;
     }
@@ -44,7 +43,7 @@ public abstract class InaccuracyModifierMixin {
         CallbackInfoReturnable<Object> cir,
         @Local(ordinal = 0) LocalFloatRef inaccuracyRef
     ) {
-        inaccuracyRef.set((float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), inaccuracyRef.get()));
+        inaccuracyRef.set((float) Config.Modifiers.Inaccuracy.INSTANCE.eval(inaccuracyRef.get()));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -56,8 +55,8 @@ public abstract class InaccuracyModifierMixin {
         CallbackInfoReturnable<Object> cir,
         @Local(ordinal = 0) LocalFloatRef inaccuracyRef
     ) {
-        float inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.Inaccuracy.INSTANCE.toTaCZ(), 1.0F - inaccuracyRef.get());
-        inaccuracy = (float) AttachmentPropertyManager.eval(Config.Modifiers.AimInaccuracy.INSTANCE.toTaCZ(), inaccuracy);
+        float inaccuracy = (float) Config.Modifiers.Inaccuracy.INSTANCE.eval(1.0F - inaccuracyRef.get());
+        inaccuracy = (float) Config.Modifiers.AimInaccuracy.INSTANCE.eval(inaccuracy);
         inaccuracyRef.set(1.0F - inaccuracy);
     }
 }

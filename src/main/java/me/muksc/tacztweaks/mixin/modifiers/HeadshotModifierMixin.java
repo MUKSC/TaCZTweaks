@@ -3,7 +3,6 @@ package me.muksc.tacztweaks.mixin.modifiers;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.HeadShotModifier;
 import me.muksc.tacztweaks.config.Config;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +18,7 @@ public abstract class HeadshotModifierMixin {
     @Expression("? * (Double) HEAD_SHOT_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "initCache", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$initCache$headshotModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.Headshot.INSTANCE.toTaCZ(), original);
+        return Config.Modifiers.Headshot.INSTANCE.eval(original);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -29,6 +28,6 @@ public abstract class HeadshotModifierMixin {
     @Expression("? * (Double) HEAD_SHOT_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$getPropertyDiagramsData$headshotModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.Headshot.INSTANCE.toTaCZ(), original);
+        return Config.Modifiers.Headshot.INSTANCE.eval(original);
     }
 }

@@ -12,6 +12,7 @@
     "accessor.ClipContextAccessor",
     "accessor.EntityKineticBulletAccessor",
     "accessor.InaccuracyTypeAccessor",
+    "accessor.ModifierAccessor",
     "compat.firstaid.EntityKineticBulletMixin",
     "compat.firstaid.EventHandlerMixin",
     "compat.lrtactical.MeleeItemMixin$0_3_0",

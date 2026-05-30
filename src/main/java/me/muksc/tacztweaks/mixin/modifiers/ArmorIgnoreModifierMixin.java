@@ -3,7 +3,6 @@ package me.muksc.tacztweaks.mixin.modifiers;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.ArmorIgnoreModifier;
 import me.muksc.tacztweaks.config.Config;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +18,7 @@ public abstract class ArmorIgnoreModifierMixin {
     @Expression("? * (Double) ARMOR_IGNORE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "initCache", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$initCache$armorIgnoreModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.ArmorIgnore.INSTANCE.toTaCZ(), original);
+        return Config.Modifiers.ArmorIgnore.INSTANCE.eval(original);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -29,6 +28,6 @@ public abstract class ArmorIgnoreModifierMixin {
     @Expression("? * (Double) ARMOR_IGNORE_BASE_MULTIPLIER.get()")
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double tacztweaks$getPropertyDiagramsData$armorIgnoreModifier(double original) {
-        return AttachmentPropertyManager.eval(Config.Modifiers.ArmorIgnore.INSTANCE.toTaCZ(), original);
+        return Config.Modifiers.ArmorIgnore.INSTANCE.eval(original);
     }
 }

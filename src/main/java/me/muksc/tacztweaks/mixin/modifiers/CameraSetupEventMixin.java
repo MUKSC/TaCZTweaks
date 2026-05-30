@@ -10,7 +10,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.client.event.CameraSetupEvent;
-import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.mixininterface.modifiers.GunRecoilExtension;
@@ -47,9 +46,9 @@ public abstract class CameraSetupEventMixin {
         try {
             ext.tacztweaks$setModifier(value -> {
                 boolean negative = value < 0;
-                double recoil = AttachmentPropertyManager.eval(Config.Modifiers.VerticalRecoil.INSTANCE.toTaCZ(), Math.abs(value));
-                if (crawlRef.get()) recoil = AttachmentPropertyManager.eval(Config.Modifiers.CrawlVerticalRecoil.INSTANCE.toTaCZ(), recoil);
-                double aimingModifier = AttachmentPropertyManager.eval(Config.Modifiers.AimVerticalRecoil.INSTANCE.toTaCZ(), recoil) - recoil;
+                double recoil = Config.Modifiers.VerticalRecoil.INSTANCE.eval(Math.abs(value));
+                if (crawlRef.get()) recoil = Config.Modifiers.CrawlVerticalRecoil.INSTANCE.eval(recoil);
+                double aimingModifier = Config.Modifiers.AimVerticalRecoil.INSTANCE.eval(recoil) - recoil;
                 recoil = recoil + (aimingModifier * aimingProgressRef.get());
                 return recoil * (negative ? -1 : 1);
             });
@@ -71,9 +70,9 @@ public abstract class CameraSetupEventMixin {
         try {
             ext.tacztweaks$setModifier(value -> {
                 boolean negative = value < 0;
-                double recoil = AttachmentPropertyManager.eval(Config.Modifiers.HorizontalRecoil.INSTANCE.toTaCZ(), Math.abs(value));
-                if (crawlRef.get()) recoil = AttachmentPropertyManager.eval(Config.Modifiers.CrawlHorizontalRecoil.INSTANCE.toTaCZ(), recoil);
-                double aimingModifier = AttachmentPropertyManager.eval(Config.Modifiers.AimHorizontalRecoil.INSTANCE.toTaCZ(), recoil) - recoil;
+                double recoil = Config.Modifiers.HorizontalRecoil.INSTANCE.eval(Math.abs(value));
+                if (crawlRef.get()) recoil = Config.Modifiers.CrawlHorizontalRecoil.INSTANCE.eval(recoil);
+                double aimingModifier = Config.Modifiers.AimHorizontalRecoil.INSTANCE.eval(recoil) - recoil;
                 recoil = recoil + (aimingModifier * aimingProgressRef.get());
                 return recoil * (negative ? -1 : 1);
             });

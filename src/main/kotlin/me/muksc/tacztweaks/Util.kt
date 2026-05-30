@@ -18,13 +18,6 @@ fun <K, V> Map<K, V>.toImmutableMap(): ImmutableMap<K, V> =
 inline fun <T> Comparator<T>.thenPrioritizeBy(crossinline selector: (T) -> Boolean): Comparator<T> =
     thenByDescending(selector)
 
-fun <T> Class<T>.setPrivateField(instance: T, name: String, value: Any?) {
-    getDeclaredField(name).run {
-        isAccessible = true
-        set(instance, value)
-    }
-}
-
 fun BlockState.blockInput(): BlockInput = BlockInput(this, emptySet(), null)
 
 val Block.id: ResourceLocation?

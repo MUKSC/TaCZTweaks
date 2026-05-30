@@ -14,9 +14,9 @@ import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.config.sync.ESyncDirection
 import me.muksc.tacztweaks.config.sync.SyncableCodecConfig
 import me.muksc.tacztweaks.config.sync.SyncableJsonFileCodecConfig
+import me.muksc.tacztweaks.mixin.accessor.ModifierAccessor
 import me.muksc.tacztweaks.network.NetworkHandler
 import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
-import me.muksc.tacztweaks.setPrivateField
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -124,16 +124,16 @@ object Config : SyncableJsonFileCodecConfig<Config>(
 
     abstract class ModifierConfig : SyncableCodecConfig<ModifierConfig>() {
         val addend by registerSyncable(
-            default = 0.0F,
-            codec = FLOAT,
-            encoder = FriendlyByteBuf::writeFloat,
-            decoder = FriendlyByteBuf::readFloat
+            default = 0.0,
+            codec = DOUBLE,
+            encoder = FriendlyByteBuf::writeDouble,
+            decoder = FriendlyByteBuf::readDouble
         )
         val multiplier by registerSyncable(
-            default = 1.0F,
-            codec = FLOAT,
-            encoder = FriendlyByteBuf::writeFloat,
-            decoder = FriendlyByteBuf::readFloat
+            default = 1.0,
+            codec = DOUBLE,
+            encoder = FriendlyByteBuf::writeDouble,
+            decoder = FriendlyByteBuf::readDouble
         )
         val function by registerSyncable<String>(
             default = "",
@@ -142,25 +142,22 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             decoder = FriendlyByteBuf::readUtf
         )
 
-        fun toTaCZ(): Modifier {
-            var modifier = modifier
-            if (modifier == null) modifier = create()
-            if (modifier.addend.toFloat() != addend.syncedValue) modifier = create()
-            if (modifier.multiplier.toFloat() != multiplier.syncedValue) modifier = create()
-            if (modifier.function != function.syncedValue.takeIf { it.isNotEmpty() }) modifier = create()
-            return modifier.also(this::modifier::set)
+        fun isEmpty(): Boolean =
+            addend.syncedValue == 0.0
+                && multiplier.syncedValue == 1.0
+                && function.syncedValue.isEmpty()
+
+        fun eval(value: Double): Double {
+            if (isEmpty()) return value
+            return AttachmentPropertyManager.eval(modifier, value)
         }
 
-        private var modifier: Modifier? = null
-
-        private fun create(): Modifier = Modifier().apply {
-            val instance = this
-            val config = this@ModifierConfig
-            Modifier::class.java.run {
-                setPrivateField(instance, "addend", config.addend.syncedValue)
-                setPrivateField(instance, "multiplier", config.multiplier.syncedValue)
-                setPrivateField(instance, "function", config.function.syncedValue.takeIf { it.isNotEmpty() })
-            }
+        private val _modifier = Modifier()
+        private val accessor = _modifier as ModifierAccessor
+        val modifier: Modifier get() = _modifier.apply {
+            accessor.setAddend(this@ModifierConfig.addend.syncedValue)
+            accessor.setMultiplier(this@ModifierConfig.multiplier.syncedValue)
+            accessor.setFunction(this@ModifierConfig.function.syncedValue)
         }
     }
 
@@ -836,20 +833,20 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     name(TaCZTweaks.translatable("config.modifiers.$key.name"))
                     description(OptionDescription.of(TaCZTweaks.translatable("config.modifiers.$key.description")))
                     collapsed(true)
-                    option(Option.createBuilder<Float>().apply {
+                    option(Option.createBuilder<Double>().apply {
                         nameSynced(TaCZTweaks.translatable("config.modifier.addend.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.addend.description")))
                         binding(modifier.addend.asSyncedBinding())
-                        controller(numberField { value: Float ->
+                        controller(numberField { value: Double ->
                             Component.literal(DecimalFormat("+#.#;-#.#").format(value))
                         })
                         available(canUpdateServerConfig)
                     }.build())
-                    option(Option.createBuilder<Float>().apply {
+                    option(Option.createBuilder<Double>().apply {
                         nameSynced(TaCZTweaks.translatable("config.modifier.multiplier.name"))
                         descriptionSynced(OptionDescription.of(TaCZTweaks.translatable("config.modifier.multiplier.description")))
                         binding(modifier.multiplier.asSyncedBinding())
-                        controller(numberField { value: Float ->
+                        controller(numberField { value: Double ->
                             Component.literal("%.1f".format(value))
                         })
                         available(canUpdateServerConfig)
