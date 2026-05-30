@@ -1,4 +1,2 @@
-- TaCZ 1.1.8
-- Added new `rps` and `forceDefaultHitAndKillSounds` options
-- Fixed the unloading feature doesn't work when you only have one round left
-- Fixed compatibility with other mod's shields
+- Improved performance of the balancing modifier feature
+- Fixed the incorrect reloading behaviour when using manual bolting
