@@ -190,6 +190,7 @@ publishMods {
 
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
+            .orElse(provider { env.fetch("GITHUB_TOKEN") })
         parent(rootProject.tasks.named("publishGithub"))
     }
 }
