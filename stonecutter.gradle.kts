@@ -18,8 +18,8 @@ stonecutter parameters {
 
 stonecutter tasks {
     val comparator = compareBy<ProjectNode> { when (it.metadata.project.substringAfterLast('-')) {
-        "forge", "neoforge" -> 0
-        "fabric" -> 1
+        "fabric" -> 0
+        "forge", "neoforge" -> 1
         else -> error("Unknown loader for project: ${it.metadata.project}")
     } }.then(versionComparator)
     order("publishModrinth", comparator)
@@ -29,7 +29,8 @@ stonecutter tasks {
 publishMods {
     displayName = "${mod("name")} ${prop("version")} for TaCZ ${prop("version.target")}"
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
-    type = STABLE
+    type = ALPHA
+    dryRun = providers.gradleProperty("publish.dry").map(String::toBoolean)
 
     github {
         repository = prop("publish.repository")

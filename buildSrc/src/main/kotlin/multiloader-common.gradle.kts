@@ -143,8 +143,9 @@ tasks.processResources {
 publishMods {
     displayName = "${mod("name")} ${prop("version")} for TaCZ ${prop("version.target")}"
     changelog = providers.fileContents(rootProject.layout.projectDirectory.file("CHANGELOG.md")).asText
-    type = STABLE
+    type = ALPHA
     modLoaders.add(loader)
+    dryRun = providers.gradleProperty("publish.dry").map(String::toBoolean)
 
     modrinth {
         projectId = prop("publish.modrinth")
