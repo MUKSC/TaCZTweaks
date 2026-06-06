@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.muksc.tacztweaks.neoforge.mixin",
+  "compatibilityLevel": "JAVA_${java_version}",
+  "refmap": "${mod_id}-neoforge.refmap.json",
+  "mixins": [],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

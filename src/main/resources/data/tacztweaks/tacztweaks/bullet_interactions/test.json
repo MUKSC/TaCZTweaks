@@ -1,0 +1,18 @@
+{
+  "type": "block",
+  "conditions": [
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+        "type": "minecraft:creeper"
+      }
+    }
+  ],
+  "blockBreak": {
+    "type": "never"
+  },
+  "pierce": {
+    "type": "never"
+  }
+}

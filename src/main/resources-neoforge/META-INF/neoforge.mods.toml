@@ -1,0 +1,55 @@
+modLoader = "kotlinforforge"
+loaderVersion = "[kotlin_loader_version,)"
+issueTrackerURL = "https://github.com/MUKSC/TaCZTweaks/issues"
+license = "GNU General Public License v3.0"
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[mixins]]
+config = "${mod_id}-neoforge.mixins.json"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
+displayURL = "https://modrinth.com/mod/tacz-tweaks"
+logoFile = "icon.png"
+authors = "MUKSC"
+description = '''
+'''
+
+[[dependencies."${mod_id}"]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${loader_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "kotlinforforge"
+type = "required"
+versionRange = "[${kff_version},)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "yet_another_config_lib_v3"
+type = "required"
+versionRange = "[${yacl_version},)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "tacz"
+type = "required"
+versionRange = "[${tacz_version_min},${tacz_version_max})"
+ordering = "AFTER"
+side = "BOTH"

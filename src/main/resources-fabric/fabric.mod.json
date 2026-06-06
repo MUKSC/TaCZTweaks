@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "",
+  "authors": [
+    "MUKSC"
+  ],
+  "contact": {
+    "repo": "https://github.com/MUKSC/TaCZTweaks",
+    "issues": "https://github.com/MUKSC/TaCZTweaks/issues",
+    "homepage": "https://modrinth.com/mod/tacz-tweaks"
+  },
+  "license": "GNU General Public License v3.0",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "me.muksc.tacztweaks.fabric.TaCZTweaksMod"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "me.muksc.tacztweaks.fabric.TaCZTweaksModClient"
+      }
+    ],
+    "modmenu": [
+      {
+        "adapter": "kotlin",
+        "value": "me.muksc.tacztweaks.fabric.compat.ModMenuCompat"
+      }
+    ]
+  },
+  "accessWidener": "${mod_id}.accesswidener",
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "yet_another_config_lib_v3": ">=${yacl_version}",
+    "tacz": ">=${tacz_version_min}",
+    "minecraft": "${minecraft_version}"
+  }
+}
