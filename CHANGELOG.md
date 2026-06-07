@@ -17,3 +17,8 @@ The config file will be migrated automatically; this version should serve as a d
 - New overhauled and much more capable data pack system
 - More attributes (suggestions welcome!)
 - More commands (suggestions welcome!)
+
+### Changes Over 3.0.0-alpha.6
+- Fixed mixin related crashes
+- Fixed bullet interactions not being able to destroy blocks in Fabric
+- Removed the accidentally bundled `glass.json` bullet interaction file
