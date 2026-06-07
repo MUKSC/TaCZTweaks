@@ -20,11 +20,11 @@ public interface TaCZTweaksBullet {
 
     int tacztweaks$getBlockPierce();
 
-    void tacztweaks$incrementBlockPierce();
+    void tacztweaks$setBlockPierce(int pierce);
 
     int tacztweaks$getEntityPierce();
 
-    void tacztweaks$incrementEntityPierce();
+    void tacztweaks$setEntityPierce(int pierce);
 
     void tacztweaks$modifyDamage(float flat, float multiplier);
 

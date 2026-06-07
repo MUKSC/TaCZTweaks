@@ -57,9 +57,9 @@ public abstract class ProjectileExplosionMixin extends Explosion {
                 this.x = x;
                 this.y = y;
                 this.z = z;
-                accessor.setX(x);
-                accessor.setY(y);
-                accessor.setZ(z);
+                accessor.tacztweaks$setX(x);
+                accessor.tacztweaks$setY(y);
+                accessor.tacztweaks$setZ(z);
                 explode();
             });
         } finally {

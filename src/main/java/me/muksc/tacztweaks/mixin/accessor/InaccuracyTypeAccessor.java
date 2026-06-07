@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(value = InaccuracyType.class, remap = false)
 public interface InaccuracyTypeAccessor {
-    @Invoker
-    static boolean invokeIsMove(LivingEntity livingEntity) {
+    @Invoker("isMove")
+    static boolean tacztweaks$invokeIsMove(LivingEntity livingEntity) {
         throw new AssertionError();
     }
 }

@@ -10,19 +10,19 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(value = EntityKineticBullet.class, remap = false)
 public interface EntityKineticBulletAccessor {
-    @Accessor
-    int getPierce();
+    @Accessor("pierce")
+    int tacztweaks$getPierce();
 
-    @Accessor
-    void setPierce(int pierce);
+    @Accessor("pierce")
+    void tacztweaks$setPierce(int pierce);
 
-    @Accessor
-    boolean getExplosion();
+    @Accessor("explosion")
+    boolean tacztweaks$getExplosion();
 
-    @Invoker
-    void invokeOnHitEntity(TacHitResult result, Vec3 startVec, Vec3 endVec);
+    @Invoker("onHitEntity")
+    void tacztweaks$invokeOnHitEntity(TacHitResult result, Vec3 startVec, Vec3 endVec);
 
-    @Invoker
-    void invokeOnHitBlock(BlockHitResult result, Vec3 startVec, Vec3 endVec);
+    @Invoker("onHitBlock")
+    void tacztweaks$invokeOnHitBlock(BlockHitResult result, Vec3 startVec, Vec3 endVec);
 
 }

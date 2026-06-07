@@ -337,9 +337,9 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             private val _modifier = TaCZModifier()
             private val accessor = _modifier as ModifierAccessor
             val modifier: TaCZModifier get() = _modifier.apply {
-                accessor.setAddend(this@Modifier.addend.syncedValue)
-                accessor.setMultiplier(this@Modifier.multiplier.syncedValue)
-                accessor.setFunction(this@Modifier.function.syncedValue)
+                accessor.`tacztweaks$setAddend`(this@Modifier.addend.syncedValue)
+                accessor.`tacztweaks$setMultiplier`(this@Modifier.multiplier.syncedValue)
+                accessor.`tacztweaks$setFunction`(this@Modifier.function.syncedValue)
             }
         }
     }

@@ -30,7 +30,7 @@ public abstract class SoundEngineMixin {
     ) {
         if (original == null) return original;
         ChannelHandleAccessor accessor = (ChannelHandleAccessor) original;
-        Channel channel = accessor.getChannel();
+        Channel channel = accessor.tacztweaks$getChannel();
         if (channel == null) return original;
         ChannelExtraContext.of(channel).tacztweaks$setSoundInstance(sound);
         return original;

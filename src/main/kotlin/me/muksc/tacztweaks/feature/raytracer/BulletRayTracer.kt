@@ -5,6 +5,7 @@ import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.IgnoringClipContext
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.RayTracingBullet
+import me.muksc.tacztweaks.mixininterop.*
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
@@ -28,7 +29,7 @@ object BulletRayTracer {
         run {
             val bullet = getBullet(args.context) ?: return@run
             val ext = RayTracingBullet.of(bullet)
-            ext.`tacztweaks$setCurrentHitPosition`(args.context.from)
+            ext.currentHitPosition = args.context.from
             level = args.level
         }
         operation(args)

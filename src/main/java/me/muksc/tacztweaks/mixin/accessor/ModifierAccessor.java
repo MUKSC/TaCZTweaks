@@ -6,12 +6,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(value = Modifier.class, remap = false)
 public interface ModifierAccessor {
-    @Accessor
-    void setAddend(double addend);
+    @Accessor("addend")
+    void tacztweaks$setAddend(double addend);
 
-    @Accessor
-    void setMultiplier(double multiplier);
+    @Accessor("multiplier")
+    void tacztweaks$setMultiplier(double multiplier);
 
-    @Accessor
-    void setFunction(String function);
+    @Accessor("function")
+    void tacztweaks$setFunction(String function);
 }

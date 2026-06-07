@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(BlockInput.class)
 public interface BlockInputAccessor {
-    @Accessor
-    @Nullable CompoundTag getTag();
+    @Accessor("tag")
+    @Nullable CompoundTag tacztweaks$getTag();
 }

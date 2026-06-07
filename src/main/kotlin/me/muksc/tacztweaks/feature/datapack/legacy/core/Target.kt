@@ -13,6 +13,8 @@ import me.muksc.tacztweaks.core.codec.EntityPredicateCodec
 import me.muksc.tacztweaks.core.codec.IntsMinMaxBoundsCodec
 import me.muksc.tacztweaks.core.codec.strictOptionalFieldOf
 import me.muksc.tacztweaks.mixininterface.feature.datapack.TaCZTweaksBullet
+import me.muksc.tacztweaks.mixininterop.burstIndex
+import me.muksc.tacztweaks.mixininterop.pelletIndex
 import net.minecraft.advancements.critereon.EntityPredicate
 import net.minecraft.advancements.critereon.MinMaxBounds
 import net.minecraft.resources.ResourceLocation
@@ -194,7 +196,7 @@ sealed class Target(
     ) : Target(ETargetType.BURST_INDEX) {
         override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
             val ext = TaCZTweaksBullet.of(entity) ?: return false
-            return index.matches(ext.`tacztweaks$getBurstIndex`())
+            return index.matches(ext.burstIndex)
         }
 
         companion object {
@@ -209,7 +211,7 @@ sealed class Target(
     ) : Target(ETargetType.PELLET_INDEX) {
         override fun test(entity: EntityKineticBullet?, weaponId: ResourceLocation, damage: Float): Boolean {
             val ext = TaCZTweaksBullet.of(entity) ?: return false
-            return index.matches(ext.`tacztweaks$getPelletIndex`())
+            return index.matches(ext.pelletIndex)
         }
 
         companion object {

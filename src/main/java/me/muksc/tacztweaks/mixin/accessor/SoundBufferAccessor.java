@@ -10,9 +10,9 @@ import java.nio.ByteBuffer;
 
 @Mixin(SoundBuffer.class)
 public interface SoundBufferAccessor {
-    @Accessor
-    @Nullable ByteBuffer getData();
+    @Accessor("data")
+    @Nullable ByteBuffer tacztweaks$getData();
 
-    @Accessor
-    AudioFormat getFormat();
+    @Accessor("format")
+    AudioFormat tacztweaks$getFormat();
 }

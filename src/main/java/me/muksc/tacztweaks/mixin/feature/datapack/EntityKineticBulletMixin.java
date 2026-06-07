@@ -85,8 +85,8 @@ public abstract class EntityKineticBulletMixin implements TaCZTweaksBullet {
     }
 
     @Override
-    public void tacztweaks$incrementBlockPierce() {
-        tacztweaks$blockPierce += 1;
+    public void tacztweaks$setBlockPierce(int pierce) {
+        tacztweaks$blockPierce = pierce;
     }
 
     @Override
@@ -95,8 +95,8 @@ public abstract class EntityKineticBulletMixin implements TaCZTweaksBullet {
     }
 
     @Override
-    public void tacztweaks$incrementEntityPierce() {
-        tacztweaks$entityPierce += 1;
+    public void tacztweaks$setEntityPierce(int pierce) {
+        tacztweaks$entityPierce = pierce;
     }
 
     @Override

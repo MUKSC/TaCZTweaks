@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 @Mixin(value = LocalPlayerShoot.class, remap = false)
 public interface LocalPlayerShootAccessor {
     @Accessor("SHOOT_LOCKED_CONDITION")
-    static Predicate<IGunOperator> SHOOT_LOCKED_CONDITION() {
+    static Predicate<IGunOperator> tacztweaks$SHOOT_LOCKED_CONDITION() {
         throw new AssertionError();
     }
 }

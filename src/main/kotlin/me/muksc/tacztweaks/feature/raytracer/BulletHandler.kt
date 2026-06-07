@@ -10,6 +10,8 @@ import me.muksc.tacztweaks.feature.datapack.legacy.manager.BulletSoundsManager
 import me.muksc.tacztweaks.feature.general.compatibility.PillagersGunManager
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.RayTracingBullet
+import me.muksc.tacztweaks.mixininterop.currentHitPosition
+import me.muksc.tacztweaks.mixininterop.onHitBlock
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
@@ -25,22 +27,22 @@ object BulletHandler {
         val accessor = bullet as EntityKineticBulletAccessor
         val ext = RayTracingBullet.of(bullet)
 
-        val currentPosition = ext.`tacztweaks$getCurrentHitPosition`()
+        val currentPosition = ext.currentHitPosition
         val entities = EntityUtil.findEntitiesOnPath(
             bullet, currentPosition, original.location
         )
         for (result in entities.sortedBy { currentPosition.distanceTo(it.hitPos) }) {
             if (PillagersGunManager.shouldIgnoreEntity(result.entity, bullet.owner)) continue
-            ext.`tacztweaks$setCurrentHitPosition`(result.hitPos)
+            ext.currentHitPosition = result.hitPos
             if (onHitEntity(result, bullet, context)) continue
             bullet.discard()
             return original
         }
 
-        ext.`tacztweaks$setCurrentHitPosition`(original.location)
+        ext.currentHitPosition = original.location
         if (original.type == HitResult.Type.MISS || state == null) return original
         if (onHitBlock(original, state, bullet, context)) return null
-        accessor.invokeOnHitBlock(original, context.from, context.to)
+        accessor.onHitBlock(original, context.from, context.to)
         return original
     }
 
@@ -54,7 +56,7 @@ object BulletHandler {
         val interactionResult = BulletInteractionManager.handleBlockInteraction(bullet, result, state)
         BulletParticlesManager.handleBlockParticle(interactionResult, bullet, result, state)
         BulletSoundsManager.handleBlockSound(interactionResult, bullet, result, state)
-        if (!interactionResult.pierce) accessor.invokeOnHitBlock(result, context.from, context.to)
+        if (!interactionResult.pierce) accessor.onHitBlock(result, context.from, context.to)
         return interactionResult.pierce
     }
 

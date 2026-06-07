@@ -7,6 +7,7 @@ import com.tacz.guns.api.item.IAmmoBox
 import com.tacz.guns.client.gameplay.LocalPlayerDataHolder
 import me.muksc.tacztweaks.mixin.accessor.LocalPlayerDataHolderAccessor
 import me.muksc.tacztweaks.mixin.accessor.LocalPlayerShootAccessor
+import me.muksc.tacztweaks.mixininterop.player
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
 
@@ -21,7 +22,7 @@ fun Inventory.hasCreativeAmmoBox(gunStack: ItemStack): Boolean = (0..containerSi
 val LocalPlayerDataHolder.clientStateLockExcludingShoot: Boolean
     get() {
         val loosened = lockedCondition == null
-            || lockedCondition == LocalPlayerShootAccessor.SHOOT_LOCKED_CONDITION()
+            || lockedCondition == LocalPlayerShootAccessor.`tacztweaks$SHOOT_LOCKED_CONDITION`()
         if (clientStateLock && !loosened) return true
 
         val operator = IGunOperator.fromLivingEntity((this as LocalPlayerDataHolderAccessor).player)

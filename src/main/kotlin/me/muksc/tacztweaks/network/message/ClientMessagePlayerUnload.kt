@@ -9,6 +9,7 @@ import me.muksc.tacztweaks.core.network.CustomPacketPayloadType
 import me.muksc.tacztweaks.core.codec.StreamCodec
 import me.muksc.tacztweaks.core.extension.hasCreativeAmmoBox
 import me.muksc.tacztweaks.mixininterface.feature.keyactions.unload.UnloadableGun
+import me.muksc.tacztweaks.mixininterop.unload
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -26,7 +27,7 @@ object ClientMessagePlayerUnload : CustomPacketPayload<ClientMessagePlayerUnload
         val gunStack = operator.dataHolder.currentGunItem?.get() ?: return@execute
         if (player.inventory.hasCreativeAmmoBox(gunStack)) return@execute
         val gun = IGun.getIGunOrNull(gunStack) ?: return@execute
-        UnloadableGun.of(gun).`tacztweaks$unload`(player, gunStack)
+        UnloadableGun.of(gun).unload(player, gunStack)
     }
 
     override fun self(): ClientMessagePlayerUnload = this

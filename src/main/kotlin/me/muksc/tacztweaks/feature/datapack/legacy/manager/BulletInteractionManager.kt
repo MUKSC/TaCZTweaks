@@ -19,6 +19,7 @@ import me.muksc.tacztweaks.feature.raytracer.BulletHandler.InteractionResult
 import me.muksc.tacztweaks.feature.datapack.shield.CustomShieldResult
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.feature.datapack.TaCZTweaksBullet
+import me.muksc.tacztweaks.mixininterop.*
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -108,7 +109,7 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         val level = bullet.level() as? ServerLevel ?: return InteractionResult(false, false)
         val pos = result.blockPos.immutable()
         val ext = TaCZTweaksBullet.of(bullet)
-        val stack = GunStack(ext.`tacztweaks$getGunStack`())
+        val stack = GunStack(ext.gunStack)
         val (id, interaction) = getBulletInteraction(bullet, result.location, BulletInteraction.Block::blocks) {
             it.test(level, pos, state)
         } ?: (TaCZTweaks.id("default") to INTERACTION_BLOCK_DEFAULT)
@@ -126,8 +127,8 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         val pierce = shouldPierce(
             bullet, result,
             interaction.pierce, interaction.gunPierce,destroyBlock,
-            ext::`tacztweaks$incrementBlockPierce`,
-            ext::`tacztweaks$getBlockPierce`
+            incrementCustomPierce = { ext.blockPierce += 1 },
+            getCustomPierce = ext::blockPierce
         )
         if (pierce && !destroyBlock && interaction.pierce.renderBulletHole) {
             val option = BulletHoleOption(
@@ -156,19 +157,19 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         } ?: (TaCZTweaks.id("default") to INTERACTION_ENTITY_DEFAULT)
         logger.infoDebug("Using entity bullet interaction: $id")
 
-        ext.`tacztweaks$modifyEntityHitDamage`(
+        ext.modifyEntityHitDamage(
             interaction.damage.modifier,
             interaction.damage.multiplier
         )
-        accessor.invokeOnHitEntity(result, context.from, result.location)
+        accessor.onHitEntity(result, context.from, result.location)
 
         val isDead = !entity.isAlive
         if (accessor.explosion) return InteractionResult(false, isDead)
         val pierce = shouldPierce(
             bullet, result,
             interaction.pierce,interaction.gunPierce, isDead,
-            ext::`tacztweaks$incrementEntityPierce`,
-            ext::`tacztweaks$getEntityPierce`
+            incrementCustomPierce = { ext.entityPierce += 1 },
+            getCustomPierce = ext::entityPierce
         )
         return InteractionResult(pierce, isDead)
     }
@@ -282,7 +283,7 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
             is BulletInteraction.Pierce.Damage -> bullet.getDamage(result.location) > 0.0F
         } || return false
         if (pierce.conditional && !success) return false
-        ext.`tacztweaks$modifyDamage`(-pierce.damageFalloff, pierce.damageMultiplier)
+        ext.modifyDamage(-pierce.damageFalloff, pierce.damageMultiplier)
         return true
     }
 }

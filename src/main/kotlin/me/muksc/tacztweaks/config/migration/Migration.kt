@@ -9,6 +9,7 @@ import dev.isxander.yacl3.config.v3.JsonFileCodecConfig
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.core.logger.withMarker
 import me.muksc.tacztweaks.mixin.accessor.JsonFileCodecConfigAccessor
+import me.muksc.tacztweaks.mixininterop.configPath
 import org.slf4j.MarkerFactory
 import java.io.IOException
 import java.nio.file.Files

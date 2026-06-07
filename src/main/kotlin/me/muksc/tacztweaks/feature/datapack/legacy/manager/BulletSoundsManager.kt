@@ -10,6 +10,7 @@ import me.muksc.tacztweaks.core.anyOrEmpty
 import me.muksc.tacztweaks.feature.datapack.legacy.BulletSounds
 import me.muksc.tacztweaks.feature.raytracer.BulletHandler
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.RayTracingBullet
+import me.muksc.tacztweaks.mixininterop.currentHitPosition
 import me.muksc.tacztweaks.network.NetworkManager
 import me.muksc.tacztweaks.network.message.ServerMessageAirspaceSounds
 import me.muksc.tacztweaks.network.message.ServerMessageSoundPhysicsRequired
@@ -125,7 +126,7 @@ object BulletSoundsManager : BaseDataManager<BulletSounds>("bullet_sounds", COMP
 
     fun handleSoundWhizz(player: ServerPlayer, bullet: EntityKineticBullet) {
         val ext = RayTracingBullet.of(bullet)
-        val destination = ext.`tacztweaks$getCurrentHitPosition`()
+        val destination = ext.currentHitPosition
         val (id, sounds) = getSound<BulletSounds.Whizz>(bullet, destination) ?: return
         logger.infoDebug( "Using whizz bullet sounds '$id' for player '$player'")
 

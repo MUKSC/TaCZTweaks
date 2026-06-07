@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ClipContext.class)
 public interface ClipContextAccessor {
-    @Accessor
-    ClipContext.Block getBlock();
+    @Accessor("block")
+    ClipContext.Block tacztweaks$getBlock();
 
-    @Accessor
-    ClipContext.Fluid getFluid();
+    @Accessor("fluid")
+    ClipContext.Fluid tacztweaks$getFluid();
 
-    @Accessor
-    CollisionContext getCollisionContext();
+    @Accessor("collisionContext")
+    CollisionContext tacztweaks$getCollisionContext();
 }

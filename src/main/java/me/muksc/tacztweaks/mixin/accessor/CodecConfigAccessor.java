@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mixin(value = CodecConfig.class, remap = false)
 public interface CodecConfigAccessor {
-    @Accessor
-    List<ReadonlyConfigEntry<?>> getEntries();
+    @Accessor("entries")
+    List<ReadonlyConfigEntry<?>> tacztweaks$getEntries();
 }

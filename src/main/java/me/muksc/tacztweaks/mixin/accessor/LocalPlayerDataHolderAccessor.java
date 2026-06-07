@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(value = LocalPlayerDataHolder.class, remap = false)
 public interface LocalPlayerDataHolderAccessor {
-    @Accessor
-    LocalPlayer getPlayer();
+    @Accessor("player")
+    LocalPlayer tacztweaks$getPlayer();
 }

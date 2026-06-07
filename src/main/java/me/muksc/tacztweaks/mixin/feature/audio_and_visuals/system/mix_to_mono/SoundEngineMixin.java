@@ -29,9 +29,9 @@ public abstract class SoundEngineMixin {
         if (!MonoObject.of(id).tacztweaks$getMono()) return original;
         return original.thenApply(buffer -> {
             SoundBufferAccessor accessor = (SoundBufferAccessor) buffer;
-            ByteBuffer data = accessor.getData();
+            ByteBuffer data = accessor.tacztweaks$getData();
             if (data == null) return buffer;
-            AudioFormat format = accessor.getFormat();
+            AudioFormat format = accessor.tacztweaks$getFormat();
             ByteBuffer monoData = StereoToMonoMixer.process(id, data, format);
             if (monoData == null) return buffer;
             return new SoundBuffer(monoData, new AudioFormat(

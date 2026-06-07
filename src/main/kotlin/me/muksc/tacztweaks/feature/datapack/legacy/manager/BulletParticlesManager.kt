@@ -16,6 +16,7 @@ import me.muksc.tacztweaks.feature.datapack.legacy.BulletParticles.Particle.Coor
 import me.muksc.tacztweaks.feature.datapack.legacy.BulletParticles.Particle.Coordinates.ECoordinatesType
 import me.muksc.tacztweaks.feature.raytracer.BulletHandler
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.RayTracingBullet
+import me.muksc.tacztweaks.mixininterop.currentHitPosition
 import net.minecraft.commands.arguments.ParticleArgument
 import net.minecraft.commands.arguments.coordinates.LocalCoordinates
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate
@@ -116,7 +117,7 @@ object BulletParticlesManager : BaseDataManager<BulletParticles>("bullet_particl
     private fun BulletParticles.Particle.summon(level: ServerLevel, bullet: EntityKineticBullet, context: String? = null) {
         val ext = RayTracingBullet.of(bullet)
         val source = bullet.createCommandSourceStack()
-            .withPosition(ext.`tacztweaks$getCurrentHitPosition`())
+            .withPosition(ext.currentHitPosition)
         val reader = StringReader(if (context != null) particle.format(context) else particle)
         //? if <1.20.5 {
         val registries = level.registryAccess().lookupOrThrow(Registries.PARTICLE_TYPE)

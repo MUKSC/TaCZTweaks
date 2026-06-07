@@ -4,6 +4,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import me.muksc.tacztweaks.mixin.accessor.BlockInputAccessor
+import me.muksc.tacztweaks.mixininterop.tag
 import net.minecraft.commands.arguments.blocks.BlockInput
 import net.minecraft.commands.arguments.blocks.BlockStateParser
 import net.minecraft.core.registries.BuiltInRegistries

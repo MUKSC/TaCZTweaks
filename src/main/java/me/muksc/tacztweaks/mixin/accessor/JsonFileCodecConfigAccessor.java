@@ -9,8 +9,8 @@ import java.nio.file.Path;
 
 @Mixin(value = JsonFileCodecConfig.class, remap = false)
 public interface JsonFileCodecConfigAccessor {
-    @Accessor
-    Path getConfigPath();
+    @Accessor("configPath")
+    Path tacztweaks$getConfigPath();
 
     @Accessor
     Gson getGson();
