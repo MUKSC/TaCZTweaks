@@ -239,7 +239,7 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         //val blockEntity by lazy { level.getBlockEntity(pos) }
         if (entity is ServerPlayer) {
             //? if fabric {
-            /*if (PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, entity, pos, state, blockEntity)) {
+            /*if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, entity, pos, state, blockEntity)) {
                 PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(level, entity, pos, state, blockEntity)
                 return
             }
