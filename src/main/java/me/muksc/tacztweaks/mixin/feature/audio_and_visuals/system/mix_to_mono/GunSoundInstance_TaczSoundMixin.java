@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(targets = "com.tacz.guns.client.sound.GunSoundInstance$TaczSound", remap = false)
+@Mixin(targets = "com.tacz.guns.client.sound.GunSoundInstance$TaczSound")
 public abstract class GunSoundInstance_TaczSoundMixin implements MonoObject {
     @Unique
     private boolean tacztweaks$mono = false;
@@ -22,7 +22,7 @@ public abstract class GunSoundInstance_TaczSoundMixin implements MonoObject {
         tacztweaks$mono = mono;
     }
 
-    @ModifyReturnValue(method = "getPath", at = @At("RETURN"), remap = true)
+    @ModifyReturnValue(method = "getPath", at = @At("RETURN"))
     private ResourceLocation tacztweaks$mixToMono$setMono(ResourceLocation original) {
         MonoObject object = MonoObject.of(original);
         object.tacztweaks$setMono(tacztweaks$mono);

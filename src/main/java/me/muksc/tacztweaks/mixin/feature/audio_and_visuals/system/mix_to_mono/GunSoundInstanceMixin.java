@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = GunSoundInstance.class, remap = false)
+@Mixin(GunSoundInstance.class)
 public abstract class GunSoundInstanceMixin {
     @Unique
     private boolean tacztweaks$mono = false;
 
-    @Inject(method = "<init>(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFLnet/minecraft/world/entity/Entity;ILnet/minecraft/resources/ResourceLocation;ZZ)V", at = @At("TAIL"))
+    @Inject(method = "<init>(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFLnet/minecraft/world/entity/Entity;ILnet/minecraft/resources/ResourceLocation;ZZ)V", at = @At("TAIL"), remap = false)
     private void tacztweaks$init$mixToMono$storeMono(SoundEvent soundEvent, SoundSource source, float volume, float pitch, Entity entity, int soundDistance, ResourceLocation registryName, boolean mono, boolean relative, CallbackInfo ci) {
         tacztweaks$mono = mono;
     }
 
-    @ModifyExpressionValue(method = "resolve", at = @At(value = "NEW", target = "com/tacz/guns/client/sound/GunSoundInstance$TaczSound", remap = false), remap = true)
+    @ModifyExpressionValue(method = "resolve", at = @At(value = "NEW", target = "com/tacz/guns/client/sound/GunSoundInstance$TaczSound", remap = false))
     private @Coerce Object tacztweaks$resolve$mixToMono$setMono(@Coerce Object original) {
         MonoObject object = MonoObject.of(original);
         object.tacztweaks$setMono(tacztweaks$mono);

@@ -6,7 +6,7 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(value = Channel.class, remap = false)
+@Mixin(Channel.class)
 public abstract class ChannelMixin implements ChannelExtraContext {
     @Unique
     private SoundInstance tacztweaks$soundInstance = null;

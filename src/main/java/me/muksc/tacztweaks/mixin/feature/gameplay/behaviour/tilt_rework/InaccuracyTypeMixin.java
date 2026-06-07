@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = InaccuracyType.class, remap = false)
 public abstract class InaccuracyTypeMixin {
-    @Definition(id = "CROUCHING", field = "Lnet/minecraft/world/entity/Pose;CROUCHING:Lnet/minecraft/world/entity/Pose;")
+    @Definition(id = "CROUCHING", field = "Lnet/minecraft/world/entity/Pose;CROUCHING:Lnet/minecraft/world/entity/Pose;", remap = true)
     @Expression("? == CROUCHING")
     @ModifyExpressionValue(method = "getInaccuracyType", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static boolean tacztweaks$getInaccuracyType$tiltRework(

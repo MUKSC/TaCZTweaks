@@ -56,7 +56,7 @@ public abstract class ProjectileExplosionMixin extends Explosion {
     @Shadow @Final private Entity exploder;
     @Shadow @Final private ExplosionDamageCalculator damageCalculator;
 
-    @Inject(method = "explode", at = @At("HEAD"))
+    @Inject(method = "explode", at = @At("HEAD"), remap = true)
     private void tacztweaks$explode$sableCompat$preExplode(
         final CallbackInfo ci,
         @Share("explodedSet") final LocalRef<Set<BlockPos>> explodedSet
@@ -64,7 +64,7 @@ public abstract class ProjectileExplosionMixin extends Explosion {
         explodedSet.set(new ObjectOpenHashSet<>());
     }
 
-    @Inject(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ExplosionDamageCalculator;getBlockExplosionResistance(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Ljava/util/Optional;"))
+    @Inject(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ExplosionDamageCalculator;getBlockExplosionResistance(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Ljava/util/Optional;"), remap = true)
     private void tacztweaks$explode$sableCompat$redirectBlockExplosionResistance(
         CallbackInfo ci,
         @Local(name = "set") Set<BlockPos> set,

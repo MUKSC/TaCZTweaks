@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = BulletHoleParticle.class, remap = false)
+@Mixin(BulletHoleParticle.class)
 public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     protected BulletHoleParticleMixin(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
@@ -55,7 +55,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
         if (shouldRemove()) remove();
     }
 
-    @Definition(id = "move", method = "Lnet/minecraft/world/phys/AABB;move(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/AABB;")
+    @Definition(id = "move", method = "Lnet/minecraft/world/phys/AABB;move(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/AABB;", remap = true)
     @Definition(id = "pos", field = "Lcom/tacz/guns/client/particle/BulletHoleParticle;pos:Lnet/minecraft/core/BlockPos;")
     @Expression("?.move(this.pos)")
     @WrapOperation(method = "shouldRemove", at = @At("MIXINEXTRAS:EXPRESSION"), remap = false)

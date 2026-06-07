@@ -14,15 +14,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(value = GunSmithTableScreen.class, remap = false)
+@Mixin(GunSmithTableScreen.class)
 public abstract class GunSmithTableScreenMixin extends AbstractContainerScreen<GunSmithTableMenu> {
-    @Shadow private List<ResourceLocation> selectedRecipeList;
+    @Shadow(remap = false) private List<ResourceLocation> selectedRecipeList;
 
     public GunSmithTableScreenMixin(GunSmithTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 
-    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true, remap = true)
+    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
     //? if <1.20.2 {
     private void tacztweaks$mouseScrolled$fixNPE(double pMouseX, double pMouseY, double pDelta, CallbackInfoReturnable<Boolean> cir) {
     //?} else {

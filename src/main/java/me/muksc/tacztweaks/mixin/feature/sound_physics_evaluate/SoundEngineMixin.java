@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = SoundEngine.class, remap = false)
+@Mixin(SoundEngine.class)
 public abstract class SoundEngineMixin {
     @Definition(id = "ChannelHandle", type = ChannelAccess.ChannelHandle.class)
     @Definition(id = "join", method = "Ljava/util/concurrent/CompletableFuture;join()Ljava/lang/Object;")
@@ -40,7 +40,7 @@ public abstract class SoundEngineMixin {
     //? if fabric {
     /*@WrapOperation(method = "method_19752", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/audio/Channel;play()V"))
     *///?} else {
-    @WrapOperation(method = "lambda$play$6", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/audio/Channel;play()V"))
+    @WrapOperation(method = "lambda$play$6", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/audio/Channel;play()V", remap = true), remap = false)
     //?}
     private static void tacztweaks$play$soundPhysicsEvaluate$1(Channel instance, Operation<Void> original) {
         SoundInstance soundInstance = ChannelExtraContext.of(instance).tacztweaks$getSoundInstance();
@@ -56,7 +56,7 @@ public abstract class SoundEngineMixin {
     //? if fabric {
     /*@WrapOperation(method = "method_19755", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/audio/Channel;play()V"))
     *///?} else {
-    @WrapOperation(method = "lambda$play$8", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/audio/Channel;play()V"))
+    @WrapOperation(method = "lambda$play$8", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/audio/Channel;play()V", remap = true), remap = false)
     //?}
     private static void tacztweaks$play$soundPhysicsEvaluate$2(Channel instance, Operation<Void> original) {
         SoundInstance soundInstance = ChannelExtraContext.of(instance).tacztweaks$getSoundInstance();

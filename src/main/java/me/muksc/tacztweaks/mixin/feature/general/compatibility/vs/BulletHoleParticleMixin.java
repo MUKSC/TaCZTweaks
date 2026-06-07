@@ -40,7 +40,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     private ClientShip tacztweaks$ship = null;
 
     @Unique
-    private final Vector3d tacztweaks$shipPos = null;
+    private Vector3d tacztweaks$shipPos = null;
 
     @ModifyExpressionValue(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/client/particle/BulletHoleParticle;shouldRemove()Z", remap = false))
     private boolean tacztweaks$init$vsCompat$deferRemoveCheck(boolean original) {
@@ -52,11 +52,11 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     private void tacztweaks$init$vsCompat(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, CallbackInfo ci) {
         if (!Config.General.Compatibility.vsCompat()) return;
         tacztweaks$ship = VSGameUtilsKt.getShipObjectManagingPos(world, pos);
-        if (tacztweaks$ship != null) tacztweaks$ship.getTransform().getWorldToShip().transformPosition(x, y, z, tacztweaks$shipPos);
+        if (tacztweaks$ship != null) tacztweaks$shipPos = tacztweaks$ship.getTransform().getWorldToShip().transformPosition(x, y, z, new Vector3d());
         if (shouldRemove()) remove();
     }
 
-    @Definition(id = "move", method = "Lnet/minecraft/world/phys/AABB;move(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/AABB;")
+    @Definition(id = "move", method = "Lnet/minecraft/world/phys/AABB;move(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/AABB;", remap = true)
     @Definition(id = "pos", field = "Lcom/tacz/guns/client/particle/BulletHoleParticle;pos:Lnet/minecraft/core/BlockPos;")
     @Expression("?.move(this.pos)")
     @WrapOperation(method = "shouldRemove", at = @At("MIXINEXTRAS:EXPRESSION"), remap = false)
@@ -71,7 +71,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
         @Share("worldPos") LocalRef<Vector3d> worldPosRef
     ) {
         if (!Config.General.Compatibility.vsCompat() || tacztweaks$ship == null) return;
-        worldPosRef.set(tacztweaks$ship.getRenderTransform().getShipToWorld().transformPosition(tacztweaks$shipPos));
+        worldPosRef.set(tacztweaks$ship.getRenderTransform().getShipToWorld().transformPosition(tacztweaks$shipPos, new Vector3d()));
     }
 
     @Definition(id = "lerp", method = "Lnet/minecraft/util/Mth;lerp(DDD)D")

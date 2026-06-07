@@ -29,7 +29,7 @@ public abstract class CommonForgeEventsMixin {
         return LegendarySurvivalOverhaulManager.wrapOperation(bullet, () -> original.call(hitEntity, player));
     }
 
-    @Definition(id = "is", method = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z")
+    @Definition(id = "is", method = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z", remap = true)
     @Definition(id = "IS_PROJECTILE", field = "Lnet/minecraft/tags/DamageTypeTags;IS_PROJECTILE:Lnet/minecraft/tags/TagKey;", remap = true)
     @Expression("?.is(IS_PROJECTILE)")
     @WrapOperation(method = "onEntityHurtDamage", at = @At("MIXINEXTRAS:EXPRESSION"))
