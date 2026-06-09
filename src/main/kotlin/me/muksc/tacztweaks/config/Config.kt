@@ -87,11 +87,9 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         }
 
         object Miscellaneous : SyncableCodecConfig<Miscellaneous>() {
-            val alwaysFilterByItemInHand by register(true, BOOL)
             val dynamicAttachmentSlots by register(false, BOOL)
             val rps by register(false, BOOL)
 
-            @JvmStatic fun alwaysFilterByItemInHand(): Boolean = alwaysFilterByItemInHand.value
             @JvmStatic fun dynamicAttachmentSlots(): Boolean = dynamicAttachmentSlots.value
             @JvmStatic fun rps(): Boolean = rps.value
         }
@@ -403,9 +401,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 }
             }
             group("miscellaneous") {
-                option(General.Miscellaneous::alwaysFilterByItemInHand) {
-                    builder.controller(booleanController())
-                }
                 option(General.Miscellaneous::dynamicAttachmentSlots) {
                     builder.controller(booleanController())
                 }

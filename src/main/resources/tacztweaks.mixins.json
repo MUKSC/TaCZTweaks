@@ -165,7 +165,6 @@
     "feature.general.fixes.crashes.GunSmithTableScreenMixin",
     "feature.general.fixes.disable_bullet_culling.EntityBulletRendererMixin",
     "feature.general.fixes.third_person_gun_rendering_fix.ItemInHandLayerMixinMixin",
-    "feature.general.misc.always_filter_by_item_in_hand.GunPackListMixin",
     "feature.general.misc.dynamic_attachment_slots.GunRefitScreenMixin",
     "feature.keyactions.reducesensitivity.MouseHandlerMixinMixin",
     "feature.keyactions.tiltgun.LocalPlayerMixin",
