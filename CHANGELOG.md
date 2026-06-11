@@ -18,7 +18,5 @@ The config file will be migrated automatically; this version should serve as a d
 - More attributes (suggestions welcome!)
 - More commands (suggestions welcome!)
 
-### Changes Over 3.0.0-alpha.7
-- Removed the `alwaysFilterByItemInHand` option as it's implemented in the base mod
-- Fixed the Gun Smith Table not displaying recipes in Forge 1.20.1
-- Fixed some mod compatibility issues
+### Changes Over 3.0.0-alpha.8
+- Fixed refitting not working on dedicated servers
