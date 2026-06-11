@@ -130,7 +130,7 @@ dependencies {
 
     // Runtime
     modLocalRuntime("maven.modrinth:better-modlist:${libs("better-modlist")}")
-    modLocalRuntime("maven.modrinth:cubes-without-borders:${libs("cubes-without-borders")}")
+    // if (client) modLocalRuntime("maven.modrinth:cubes-without-borders:${libs("cubes-without-borders")}")
     modLocalRuntime("org.valkyrienskies:valkyrienskies-120-forge:${libs("valkyrienskies")}")
     modLocalRuntime("maven.modrinth:sound-physics-remastered:${libs("sound-physics-remastered")}")
 }

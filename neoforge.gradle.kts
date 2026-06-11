@@ -87,11 +87,9 @@ dependencies {
 
     // Runtime
     localRuntime("maven.modrinth:better-modlist:${libs("better-modlist")}")
-    localRuntime("maven.modrinth:cubes-without-borders:${libs("cubes-without-borders")}")
-    run {
-        localRuntime("dev.ryanhcode.sable:sable-neoforge-1.21.1:${libs("sable")}") {
-            isTransitive = false
-        }
+    // if (client) localRuntime("maven.modrinth:cubes-without-borders:${libs("cubes-without-borders")}")
+    localRuntime("dev.ryanhcode.sable:sable-neoforge-1.21.1:${libs("sable")}") {
+        isTransitive = false
     }
     localRuntime("maven.modrinth:sound-physics-remastered:${libs("sound-physics-remastered")}")
 }
