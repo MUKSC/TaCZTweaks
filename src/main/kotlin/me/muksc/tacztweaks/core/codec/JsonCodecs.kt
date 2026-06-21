@@ -45,18 +45,16 @@ val NumberProviderCodec: Codec<NumberProvider> = ExtraCodecs.JSON.comapFlatMap({
     } catch (e: JsonParseException) {
         DataResult.error(e::message)
     }
-}, {
-    conditionGson.toJsonTree(it)
-})
+}, conditionGson::toJsonTree)
 
 val IntsMinMaxBoundsCodec: Codec<MinMaxBounds.Ints> = ExtraCodecs.JSON.xmap(
-    { MinMaxBounds.Ints.fromJson(it) },
-    { it.serializeToJson() }
+    MinMaxBounds.Ints::fromJson,
+    MinMaxBounds.Ints::serializeToJson
 )
 
 val DoublesMinMaxBoundsCodec: Codec<MinMaxBounds.Doubles> = ExtraCodecs.JSON.xmap(
-    { MinMaxBounds.Doubles.fromJson(it) },
-    { it.serializeToJson() }
+    MinMaxBounds.Doubles::fromJson,
+    MinMaxBounds.Doubles::serializeToJson
 )
 
 val LootItemConditionCodec: Codec<LootItemCondition> = ExtraCodecs.JSON.comapFlatMap({
@@ -65,22 +63,20 @@ val LootItemConditionCodec: Codec<LootItemCondition> = ExtraCodecs.JSON.comapFla
     } catch (e: JsonParseException) {
         DataResult.error(e::message)
     }
-}, {
-    conditionGson.toJsonTree(it)
-})
+}, conditionGson::toJsonTree)
 
 val ItemPredicateCodec: Codec<ItemPredicate> = ExtraCodecs.JSON.xmap(
-    { ItemPredicate.fromJson(it) },
-    { it.serializeToJson() }
+    ItemPredicate::fromJson,
+    ItemPredicate::serializeToJson
 )
 
 val BlockPredicateCodec: Codec<BlockPredicate> = ExtraCodecs.JSON.xmap(
-    { BlockPredicate.fromJson(it) },
-    { it.serializeToJson() }
+    BlockPredicate::fromJson,
+    BlockPredicate::serializeToJson
 )
 
 val EntityPredicateCodec: Codec<EntityPredicate> = ExtraCodecs.JSON.xmap(
-    { EntityPredicate.fromJson(it) },
-    { it.serializeToJson() }
+    EntityPredicate::fromJson,
+    EntityPredicate::serializeToJson
 )
 //?}

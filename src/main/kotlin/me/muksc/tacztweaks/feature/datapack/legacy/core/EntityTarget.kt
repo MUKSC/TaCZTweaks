@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import kotlin.ranges.contains
+import net.minecraft.world.entity.Entity as MCEntity
 
 //? if forge
 import me.muksc.tacztweaks.core.registry.PlatformRegistries.byNameCodec
@@ -45,7 +46,7 @@ sealed class EntityTarget(
     }
 
     class AllOf(val terms: List<EntityTarget>) : EntityTarget(EEntityTargetType.ALL_OF) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             terms.all { it.test(entity) }
 
         companion object {
@@ -56,7 +57,7 @@ sealed class EntityTarget(
     }
 
     class AnyOf(val terms: List<EntityTarget>) : EntityTarget(EEntityTargetType.ANY_OF) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             terms.any { it.test(entity) }
 
         companion object {
@@ -67,7 +68,7 @@ sealed class EntityTarget(
     }
 
     class Inverted(val term: EntityTarget) : EntityTarget(EEntityTargetType.INVERTED) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             !term.test(entity)
 
         companion object {
@@ -78,7 +79,7 @@ sealed class EntityTarget(
     }
 
     class Entity(val values: List<EntityType<*>>) : EntityTarget(EEntityTargetType.ENTITY_TAG) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             values.any { entity.type == it }
 
         companion object {
@@ -89,7 +90,7 @@ sealed class EntityTarget(
     }
 
     class EntityTag(val values: List<TagKey<EntityType<*>>>) : EntityTarget(EEntityTargetType.ENTITY_TAG) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             values.any { entity.type.`is`(it) }
 
         companion object {
@@ -100,7 +101,7 @@ sealed class EntityTarget(
     }
 
     class RegexPattern(val regex: Regex) : EntityTarget(EEntityTargetType.REGEX) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             regex.matches(entity.type.id.toString())
 
         companion object {
@@ -111,7 +112,7 @@ sealed class EntityTarget(
     }
 
     class Predicate(val predicate: EntityPredicate) : EntityTarget(EEntityTargetType.PREDICATE) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             predicate.matches(entity.level() as ServerLevel, entity.position(), entity)
 
         companion object {
@@ -133,7 +134,7 @@ sealed class EntityTarget(
             }
         }
 
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             entity is LivingEntity && when (unit) {
                 EHealthUnit.RAW -> entity.health
                 EHealthUnit.PERCENTAGE -> entity.health / entity.maxHealth
@@ -148,7 +149,7 @@ sealed class EntityTarget(
     }
 
     class Armor(val range: ValueRange) : EntityTarget(EEntityTargetType.ARMOR) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             entity is LivingEntity && entity.getAttributeValue(Attributes.ARMOR) in range
 
         companion object {
@@ -159,7 +160,7 @@ sealed class EntityTarget(
     }
 
     class ArmorToughness(val range: ValueRange) : EntityTarget(EEntityTargetType.ARMOR_TOUGHNESS) {
-        override fun test(entity: net.minecraft.world.entity.Entity): Boolean =
+        override fun test(entity: MCEntity): Boolean =
             entity is LivingEntity && entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS) in range
 
         companion object {

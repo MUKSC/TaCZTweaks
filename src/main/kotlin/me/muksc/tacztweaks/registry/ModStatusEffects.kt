@@ -22,9 +22,6 @@ object ModStatusEffects {
 
     //? if fabric
     //@Suppress("RedundantSamConstructor")
-    fun <T : MobEffect> register(name: String, block: () -> T): DeferredHolder<MobEffect, T> {
-        return REGISTRY.register(name, Supplier {
-            block()
-        }).wrap()
-    }
+    fun <T : MobEffect> register(name: String, block: () -> T): DeferredHolder<MobEffect, T> =
+        REGISTRY.register(name, Supplier { block() }).wrap()
 }

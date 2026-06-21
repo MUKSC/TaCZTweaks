@@ -17,8 +17,8 @@ object LRTacticalManager : ModCompatibilityManager(
     }
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean = when (mixinClassName) {
-        "me.muksc.tacztweaks.mixin.feature.general.compatibility.lrtactical.MeleeItemMixin_0_4_0" -> modVersionRange("lrtactical", "0.4.0")
-        "me.muksc.tacztweaks.mixin.feature.general.compatibility.lrtactical.MeleeItemMixin_0_3_0" -> modVersionRange("lrtactical", "0.3.0", "0.4.0")
+        "me.muksc.tacztweaks.mixin.feature.general.compatibility.lrtactical.MeleeItemMixin_0_4_0" -> modVersionRange(modId, "0.4.0")
+        "me.muksc.tacztweaks.mixin.feature.general.compatibility.lrtactical.MeleeItemMixin_0_3_0" -> modVersionRange(modId, "0.3.0", "0.4.0")
         else -> true
     }
 

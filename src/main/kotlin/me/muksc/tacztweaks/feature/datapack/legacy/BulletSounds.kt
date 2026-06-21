@@ -3,17 +3,13 @@ package me.muksc.tacztweaks.feature.datapack.legacy
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import me.muksc.tacztweaks.core.codec.DispatchCodec
-import me.muksc.tacztweaks.core.codec.singleOrListCodec
-import me.muksc.tacztweaks.core.codec.sortedBy
-import me.muksc.tacztweaks.core.codec.strictOptionalFieldOf
-import me.muksc.tacztweaks.feature.datapack.core.forGetter
+import me.muksc.tacztweaks.core.codec.*
 import me.muksc.tacztweaks.feature.datapack.legacy.core.BlockTestable
 import me.muksc.tacztweaks.feature.datapack.legacy.core.EntityTestable
 import me.muksc.tacztweaks.feature.datapack.legacy.core.Target
 import me.muksc.tacztweaks.feature.datapack.legacy.core.ValueRange
 import net.minecraft.resources.ResourceLocation
-import java.util.*
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 sealed class BulletSounds(
@@ -190,9 +186,9 @@ sealed class BulletSounds(
         companion object {
             val CODEC: MapCodec<Airspace> = RecordCodecBuilder.mapCodec { it.group(
                 singleOrListCodec(Target.CODEC).strictOptionalFieldOf("target", emptyList()).forGetter(Airspace::target),
-                ValueRange.CODEC.optionalFieldOf("airspace", ValueRange.DEFAULT).forGetter(Airspace::airspace),
-                ValueRange.CODEC.optionalFieldOf("occlusion", ValueRange.DEFAULT).forGetter(Airspace::occlusion),
-                ValueRange.CODEC.optionalFieldOf("reflectivity", ValueRange.DEFAULT).forGetter(Airspace::reflectivity),
+                ValueRange.CODEC.strictOptionalFieldOf("airspace", ValueRange.DEFAULT).forGetter(Airspace::airspace),
+                ValueRange.CODEC.strictOptionalFieldOf("occlusion", ValueRange.DEFAULT).forGetter(Airspace::occlusion),
+                ValueRange.CODEC.strictOptionalFieldOf("reflectivity", ValueRange.DEFAULT).forGetter(Airspace::reflectivity),
                 Codec.list(DistanceSound.CODEC).sortedBy(DistanceSound::threshold).strictOptionalFieldOf("sounds", emptyList()).forGetter(Airspace::sounds),
                 Codec.INT.strictOptionalFieldOf("priority", 0).forGetter(Airspace::priority)
             ).apply(it, ::Airspace) }

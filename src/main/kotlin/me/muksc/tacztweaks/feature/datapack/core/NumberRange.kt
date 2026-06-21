@@ -4,13 +4,14 @@ import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.core.codec.NumberProviderCodec
+import me.muksc.tacztweaks.core.codec.forGetter
 import me.muksc.tacztweaks.core.codec.strictOptionalFieldOf
 import me.muksc.tacztweaks.core.toImmutableSet
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
-import java.util.*
+import java.util.Optional
 import java.util.function.Function
 import kotlin.jvm.optionals.getOrNull
 

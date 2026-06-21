@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraftforge.registries.RegistryObject
-import java.util.*
+import java.util.Optional
 import java.util.function.Predicate
 import java.util.stream.Stream
 import kotlin.jvm.optionals.getOrNull

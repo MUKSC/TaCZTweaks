@@ -17,7 +17,7 @@ import net.minecraftforge.network.NetworkDirection
 import net.minecraftforge.network.NetworkRegistry
 import net.minecraftforge.network.PacketDistributor
 import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
-import java.util.*
+import java.util.Optional
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.BiConsumer
 

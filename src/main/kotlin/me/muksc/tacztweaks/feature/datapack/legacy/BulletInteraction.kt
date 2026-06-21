@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.muksc.tacztweaks.core.codec.*
-import me.muksc.tacztweaks.feature.datapack.core.forGetter
 import me.muksc.tacztweaks.feature.datapack.legacy.core.BlockTestable
 import me.muksc.tacztweaks.feature.datapack.legacy.core.EntityTestable
 import me.muksc.tacztweaks.feature.datapack.legacy.core.Target

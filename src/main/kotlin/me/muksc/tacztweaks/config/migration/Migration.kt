@@ -18,7 +18,7 @@ import kotlin.io.path.copyTo
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
 
-val logger = TaCZTweaks.logger.withMarker(
+internal val logger = TaCZTweaks.logger.withMarker(
     MarkerFactory.getMarker("ConfigMigration")
 )
 

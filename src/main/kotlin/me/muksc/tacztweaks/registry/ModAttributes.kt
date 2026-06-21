@@ -46,9 +46,8 @@ object ModAttributes {
 
     //? if fabric
     //@Suppress("RedundantSamConstructor")
-    fun <T : Attribute> register(name: String, block: (descriptionId: String) -> T): DeferredHolder<Attribute, T> {
-        return REGISTRY.register(name, Supplier {
+    fun <T : Attribute> register(name: String, block: (descriptionId: String) -> T): DeferredHolder<Attribute, T> =
+        REGISTRY.register(name, Supplier {
             block(TaCZTweaks.translatable("attribute.$name").string)
         }).wrap()
-    }
 }
