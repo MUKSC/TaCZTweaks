@@ -18,13 +18,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = SoundPhysics.class, remap = false)
 public abstract class SoundPhysicsMixin_1_1_x {
     @Dynamic
-    @ModifyExpressionValue(method = "evaluateEnvironment", at = @At(value = "INVOKE", target = "Lcom/sonicether/soundphysics/SoundPhysics;calculateOcclusion(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/sounds/SoundSource;Ljava/lang/String;)D"))
-    private static float tacztweaks$evaluateEnvironment$soundPhysicsEvaluate$occlusionAccumulation(
-        float original,
+    @Inject(method = "evaluateEnvironment", at = @At("HEAD"))
+    private static void tacztweaks$evaluateEnvironment$soundPhysicsEvaluate$init(
+        int sourceID, double posX, double posY, double posZ, SoundSource category, String sound, boolean auxOnly, CallbackInfoReturnable<Vec3> cir,
         @Share(value = "processing", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsEvaluationSoundInstance> processingRef,
         @Share(value = "evaluation", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsManager.EvaluationResult> evaluationRef
     ) {
-        if (processingRef.get() != null) evaluationRef.set(evaluationRef.get().withOcclusionAccumulation(original));
+        processingRef.set(SoundPhysicsManager.getProcessing());
+        if (processingRef.get() != null) evaluationRef.set(new SoundPhysicsManager.EvaluationResult(-1.0F, -1.0F, -1.0F));
+    }
+
+    @Dynamic
+    @ModifyExpressionValue(method = "evaluateEnvironment", at = @At(value = "INVOKE", target = "Lcom/sonicether/soundphysics/SoundPhysics;calculateOcclusion(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/sounds/SoundSource;Ljava/lang/String;)D"))
+    private static double tacztweaks$evaluateEnvironment$soundPhysicsEvaluate$occlusionAccumulation(
+        double original,
+        @Share(value = "processing", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsEvaluationSoundInstance> processingRef,
+        @Share(value = "evaluation", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsManager.EvaluationResult> evaluationRef
+    ) {
+        if (processingRef.get() != null) evaluationRef.set(evaluationRef.get().withOcclusionAccumulation((float) original));
         return original;
     }
 
