@@ -23,7 +23,7 @@ sealed class BulletParticles(
         ENTITY("entity", { Entity.CODEC });
 
         companion object {
-            private val map = EBulletParticlesType.entries.associateBy(EBulletParticlesType::key)
+            private val map = entries.associateBy(EBulletParticlesType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
     }
@@ -53,7 +53,7 @@ sealed class BulletParticles(
                 LOCAL("local", { Local.CODEC });
 
                 companion object {
-                    private val map = ECoordinatesType.entries.associateBy(ECoordinatesType::key)
+                    private val map = entries.associateBy(ECoordinatesType::key)
                     val CODEC = DispatchCodec.getCodec(map::getValue)
                 }
             }

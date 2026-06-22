@@ -28,7 +28,7 @@ sealed class BulletSounds(
         AIRSPACE("airspace", { Airspace.CODEC });
 
         companion object {
-            private val map = EBulletSoundsType.entries.associateBy(EBulletSoundsType::key)
+            private val map = entries.associateBy(EBulletSoundsType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
     }

@@ -49,7 +49,7 @@ sealed class Target(
         RANDOM_CHANCE("random_chance", { RandomChance.CODEC });
 
         companion object {
-            private val map = ETargetType.entries.associateBy(ETargetType::key)
+            private val map = entries.associateBy(ETargetType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
     }

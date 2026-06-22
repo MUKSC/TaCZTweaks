@@ -40,7 +40,7 @@ sealed class EntityTarget(
         ARMOR_TOUGHNESS("armor_toughness", { ArmorToughness.CODEC });
 
         companion object {
-            private val map = EEntityTargetType.entries.associateBy(EEntityTargetType::key)
+            private val map = entries.associateBy(EEntityTargetType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
     }

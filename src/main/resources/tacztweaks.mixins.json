@@ -120,6 +120,8 @@
     "feature.general.compatibility.sable.BulletHoleParticleMixin",
     "feature.general.compatibility.sable.ExplodeUtilMixin",
     "feature.general.compatibility.sable.ProjectileExplosionMixin",
+    "feature.general.compatibility.sable.lrtactical.CustomExplosionMixin",
+    "feature.general.compatibility.sable.lrtactical.ThrowableItemEntityMixin",
     "feature.general.compatibility.vs.MixinExplosionMixin",
     "feature.general.compatibility.vs.ProjectileExplosionMixin",
     "feature.general.fixes.attachment_compatibility_check_fix.AttachmentQueryEntryMixin",

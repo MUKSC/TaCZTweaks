@@ -40,7 +40,7 @@ sealed class BlockTarget(
         HARDNESS("hardness", { Hardness.CODEC });
 
         companion object {
-            private val map = EBlockTargetType.entries.associateBy(EBlockTargetType::key)
+            private val map = entries.associateBy(EBlockTargetType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
     }

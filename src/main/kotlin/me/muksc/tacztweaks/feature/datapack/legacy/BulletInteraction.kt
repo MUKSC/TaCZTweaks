@@ -28,7 +28,7 @@ sealed class BulletInteraction(
         SHIELD("shield", { Shield.CODEC });
 
         companion object {
-            private val map = EBulletInteractionType.entries.associateBy(EBulletInteractionType::key)
+            private val map = entries.associateBy(EBulletInteractionType::key)
             val CODEC = DispatchCodec.getCodec(map::getValue)
         }
     }
@@ -50,7 +50,7 @@ sealed class BulletInteraction(
             DAMAGE("damage", { Damage.CODEC });
 
             companion object {
-                private val map = EPierceType.entries.associateBy(EPierceType::key)
+                private val map = entries.associateBy(EPierceType::key)
                 val CODEC = DispatchCodec.getCodec(map::getValue)
             }
         }
