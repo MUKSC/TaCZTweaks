@@ -18,5 +18,7 @@ The config file will be migrated automatically; this version should serve as a d
 - More attributes (suggestions welcome!)
 - More commands (suggestions welcome!)
 
-### Changes Over 3.0.0-alpha.8
-- Fixed refitting not working on dedicated servers
+### Changes Over 3.0.0-alpha.9
+- Implemented additional Sable compat for the LesRaisins Tactical Equipment mod
+- Fixed compatibility with older versions of Sound Physics Remastered
+- Fixed crashes related to attributes
