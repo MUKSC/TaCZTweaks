@@ -21,7 +21,9 @@ object DisarmManager {
             if (entity.isRowing()) return DisarmStatus(true, false)
         }
         if (entity.hasEffect(ModStatusEffects.DISARM.valueOrDelegate())) return DisarmStatus(true, true)
-        if (!entity.getBooleanAttributeValue(ModAttributes.ENABLED.valueOrDelegate())) return DisarmStatus(true, true)
+        if (entity.attributes.hasAttribute(ModAttributes.ENABLED.valueOrDelegate())) {
+            if (!entity.getBooleanAttributeValue(ModAttributes.ENABLED.valueOrDelegate())) return DisarmStatus(true, true)
+        }
         return DisarmStatus(false, true)
     }
 

@@ -20,6 +20,7 @@ public abstract class LivingEntityShootMixin {
     @Expression("?.sprintTimeS > 0.0")
     @ModifyExpressionValue(method = "shoot(Ljava/util/function/Supplier;Ljava/util/function/Supplier;JFZ)Lcom/tacz/guns/api/entity/ShootResult;", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean tacztweaks$shoot$attribute$handling$shootWhileSprinting(boolean original) {
+        if (!shooter.getAttributes().hasAttribute(DeferredHolderExt.valueOrDelegate(ModAttributes.SHOOT_WHILE_SPRINTING))) return original;
         double value = shooter.getAttributeValue(DeferredHolderExt.valueOrDelegate(ModAttributes.SHOOT_WHILE_SPRINTING));
         return original && value <= 0.0;
     }

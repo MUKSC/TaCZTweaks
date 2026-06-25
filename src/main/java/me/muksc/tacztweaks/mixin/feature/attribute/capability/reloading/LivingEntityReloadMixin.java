@@ -17,6 +17,7 @@ public abstract class LivingEntityReloadMixin {
 
     @Inject(method = "reload", at = @At("HEAD"), cancellable = true)
     private void tacztweaks$reload$attribute$capability$reloading(CallbackInfo ci) {
+        if (!shooter.getAttributes().hasAttribute(DeferredHolderExt.valueOrDelegate(ModAttributes.RELOADING))) return;
         double value = shooter.getAttributeValue(DeferredHolderExt.valueOrDelegate(ModAttributes.RELOADING));
         if (value <= 0.0) ci.cancel();
     }

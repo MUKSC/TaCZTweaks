@@ -16,6 +16,7 @@ public abstract class LivingEntitySprintMixin {
 
     @ModifyExpressionValue(method = "getProcessedSprintStatus", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/api/entity/ReloadState$StateType;isReloading()Z"))
     private boolean tacztweaks$getProcessedSprintStatus$attribute$handling$sprintWhileReloading(boolean original) {
+        if (!shooter.getAttributes().hasAttribute(DeferredHolderExt.valueOrDelegate(ModAttributes.SPRINT_WHILE_RELOADING))) return original;
         double value = shooter.getAttributeValue(DeferredHolderExt.valueOrDelegate(ModAttributes.SPRINT_WHILE_RELOADING));
         return original && value <= 0.0;
     }
