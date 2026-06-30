@@ -1,3 +1,6 @@
+# Environment
+.env
+
 # Libraries directory
 libs/
 

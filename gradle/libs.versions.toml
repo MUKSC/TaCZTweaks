@@ -1,4 +1,5 @@
 [versions]
+dotenv = "4.0.0"
 kotlin = "2.0.0"
 minecraft = "1.20.1"
 parchment = "2023.09.03"
@@ -52,6 +53,7 @@ org-valkyrienskies-core-impl = { module = "org.valkyrienskies.core:impl", versio
 modrinth-neat = { module = "maven.modrinth:neat", version.ref = "neat-modrinth" }
 
 [plugins]
+dotenv = { id = "co.uzzu.dotenv.gradle", version.ref = "dotenv" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 forge-gradle = { id = "net.minecraftforge.gradle", version.ref = "forge-gradle" }
 librarian-forgegradle = { id = "org.parchmentmc.librarian.forgegradle", version.ref = "librarian" }

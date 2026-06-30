@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.dotenv)
     alias(libs.plugins.kotlin)
     alias(libs.plugins.forge.gradle)
     alias(libs.plugins.librarian.forgegradle)
@@ -182,6 +183,7 @@ publishMods {
         projectDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText
         additionalFiles.from(packageExamplePack.get().archiveFile)
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            .orElse(provider { env.fetch("MODRINTH_TOKEN") })
         minecraftVersions.addAll(libs.versions.minecraft.list.get().split(','))
 
         requires("kotlin-for-forge")
@@ -192,6 +194,7 @@ publishMods {
     curseforge {
         projectId = project.findProperty("curseforge_id") as String
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+            .orElse(provider { env.fetch("CURSEFORGE_TOKEN") })
         minecraftVersions.addAll(libs.versions.minecraft.list.get().split(','))
 
         clientRequired = true
@@ -206,6 +209,7 @@ publishMods {
         repository = project.findProperty("repository") as String
         additionalFiles.from(packageExamplePack.get().archiveFile)
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
+            .orElse(provider { env.fetch("GITHUB_TOKEN") })
         commitish = "main"
         tagName = "v${project.version}"
     }
