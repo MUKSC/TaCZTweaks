@@ -875,8 +875,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
     fun touch() { /* Nothing */ }
 
     init {
-        if (!loadFromFile()) {
-            saveToFile()
-        }
+        loadFromFile()
+        saveToFile()
     }
 }
