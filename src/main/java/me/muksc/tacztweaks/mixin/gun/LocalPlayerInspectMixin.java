@@ -35,6 +35,7 @@ public abstract class LocalPlayerInspectMixin {
         }
 
         LuaAnimationStateMachine<GunAnimationStateContext> state = gunIndex.getAnimationStateMachine();
+        if (state == null) return;
         SoundPlayManager.stopPlayGunSound();
         state.trigger("inspect_retreat");
         tacztweaks$lastInspect = -1L;

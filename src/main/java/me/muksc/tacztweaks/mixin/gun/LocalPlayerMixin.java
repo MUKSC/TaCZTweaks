@@ -2,6 +2,7 @@ package me.muksc.tacztweaks.mixin.gun;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.resource.GunDisplayInstance;
@@ -34,7 +35,9 @@ public abstract class LocalPlayerMixin implements SlideDataHolder {
             if (!IGun.mainHandHoldGun(player)) return false;
             GunDisplayInstance display = TimelessAPI.getGunDisplay(player.getMainHandItem()).orElse(null);
             if (display == null) return false;
-            GunAnimationStateContext context = display.getAnimationStateMachine().getContext();
+            LuaAnimationStateMachine<GunAnimationStateContext> state = display.getAnimationStateMachine();
+            if (state == null) return false;
+            GunAnimationStateContext context = state.getContext();
             if (context == null) return false;
             return context.shouldSlide();
         };
