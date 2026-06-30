@@ -23,7 +23,7 @@ class StrictOptionalFieldCodec<A : Any>(
         Stream.of(ops.createString(name))
 
     override fun equals(other: Any?): Boolean {
-        if (this == other) return true
+        if (this === other) return true
         if (other !is StrictOptionalFieldCodec<*>) return false
         return name == other.name && elementCodec == other.elementCodec
     }
