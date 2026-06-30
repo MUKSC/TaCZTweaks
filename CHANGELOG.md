@@ -1,2 +1,1 @@
-- Improved performance of the balancing modifier feature
-- Fixed the incorrect reloading behaviour when using manual bolting
+- Fixed some NPE crashes
