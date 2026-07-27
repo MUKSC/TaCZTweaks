@@ -62,6 +62,7 @@
     "feature.balancing.rpm.RpmModifierMixin",
     "feature.balancing.speed.AmmoSpeedModifierMixin",
     "feature.balancing.vertical_recoil.RecoilModifierMixin",
+    "feature.balancing.weight.WeightModifierMixin",
     "feature.core.attribute.ItemStackMixin",
     "feature.core.attribute.LivingEntityMixin",
     "feature.datapack.EntityKineticBulletMixin",

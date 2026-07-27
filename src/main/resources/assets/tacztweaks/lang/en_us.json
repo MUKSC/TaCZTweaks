@@ -174,6 +174,8 @@
   "tacztweaks.config.group.balancing.rpm.description": "Modifies the RPM of guns.\nMaximum RPM is limited to 1200 by the game tick rate.",
   "tacztweaks.config.group.balancing.capacity.name": "Capacity Modifiers",
   "tacztweaks.config.group.balancing.capacity.description": "Modifies the magazine capacity of guns.",
+  "tacztweaks.config.group.balancing.weight.name": "Weight Modifiers",
+  "tacztweaks.config.group.balancing.weight.description": "Modifies the weight of guns.",
   "tacztweaks.config.group.balancing.speed.name": "Speed Modifiers",
   "tacztweaks.config.group.balancing.speed.description": "Modifies the bullet speed of guns.",
   "tacztweaks.config.group.balancing.gravity.name": "Gravity Modifiers",

@@ -300,6 +300,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         @JvmField val ArmorIgnore = modifier("armorIgnore")
         @JvmField val RPM = modifier("rpm")
         @JvmField val Capacity = modifier("capacity")
+        @JvmField val Weight = modifier("weight")
         @JvmField val Speed = modifier("speed")
         @JvmField val Gravity = modifier("gravity")
         @JvmField val Friction = modifier("friction")
