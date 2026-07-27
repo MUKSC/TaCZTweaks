@@ -60,6 +60,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             val forceDisableCrawl by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val firstAidCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
             val lsoCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
+            val apothicAttributesCompat by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val cuffedCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
             val vsCompat by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val sableCompat by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
@@ -68,6 +69,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             @JvmStatic fun forceDisableCrawl(): Boolean = forceDisableCrawl.syncedValue
             @JvmStatic fun firstAidCompat(): Boolean = firstAidCompat.syncedValue
             @JvmStatic fun lsoCompat(): Boolean = lsoCompat.syncedValue
+            @JvmStatic fun apothicAttributesCompat(): Boolean = apothicAttributesCompat.syncedValue
             @JvmStatic fun cuffedCompat(): Boolean = cuffedCompat.syncedValue
             @JvmStatic fun vsCompat(): Boolean = vsCompat.syncedValue
             @JvmStatic fun sableCompat(): Boolean = sableCompat.syncedValue
@@ -363,6 +365,11 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 //?}
                 //? if (1.20.1 && forge) || (1.21.1 && neoforge) {
                 optionSynced(General.Compatibility::lsoCompat) {
+                    builder.controller(booleanController())
+                }
+                //?}
+                //? if (1.20.1 && forge) || (1.21.1 && neoforge) {
+                optionSynced(General.Compatibility::apothicAttributesCompat) {
                     builder.controller(booleanController())
                 }
                 //?}

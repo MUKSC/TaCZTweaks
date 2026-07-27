@@ -110,6 +110,8 @@
     "feature.gameplay.handling.manual_bolting.LocalPlayerShootMixin",
     "feature.gameplay.handling.reload_interrupts_shooting.LivingEntityReloadMixin",
     "feature.gameplay.handling.reload_interrupts_shooting.LocalPlayerReloadMixin",
+    "feature.general.compatibility.apothic_attributes.ALCombatRulesMixin",
+    "feature.general.compatibility.apothic_attributes.EntityKineticBulletMixin",
     "feature.general.compatibility.crawl.LivingEntityCrawlMixin",
     "feature.general.compatibility.crawl.LocalPlayerCrawlMixin",
     "feature.general.compatibility.firstaid.EntityKineticBulletMixin",

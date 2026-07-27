@@ -3,6 +3,7 @@ package me.muksc.tacztweaks.core.compatibility
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.core.isModLoaded
 import me.muksc.tacztweaks.core.logger.withMarker
+import me.muksc.tacztweaks.feature.general.compatibility.ApothicAttributesManager
 import me.muksc.tacztweaks.feature.general.compatibility.CuffedManager
 import me.muksc.tacztweaks.feature.general.compatibility.FirstAidManager
 import me.muksc.tacztweaks.feature.general.compatibility.LRTacticalManager
@@ -20,6 +21,7 @@ abstract class ModCompatibilityManager(
 ) {
     companion object {
         val ALL by lazy { listOf(
+            ApothicAttributesManager,
             CuffedManager,
             FirstAidManager,
             LegendarySurvivalOverhaulManager,

@@ -19,23 +19,23 @@ object ModAttributes {
     }
 
     @JvmField val ENABLED = register("capability.enabled") { descriptionId ->
-        BooleanAttribute(descriptionId, true).setSyncable(true)
+        BooleanAttribute.create(descriptionId, true).setSyncable(true)
     }
     @JvmField val SHOOTING = register("capability.shooting") { descriptionId ->
-        BooleanAttribute(descriptionId, true).setSyncable(true)
+        BooleanAttribute.create(descriptionId, true).setSyncable(true)
     }
     @JvmField val RELOADING = register("capability.reloading") { descriptionId ->
-        BooleanAttribute(descriptionId, true).setSyncable(true)
+        BooleanAttribute.create(descriptionId, true).setSyncable(true)
     }
     @JvmField val REFITTING = register("capability.refitting") { descriptionId ->
-        BooleanAttribute(descriptionId, true).setSyncable(true)
+        BooleanAttribute.create(descriptionId, true).setSyncable(true)
     }
 
     @JvmField val SHOOT_WHILE_SPRINTING = register("handling.shoot_while_sprinting") { descriptionId ->
-        BooleanAttribute(descriptionId, Config.Gameplay.Handling::shootWhileSprinting).setSyncable(true)
+        BooleanAttribute.create(descriptionId, Config.Gameplay.Handling::shootWhileSprinting).setSyncable(true)
     }
     @JvmField val SPRINT_WHILE_RELOADING = register("handling.sprint_while_reloading") { descriptionId ->
-        BooleanAttribute(descriptionId, Config.Gameplay.Handling::reloadWhileSprinting).setSyncable(true)
+        BooleanAttribute.create(descriptionId, Config.Gameplay.Handling::reloadWhileSprinting).setSyncable(true)
     }
 
     @JvmField val ATTRIBUTES = listOf(

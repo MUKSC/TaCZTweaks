@@ -10,6 +10,8 @@
   "tacztweaks.config.option.general.compatibility.firstAidCompat.description": "FirstAid Modとの互換性を有効にします。\nこの設定を有効にすると、弾が他の発射物と同じロジックを使用するようになり、正しい体の部位にダメージを与えられるようになります。",
   "tacztweaks.config.option.general.compatibility.lsoCompat.name": "Legendary Survival Overhaul互換",
   "tacztweaks.config.option.general.compatibility.lsoCompat.description": "Legendary Survival Overhaul Modとの互換性を有効にします。\nこの設定を有効にすると、弾が他の発射物と同じロジックを使用するようになり、正しい体の部位にダメージを与えられるようになります。",
+  "tacztweaks.config.option.general.compatibility.apothicAttributesCompat.name": "Apothic Attributes互換",
+  "tacztweaks.config.option.general.compatibility.apothicAttributesCompat.description": "Apothic Attributes Modとの互換性を有効にします。\nこの設定を有効にすると、TaCZの貫通率ステータスをApothic Attributesのアーマー貫通属性に変換することで、Apothic Attributesの新しいダメージ計算式がTaCZで正常に動作するようにします。",
   "tacztweaks.config.option.general.compatibility.cuffedCompat.name": "Cuffed互換",
   "tacztweaks.config.option.general.compatibility.cuffedCompat.description": "Cuffed Modとの互換性を有効にします。\nこの設定を有効にすると、手錠を掛けられている間は銃を撃てなくなります。",
   "tacztweaks.config.option.general.compatibility.vsCompat.name": "Valkyrien Skies互換",

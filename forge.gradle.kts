@@ -124,6 +124,7 @@ dependencies {
         compileOnly("org.valkyrienskies.core:util:${libs("valkyrienskies-core")}")
         compileOnly("org.valkyrienskies.core:impl:${libs("valkyrienskies-core")}")
     }
+    modCompileOnly("dev.shadowsoffire:ApothicAttributes:${libs("apothic-attributes")}")
     modCompileOnly("maven.modrinth:cuffed:${libs("cuffed")}")
     modCompileOnly("maven.modrinth:lr-tactical:${libs("lr-tactical")}")
     modCompileOnly("maven.modrinth:sound-physics-remastered:${libs("sound-physics-remastered")}")

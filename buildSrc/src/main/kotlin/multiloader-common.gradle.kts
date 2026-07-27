@@ -82,6 +82,14 @@ repositories {
             includeGroup("io.github.ocelot")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven("https://maven.shadowsoffire.dev/releases")
+        }
+        filter {
+            includeGroup("dev.shadowsoffire")
+        }
+    }
     mavenCentral()
     maven("https://maven.isxander.dev/releases")
     maven("https://maven.ryanhcode.dev/releases")

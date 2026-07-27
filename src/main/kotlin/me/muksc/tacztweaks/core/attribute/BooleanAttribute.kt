@@ -10,12 +10,33 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.item.TooltipFlag
 
-class BooleanAttribute(
+//? if forge
+import dev.shadowsoffire.attributeslib.api.IFormattableAttribute
+
+open class BooleanAttribute protected constructor(
     descriptionId: String,
     private val defaultValue: () -> Boolean
 ) : Attribute(descriptionId, if (defaultValue()) 1.0 else 0.0) {
-    constructor(descriptionId: String, defaultValue: Boolean) : this(descriptionId, { defaultValue })
+    companion object {
+        //? if forge {
+        fun create(descriptionId: String, defaultValue: () -> Boolean): BooleanAttribute {
+            try {
+                Class.forName("dev.shadowsoffire.attributeslib.api.IFormattableAttribute")
+                return BooleanAttributeAdapter(descriptionId, defaultValue)
+            } catch (_: ClassNotFoundException) {
+                return BooleanAttribute(descriptionId, defaultValue)
+            }
+        }
+        //?} else if fabric {
+        /*fun create(descriptionId: String, defaultValue: () -> Boolean): BooleanAttribute =
+            BooleanAttribute(descriptionId, defaultValue)
+        *///?}
+
+        fun create(descriptionId: String, defaultValue: Boolean): BooleanAttribute =
+            create(descriptionId) { defaultValue }
+    }
 
     override fun sanitizeValue(value: Double): Double {
         if (value.isNaN()) return 0.0
@@ -54,6 +75,19 @@ class BooleanAttribute(
         ).withStyle(color)
     }
 }
+
+//? if forge {
+private class BooleanAttributeAdapter(
+    descriptionId: String,
+    defaultValue: () -> Boolean
+) : BooleanAttribute(descriptionId, defaultValue), IFormattableAttribute {
+    override fun toValueComponent(op: AttributeModifier.Operation?, value: Double, flag: TooltipFlag): MutableComponent =
+        toValueComponent(op, value)
+
+    override fun toComponent(modif: AttributeModifier, flag: TooltipFlag): MutableComponent =
+        toComponent(modif).append(getDebugInfo(modif, flag))
+}
+//?}
 //?} else if neoforge {
 /*import net.neoforged.neoforge.common.BooleanAttribute as NeoBooleanAttribute
 
@@ -61,7 +95,13 @@ class BooleanAttribute(
     descriptionId: String,
     private val defaultValue: () -> Boolean
 ) : NeoBooleanAttribute(descriptionId, defaultValue()) {
-    constructor(descriptionId: String, defaultValue: Boolean) : this(descriptionId, { defaultValue })
+    companion object {
+        fun create(descriptionId: String, defaultValue: () -> Boolean): BooleanAttribute =
+            BooleanAttribute(descriptionId, defaultValue)
+
+        fun create(descriptionId: String, defaultValue: Boolean): BooleanAttribute =
+            BooleanAttribute(descriptionId) { defaultValue }
+    }
 
     override fun getDefaultValue(): Double = if (defaultValue()) 1.0 else 0.0
 }

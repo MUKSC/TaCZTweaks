@@ -19,10 +19,12 @@ public interface EntityKineticBulletAccessor {
     @Accessor("explosion")
     boolean tacztweaks$getExplosion();
 
+    @Accessor("armorIgnore")
+    float tacztweaks$getArmorIgnore();
+
     @Invoker("onHitEntity")
     void tacztweaks$invokeOnHitEntity(TacHitResult result, Vec3 startVec, Vec3 endVec);
 
     @Invoker("onHitBlock")
     void tacztweaks$invokeOnHitBlock(BlockHitResult result, Vec3 startVec, Vec3 endVec);
-
 }

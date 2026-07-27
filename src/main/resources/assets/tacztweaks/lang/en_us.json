@@ -10,6 +10,8 @@
   "tacztweaks.config.option.general.compatibility.firstAidCompat.description": "Enables compatibility with the FirstAid mod.\nThis option makes the damage from bullets use the same logic as other projectiles, allowing them to damage the correct body parts.",
   "tacztweaks.config.option.general.compatibility.lsoCompat.name": "Legendary Survival Overhaul Compat",
   "tacztweaks.config.option.general.compatibility.lsoCompat.description": "Enables compatibility with the Legendary Survival Overhaul mod.\nThis option makes the damage from bullets use the same logic as other projectiles, allowing them to damage the correct body parts.",
+  "tacztweaks.config.option.general.compatibility.apothicAttributesCompat.name": "Apothic Attributes Compat",
+  "tacztweaks.config.option.general.compatibility.apothicAttributesCompat.description": "Enables compatibility with the Apothic Attributes mod.\nThis option allows the Apothic Attributes' new damage formula to work correctly for TaCZ by converting the TaCZ armor pierce rate stat to the Apothic Attributes armor pierce attribute.",
   "tacztweaks.config.option.general.compatibility.cuffedCompat.name": "Cuffed Compat",
   "tacztweaks.config.option.general.compatibility.cuffedCompat.description": "Enables compatibility with the Cuffed mod.\nThis option prevents you from shooting guns while handcuffed.",
   "tacztweaks.config.option.general.compatibility.vsCompat.name": "Valkyrien Skies Compat",

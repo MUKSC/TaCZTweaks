@@ -82,6 +82,7 @@ dependencies {
     // Compatibility
     compileOnly("maven.modrinth:legendary-survival-overhaul:${libs("lso")}")
     compileOnly("dev.ryanhcode.sable:sable-common-1.21.1:${libs("sable")}")
+    compileOnly("dev.shadowsoffire:ApothicAttributes:${libs("apothic-attributes")}")
     compileOnly("maven.modrinth:lr-tactical-1.21.1:${libs("lr-tactical")}")
     compileOnly("maven.modrinth:sound-physics-remastered:${libs("sound-physics-remastered")}")
 
