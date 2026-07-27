@@ -138,7 +138,7 @@
   "tacztweaks.config.group.audioAndVisuals.visuals.description": "見た目に関する設定です。",
   "tacztweaks.config.option.audioAndVisuals.visuals.stopAimingWhileReloading.name": "リロード中はADS解除",
   "tacztweaks.config.option.audioAndVisuals.visuals.stopAimingWhileReloading.description": "リロード中はADS状態を一時的に解除します。",
-  "tacztweaks.config.option.audioAndVisuals.visuals.stopAimingWhileBolting.name": "コッキング中はADS解除。",
+  "tacztweaks.config.option.audioAndVisuals.visuals.stopAimingWhileBolting.name": "コッキング中はADS解除",
   "tacztweaks.config.option.audioAndVisuals.visuals.stopAimingWhileBolting.description": "コッキング中はADS状態を一時的に解除します。",
   "tacztweaks.config.option.audioAndVisuals.visuals.tiltOnCrawl.name": "匍匐時に銃を傾ける",
   "tacztweaks.config.option.audioAndVisuals.visuals.tiltOnCrawl.description": "匍匐中に銃を傾けるかどうかです。",
