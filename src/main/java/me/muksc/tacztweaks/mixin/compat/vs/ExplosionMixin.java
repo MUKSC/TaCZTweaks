@@ -11,12 +11,12 @@ public abstract class ExplosionMixin implements ExplosionInvoker {
     @SuppressWarnings("target")
     @Dynamic
     @Shadow
-    private void doExplodeForce() {
+    private void vs2$doExplodeForce() {
         throw new AssertionError();
     }
 
     @Override
     public void tacztweaks$invokeDoExplodeForce() {
-        doExplodeForce();
+        vs2$doExplodeForce();
     }
 }
