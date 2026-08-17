@@ -20,6 +20,10 @@ import me.muksc.tacztweaks.feature.datapack.shield.CustomShieldResult
 import me.muksc.tacztweaks.mixin.accessor.EntityKineticBulletAccessor
 import me.muksc.tacztweaks.mixininterface.feature.datapack.TaCZTweaksBullet
 import me.muksc.tacztweaks.mixininterop.*
+//? if neoforge {
+import dev.ryanhcode.sable.Sable
+import dev.ryanhcode.sable.sublevel.SubLevel
+//?}
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -238,6 +242,20 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
     ) {
         //? if fabric
         //val blockEntity by lazy { level.getBlockEntity(pos) }
+        //? if neoforge {
+        if (Config.General.Compatibility.sableCompat()) {
+            val sableSub = Sable.HELPER.getContaining(level, pos)
+            if (sableSub != null) {
+                val sableLevel = sableSub.getLevel()
+                val localPos = sableSub.logicalPose().transformPositionInverse(pos.getCenter())
+                val homePos = BlockPos.containing(localPos)
+                if (sableLevel is ServerLevel && !sableLevel.getBlockState(homePos).isAir) {
+                    sableLevel.destroyBlock(homePos, blockBreak.drop, entity)
+                    return
+                }
+            }
+        }
+        //?}
         if (entity is ServerPlayer) {
             //? if fabric {
             /*if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, entity, pos, state, blockEntity)) {
