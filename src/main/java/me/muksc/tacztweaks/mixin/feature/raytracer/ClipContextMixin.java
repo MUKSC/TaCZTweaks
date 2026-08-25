@@ -24,6 +24,11 @@ public abstract class ClipContextMixin implements IgnoringClipContext {
     private final Set<BlockPos> tacztweaks$ignores = new HashSet<>();
 
     @Override
+    public Set<BlockPos> tacztweaks$getIgnores() {
+        return tacztweaks$ignores;
+    }
+
+    @Override
     public void tacztweaks$setIgnores(Collection<BlockPos> ignores) {
         tacztweaks$ignores.addAll(ignores);
     }

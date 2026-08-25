@@ -1,6 +1,7 @@
 package me.muksc.tacztweaks.feature.raytracer
 
 import com.tacz.guns.entity.EntityKineticBullet
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.IgnoringClipContext
@@ -78,10 +79,10 @@ object BulletRayTracer {
         val accessor = args.context as ClipContextAccessor
         val entity = (accessor.collisionContext as? EntityCollisionContext)?.entity ?: return operation(args)
 
-        val ignores = arrayListOf<BlockPos>()
+        val ignores = ObjectOpenHashSet<BlockPos>()
         var result = level.clip(args.context).also(this::result::set)
         while (result.type != HitResult.Type.MISS) {
-            ignores.add(result.blockPos)
+            if (!ignores.add(result.blockPos)) continue
             val value = args.hitFunction.apply(args.context, result.blockPos)
             if (value != null) return value
 

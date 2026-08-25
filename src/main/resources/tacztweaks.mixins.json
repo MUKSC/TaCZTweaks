@@ -123,6 +123,7 @@
     "feature.general.compatibility.lrtactical.MeleeItemMixin_0_4_0",
     "feature.general.compatibility.lso.CommonForgeEventsMixin",
     "feature.general.compatibility.mts.EntityUtilMixin",
+    "feature.general.compatibility.sable.BlockGetterMixinMixin",
     "feature.general.compatibility.sable.BulletHoleParticleMixin",
     "feature.general.compatibility.sable.ExplodeUtilMixin",
     "feature.general.compatibility.sable.ProjectileExplosionMixin",
