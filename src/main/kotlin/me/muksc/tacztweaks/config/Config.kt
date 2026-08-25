@@ -207,6 +207,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 codec = Codec.list(STRING),
                 streamCodec = ByteBufCodecs.collection(::ArrayList, ByteBufCodecs.STRING_UTF8)
             )
+            val suppressorsHideDeathMessages by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val bulletProtection by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val endermenEvadeBullets by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val infiniteAmmoDisablesConsumption by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
@@ -215,6 +216,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             @JvmStatic fun tiltRework(): Boolean = tiltRework.syncedValue
             @JvmStatic fun magazineStyleReloading(): Boolean = magazineStyleReloading.syncedValue
             @JvmStatic fun magazineStyleReloadingExclusions(): List<String> = magazineStyleReloadingExclusions.syncedValue
+            @JvmStatic fun suppressorsHideDeathMessages(): Boolean = suppressorsHideDeathMessages.syncedValue
             @JvmStatic fun bulletProtection(): Boolean = bulletProtection.syncedValue
             @JvmStatic fun endermenEvadeBullets(): Boolean = endermenEvadeBullets.syncedValue
             @JvmStatic fun infiniteAmmoDisablesConsumption(): Boolean = infiniteAmmoDisablesConsumption.syncedValue
@@ -503,6 +505,9 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     builder.controller(booleanController())
                 }
                 optionSynced(Gameplay.Behaviour::magazineStyleReloading) {
+                    builder.controller(booleanController())
+                }
+                optionSynced(Gameplay.Behaviour::suppressorsHideDeathMessages) {
                     builder.controller(booleanController())
                 }
                 //? if 1.20.1 {

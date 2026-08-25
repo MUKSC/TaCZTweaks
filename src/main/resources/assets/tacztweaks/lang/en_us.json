@@ -102,6 +102,8 @@
   "tacztweaks.config.option.gameplay.behaviour.magazineStyleReloading.description": "Makes reloading discard the remaining rounds in the magazine.\nFor example, reloading a gun with 16/32 ammo remaining will consume 32 ammo instead of 16.",
   "tacztweaks.config.option.gameplay.behaviour.magazineStyleReloadingExclusions.name": "Magazine-Style Reloading Exclusions",
   "tacztweaks.config.option.gameplay.behaviour.magazineStyleReloadingExclusions.description": "List of gun IDs to exclude from the effect of the 'Reload Discards Magazine' option.",
+  "tacztweaks.config.option.gameplay.behaviour.suppressorsHideDeathMessages.name": "Suppressors Hide Death Messages",
+  "tacztweaks.config.option.gameplay.behaviour.suppressorsHideDeathMessages.description": "Hides death messages when the gun is suppressed.",
   "tacztweaks.config.option.gameplay.behaviour.bulletProtection.name": "Bullet Protection",
   "tacztweaks.config.option.gameplay.behaviour.bulletProtection.description": "Makes the Projectile Protection enchantment reduce bullet damage.",
   "tacztweaks.config.option.gameplay.behaviour.endermenEvadeBullets.name": "Endermen Evade Bullets",
