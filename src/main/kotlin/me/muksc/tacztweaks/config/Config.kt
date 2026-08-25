@@ -62,8 +62,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             val lsoCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
             val apothicAttributesCompat by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val cuffedCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
-            val vsCompat by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
-            val sableCompat by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
+            val vsCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
+            val sableCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
             val mtsCompat by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
 
             @JvmStatic fun forceDisableCrawl(): Boolean = forceDisableCrawl.syncedValue

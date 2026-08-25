@@ -3,6 +3,8 @@ package me.muksc.tacztweaks.feature.raytracer
 import com.tacz.guns.entity.EntityKineticBullet
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.muksc.tacztweaks.config.Config
+import me.muksc.tacztweaks.feature.general.compatibility.SableManager
+import me.muksc.tacztweaks.feature.general.compatibility.ValkyrienSkiesManager
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.IgnoringClipContext
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.RayTracingBullet
@@ -59,8 +61,8 @@ object BulletRayTracer {
             handle(context, original, null) as T? ?: return@copy original
         })
         return when {
-            Config.General.Compatibility.vsCompat()
-                || Config.General.Compatibility.sableCompat() -> performCompatibilityRayTrace(modifiedArgs, operation)
+            (Config.General.Compatibility.vsCompat() && ValkyrienSkiesManager.loaded)
+            || (Config.General.Compatibility.sableCompat() && SableManager.loaded) -> performCompatibilityRayTrace(modifiedArgs, operation)
             else -> operation(modifiedArgs)
         }
     }
