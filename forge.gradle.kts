@@ -22,7 +22,7 @@ tasks.jar {
 
 legacyForge {
     version = "${prop("minecraft.version")}-${libs("forge")}"
-    accessTransformers.from(rootProject.file("src/main/resources-forge/META-INF/accesstransformer.cfg"))
+    accessTransformers.from(rootProject.layout.projectDirectory.file("src/main/resources-forge/META-INF/accesstransformer.cfg"))
     validateAccessTransformers = true
 
     parchment {
@@ -34,19 +34,19 @@ legacyForge {
         create("client") {
             client()
             programArgument("--username=Dev")
-            gameDirectory = project.file("run/client")
+            gameDirectory = layout.projectDirectory.dir("run/client")
         }
 
         create("client2") {
             client()
             programArgument("--username=Dev2")
-            gameDirectory = project.file("run/client2")
+            gameDirectory = layout.projectDirectory.dir("run/client2")
         }
 
         create("server") {
             server()
             programArgument("--nogui")
-            gameDirectory = project.file("run/server")
+            gameDirectory = layout.projectDirectory.dir("run/server")
         }
 
         configureEach {
@@ -60,6 +60,10 @@ legacyForge {
             sourceSet(sourceSets["main"])
         }
     }
+}
+
+tasks.withType<JavaExec>().configureEach {
+    javaLauncher = javaToolchains.launcherFor(java.toolchain)
 }
 
 repositories {
@@ -93,7 +97,7 @@ configurations.create("localRuntime") {
     }
 }
 
-val modLocalRuntime: Configuration by configurations.getting
+val modLocalRuntime = configurations.getByName("modLocalRuntime")
 
 dependencies {
     run {

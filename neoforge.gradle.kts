@@ -7,7 +7,7 @@ plugins {
 
 neoForge {
     version = libs("neoforge")
-    accessTransformers.from(rootProject.file("src/main/resources-neoforge/META-INF/accesstransformer.cfg"))
+    accessTransformers.from(rootProject.layout.projectDirectory.file("src/main/resources-neoforge/META-INF/accesstransformer.cfg"))
     validateAccessTransformers = true
 
     parchment {
@@ -19,19 +19,19 @@ neoForge {
         create("client") {
             client()
             programArgument("--username=Dev")
-            gameDirectory = project.file("run/client")
+            gameDirectory = layout.projectDirectory.dir("run/client")
         }
 
         create("client2") {
             client()
             programArgument("--username=Dev2")
-            gameDirectory = project.file("run/client2")
+            gameDirectory = layout.projectDirectory.dir("run/client2")
         }
 
         create("server") {
             server()
             programArgument("--nogui")
-            gameDirectory = project.file("run/server")
+            gameDirectory = layout.projectDirectory.dir("run/server")
         }
 
         configureEach {
@@ -47,6 +47,10 @@ neoForge {
     }
 }
 
+tasks.withType<JavaExec>().configureEach {
+    javaLauncher = javaToolchains.launcherFor(java.toolchain)
+}
+
 repositories {
     exclusiveContent {
         forRepository {
@@ -59,10 +63,10 @@ repositories {
     mavenCentral()
 }
 
-val localRuntime: Configuration by configurations.creating {
+val localRuntime = configurations.create("localRuntime") {
     configurations {
         runtimeClasspath {
-            extendsFrom(this@creating)
+            extendsFrom(this@create)
         }
     }
 }

@@ -4,28 +4,32 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = rootProject.file("src/main/resources-fabric/${mod("id")}.accesswidener")
+    accessWidenerPath = rootProject.layout.projectDirectory.file("src/main/resources-fabric/${mod("id")}.accesswidener")
 
     runs {
         named("client") {
-            programArgs("--username=Dev")
-            runDir = "run/client"
+            programArguments.add("--username=Dev")
+            runDirectory = layout.projectDirectory.dir("run/client")
         }
 
         create("client2") {
             client()
-            programArgs("--username=Dev2")
-            runDir = "run/clientB"
+            programArguments.add("--username=Dev2")
+            runDirectory = layout.projectDirectory.dir("run/clientB")
         }
 
         named("server") {
-            programArgs("--nogui")
-            runDir = "run/server"
+            programArguments.add("--nogui")
+            runDirectory = layout.projectDirectory.dir("run/server")
         }
 
         configureEach {
-            vmArgs("-XX:+AllowEnhancedClassRedefinition")
-            isIdeConfigGenerated = true
+            jvmArguments.add("-XX:+AllowEnhancedClassRedefinition")
+            generateRunConfig = true
+
+            task {
+                javaLauncher = javaToolchains.launcherFor(java.toolchain)
+            }
         }
     }
 

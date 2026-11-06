@@ -94,8 +94,9 @@ repositories {
     maven("https://maven.isxander.dev/releases")
     maven("https://maven.ryanhcode.dev/releases")
     flatDir {
-        dirs(rootProject.file("libs"))
+        dirs(rootProject.layout.projectDirectory.file("libs"))
     }
+    mavenLocal()
 }
 
 sourceSets {
@@ -112,7 +113,7 @@ sourceSets {
 }
 
 tasks.withType<Jar>().configureEach {
-    from(rootProject.file("LICENSE")) {
+    from(rootProject.layout.projectDirectory.file("LICENSE")) {
         rename { "${it}_${archiveBaseName.get()}" }
     }
 }
