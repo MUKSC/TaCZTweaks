@@ -10,16 +10,18 @@ import me.muksc.tacztweaks.feature.sound_physics_evaluate.SoundPhysicsManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = SoundPhysics.class, remap = false)
-public abstract class SoundPhysicsMixin_1_5_x {
+public abstract class SoundPhysicsMixin_1_5_2 {
+    @Dynamic
     @Inject(method = "evaluateEnvironment", at = @At("HEAD"))
     private static void tacztweaks$evaluateEnvironment$soundPhysicsEvaluate$init(
-        int sourceID, double posX, double posY, double posZ, SoundSource category, ResourceLocation sound, boolean auxOnly, CallbackInfoReturnable<Vec3> cir,
+        int sourceID, double posX, double posY, double posZ, SoundSource category, ResourceLocation sound, float directGainScale, CallbackInfoReturnable<Vec3> cir,
         @Share(value = "processing", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsEvaluationSoundInstance> processingRef,
         @Share(value = "evaluation", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsManager.EvaluationResult> evaluationRef
     ) {
@@ -37,9 +39,10 @@ public abstract class SoundPhysicsMixin_1_5_x {
         return original;
     }
 
+    @Dynamic
     @Inject(method = "evaluateEnvironment", at = @At("RETURN"))
     private static void tacztweaks$evaluateEnvironment$soundPhysicsEvaluate$onEvaluationComplete(
-        int sourceID, double posX, double posY, double posZ, SoundSource category, ResourceLocation sound, boolean auxOnly, CallbackInfoReturnable<Vec3> cir,
+        int sourceID, double posX, double posY, double posZ, SoundSource category, ResourceLocation sound, float directGainScale, CallbackInfoReturnable<Vec3> cir,
         @Share(value = "processing", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsEvaluationSoundInstance> processingRef,
         @Share(value = "evaluation", namespace = TaCZTweaks.MOD_ID) LocalRef<SoundPhysicsManager.EvaluationResult> evaluationRef
     ) {

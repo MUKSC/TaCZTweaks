@@ -143,8 +143,9 @@
     "feature.raytracer.EntityKineticBulletMixin",
     "feature.sound_physics_evaluate.SoundEngineMixin",
     "feature.sound_physics_evaluate.SoundPhysicsMixin",
-    "feature.sound_physics_evaluate.SoundPhysicsMixin_1_1_x",
-    "feature.sound_physics_evaluate.SoundPhysicsMixin_1_5_x",
+    "feature.sound_physics_evaluate.SoundPhysicsMixin_1_1_1",
+    "feature.sound_physics_evaluate.SoundPhysicsMixin_1_5_0",
+    "feature.sound_physics_evaluate.SoundPhysicsMixin_1_5_2",
     "feature.synced_slide.LivingEntityMixin"
   ],
   "client": [

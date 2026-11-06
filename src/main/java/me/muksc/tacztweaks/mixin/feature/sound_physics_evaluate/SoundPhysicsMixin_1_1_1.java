@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = SoundPhysics.class, remap = false)
-public abstract class SoundPhysicsMixin_1_1_x {
+public abstract class SoundPhysicsMixin_1_1_1 {
     @Dynamic
     @Inject(method = "evaluateEnvironment", at = @At("HEAD"))
     private static void tacztweaks$evaluateEnvironment$soundPhysicsEvaluate$init(

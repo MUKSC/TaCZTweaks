@@ -29,10 +29,10 @@ object SoundPhysicsManager : ModCompatibilityManager(
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean = when (mixinClassName) {
         //~ if 1.21.1 '1.20.1' -> '1.21.1' {
-        "me.muksc.tacztweaks.mixin.feature.sound_physics_evaluate.SoundPhysicsMixin_1_5_x" -> modVersionRange(modId, "1.20.1-1.5.0")
-        "me.muksc.tacztweaks.mixin.feature.sound_physics_evaluate.SoundPhysicsMixin_1_1_x" -> modVersionRange(modId, "1.20.1-1.1.0", "1.20.1-1.5.0")
+        "me.muksc.tacztweaks.mixin.feature.sound_physics_evaluate.SoundPhysicsMixin_1_5_2" -> modVersionRange(modId, "1.20.1-1.5.2")
+        "me.muksc.tacztweaks.mixin.feature.sound_physics_evaluate.SoundPhysicsMixin_1_5_0" -> modVersionRange(modId, "1.20.1-1.5.0", "1.20.1-1.5.2")
+        "me.muksc.tacztweaks.mixin.feature.sound_physics_evaluate.SoundPhysicsMixin_1_1_1" -> modVersionRange(modId, "1.20.1-1.1.0", "1.20.1-1.5.0")
         //~}
-
         else -> true
     }
 
