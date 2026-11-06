@@ -134,6 +134,7 @@
     "feature.general.fixes.attachment_compatibility_check_fix.AttachmentQueryEntryMixin",
     "feature.general.fixes.attachment_compatibility_check_fix.ClientAttachmentItemTooltipMixin",
     "feature.general.fixes.crawl_cooldown_fix.LocalPlayerCrawlMixin",
+    "feature.general.fixes.jittery_shooting_animation_fix.AnimationManagerMixin",
     "feature.general.misc.rps.RpmModifierMixin",
     "feature.keyactions.tiltgun.GunAnimationStateContextMixin",
     "feature.keyactions.unload.AbstractGunItemMixin",
