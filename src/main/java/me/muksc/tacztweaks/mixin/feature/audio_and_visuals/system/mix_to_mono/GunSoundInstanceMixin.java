@@ -19,8 +19,8 @@ public abstract class GunSoundInstanceMixin {
     @Unique
     private boolean tacztweaks$mono = false;
 
-    @Inject(method = "<init>(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFLnet/minecraft/world/entity/Entity;ILnet/minecraft/resources/ResourceLocation;ZZ)V", at = @At("TAIL"), remap = false)
-    private void tacztweaks$init$mixToMono$storeMono(SoundEvent soundEvent, SoundSource source, float volume, float pitch, Entity entity, int soundDistance, ResourceLocation registryName, boolean mono, boolean relative, CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At("TAIL"), remap = false)
+    private void tacztweaks$init$mixToMono$storeMono(SoundEvent soundEvent, SoundSource source, float volume, float pitch, Entity entity, int soundDistance, ResourceLocation registryName, boolean mono, boolean relative, boolean useTaczSound, CallbackInfo ci) {
         tacztweaks$mono = mono;
     }
 

@@ -45,7 +45,7 @@
     "fabric-api": ">=${fabric_api_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "yet_another_config_lib_v3": ">=${yacl_version}",
-    "tacz": ">=${tacz_version_min}",
+    "tacz": ">=${tacz_version_min} <${tacz_version_max}",
     "minecraft": "${minecraft_version}"
   }
 }

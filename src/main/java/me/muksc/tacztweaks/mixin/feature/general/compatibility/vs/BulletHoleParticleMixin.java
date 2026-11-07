@@ -49,7 +49,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
 
     @SuppressWarnings("deprecation")
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void tacztweaks$init$vsCompat(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, CallbackInfo ci) {
+    private void tacztweaks$init$vsCompat(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, boolean incendiary, CallbackInfo ci) {
         if (!Config.General.Compatibility.vsCompat()) return;
         tacztweaks$ship = VSGameUtilsKt.getShipObjectManagingPos(world, pos);
         if (tacztweaks$ship != null) tacztweaks$shipPos = tacztweaks$ship.getTransform().getWorldToShip().transformPosition(x, y, z, new Vector3d());

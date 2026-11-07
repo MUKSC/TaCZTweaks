@@ -3,7 +3,6 @@ package me.muksc.tacztweaks
 import me.muksc.tacztweaks.client.input.BoltKey
 import me.muksc.tacztweaks.client.input.ReduceSensitivityKey
 import me.muksc.tacztweaks.client.input.TiltGunKey
-import me.muksc.tacztweaks.client.input.UnloadKey
 import me.muksc.tacztweaks.command.RootCommand
 import me.muksc.tacztweaks.config.Config
 import me.muksc.tacztweaks.core.Identifier
@@ -52,8 +51,7 @@ object TaCZTweaks {
         platform.registerKeyMappings(listOf(
             BoltKey.KEY,
             ReduceSensitivityKey.KEY,
-            TiltGunKey.KEY,
-            UnloadKey.KEY
+            TiltGunKey.KEY
         ))
     }
 }

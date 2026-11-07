@@ -77,12 +77,10 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         }
 
         object Fixes : SyncableCodecConfig<Fixes>() {
-            val crawlCooldownFix by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
             val thirdPersonGunRenderingFix by register(true, BOOL)
             val attachmentCompatibilityCheckFix by register(true, BOOL)
             val disableBulletCulling by register(true, BOOL)
 
-            @JvmStatic fun crawlCooldownFix(): Boolean = crawlCooldownFix.syncedValue
             @JvmStatic fun thirdPersonGunRenderingFix(): Boolean = thirdPersonGunRenderingFix.value
             @JvmStatic fun attachmentCompatibilityCheckFix(): Boolean = attachmentCompatibilityCheckFix.value
             @JvmStatic fun disableBulletCulling(): Boolean = disableBulletCulling.value
@@ -118,7 +116,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
 
         object Unload : SyncableCodecConfig<Unload>() {
             val enabled by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
-            val unloadRoundInChamber by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
+            val unloadRoundInChamber by registerSyncable(true, BOOL, ByteBufCodecs.BOOL)
 
             @JvmStatic fun enabled(): Boolean = enabled.syncedValue
             @JvmStatic fun unloadRoundInChamber(): Boolean = unloadRoundInChamber.syncedValue
@@ -223,12 +221,8 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         }
 
         object Crawl : SyncableCodecConfig<Crawl>() {
-            val pitchUpperLimit by registerSyncable(25.0F, FLOAT, ByteBufCodecs.FLOAT)
-            val pitchLowerLimit by registerSyncable(-10.0F, FLOAT, ByteBufCodecs.FLOAT)
             val dynamicPitchLimit by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
 
-            @JvmStatic fun pitchUpperLimit(): Float = pitchUpperLimit.syncedValue
-            @JvmStatic fun pitchLowerLimit(): Float = pitchLowerLimit.syncedValue
             @JvmStatic fun dynamicPitchLimit(): Boolean = dynamicPitchLimit.syncedValue
         }
     }
@@ -343,6 +337,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 accessor.`tacztweaks$setAddend`(this@Modifier.addend.syncedValue)
                 accessor.`tacztweaks$setMultiplier`(this@Modifier.multiplier.syncedValue)
                 accessor.`tacztweaks$setFunction`(this@Modifier.function.syncedValue)
+                compileFunction()
             }
         }
     }
@@ -397,9 +392,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 //?}
             }
             group("fixes") {
-                option(General.Fixes::crawlCooldownFix, image = true) {
-                    builder.controller(booleanController())
-                }
                 option(General.Fixes::thirdPersonGunRenderingFix, image = true) {
                     builder.controller(booleanController())
                 }
@@ -528,16 +520,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                 builder.initial("")
             }
             group("crawl") {
-                optionSynced(Gameplay.Crawl::pitchUpperLimit) {
-                    builder.controller(slider(range = 0.0F..90.0F, step = 1.0F) {
-                        TaCZTweaks.translatable("config.label.degree", "%.1f".format(it))
-                    })
-                }
-                optionSynced(Gameplay.Crawl::pitchLowerLimit) {
-                    builder.controller(slider(range = -90.0F..0.0F, step = 1.0F) {
-                        TaCZTweaks.translatable("config.label.degree", "%.1f".format(it))
-                    })
-                }
                 optionSynced(Gameplay.Crawl::dynamicPitchLimit) {
                     builder.controller(booleanController())
                 }

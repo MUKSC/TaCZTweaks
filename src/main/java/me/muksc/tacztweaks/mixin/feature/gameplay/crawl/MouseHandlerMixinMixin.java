@@ -1,6 +1,8 @@
 package me.muksc.tacztweaks.mixin.feature.gameplay.crawl;
 
 import com.bawnorton.mixinsquared.TargetHandler;
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import me.muksc.tacztweaks.config.Config;
 import me.muksc.tacztweaks.feature.gameplay.crawl.DynamicPitchLimit;
@@ -14,20 +16,17 @@ public abstract class MouseHandlerMixinMixin {
         mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",
         name = "getCrawlPitch"
     )
-    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "CONSTANT", args = "floatValue=45.0F"))
-    private static float tacztweaks$getCrawlPitch$pitchUpperLimit(float original) {
-        return Config.Gameplay.Crawl.pitchUpperLimit();
-    }
-
-    @TargetHandler(
-        mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",
-        name = "getCrawlPitch"
-    )
-    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "CONSTANT", args = "floatValue=-30.0F"))
-    private static float tacztweaks$getCrawlPitch$pitchLowerLimit(float original) {
-        if (!Config.Gameplay.Crawl.dynamicPitchLimit()) return Config.Gameplay.Crawl.pitchLowerLimit();
+    //~ config_spec
+    @Definition(id = "CRAWL_MAX_UP_ANGLE", field = "Lcom/tacz/guns/config/sync/SyncConfig;CRAWL_MAX_UP_ANGLE:Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;")
+    //~ config_spec
+    @Definition(id = "get", method = "Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;get()Ljava/lang/Object;")
+    @Definition(id = "Double", type = Double.class)
+    @Expression("-(Double) CRAWL_MAX_UP_ANGLE.get()")
+    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private static double tacztweaks$getCrawlPitch$dynamicPitchLimit(double original) {
+        if (!Config.Gameplay.Crawl.dynamicPitchLimit()) return original;
         Double dynamicPitchLimit = DynamicPitchLimit.getDynamicPitchLimitOrNull();
-        if (dynamicPitchLimit == null) return Config.Gameplay.Crawl.pitchLowerLimit();
-        return (float) Math.max(dynamicPitchLimit, Config.Gameplay.Crawl.pitchLowerLimit());
+        if (dynamicPitchLimit == null) return original;
+        return Math.max(dynamicPitchLimit, original);
     }
 }

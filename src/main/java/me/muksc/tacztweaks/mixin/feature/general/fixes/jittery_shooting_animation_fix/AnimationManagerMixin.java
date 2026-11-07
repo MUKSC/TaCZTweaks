@@ -17,7 +17,7 @@ public abstract class AnimationManagerMixin {
         throw new AssertionError();
     }
 
-    @WrapOperation(method = "lambda$onFire$3", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/compat/playeranimator/animation/AnimationManager;playOnceAnimation(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/tacz/guns/client/resource/GunDisplayInstance;Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;)V"))
+    @WrapOperation(method = "lambda$onFire$4", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/compat/playeranimator/animation/AnimationManager;playOnceAnimation(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/tacz/guns/client/resource/GunDisplayInstance;Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;)V"))
     private static void tacztweaks$onFire$jitteryShootingAnimationFix(AbstractClientPlayer player, GunDisplayInstance display, ResourceLocation dataId, String animationName, Operation<Void> original) {
         stopAnimation(player, dataId, 0);
         original.call(player, display, dataId, animationName);

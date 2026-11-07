@@ -18,4 +18,9 @@ public abstract class LocalPlayerAimMixin {
     private boolean tacztweaks$aimProgressCalculate$stopAimingWhileBolting(boolean original) {
         return original && (!Config.AudioAndVisuals.Visuals.stopAimingWhileBolting() || !data.isBolting);
     }
+
+    @ModifyExpressionValue(method = "shouldBlockAim", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;isForceAimExitOnReload()Z"))
+    private boolean tacztweaks$shouldBlockAim$stopAimingWhileBolting$overrideBehaviour(boolean original) {
+        return original && !Config.AudioAndVisuals.Visuals.stopAimingWhileBolting();
+    }
 }

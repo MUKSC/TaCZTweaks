@@ -15,7 +15,7 @@ public abstract class SoundPlayManagerMixin {
     @Definition(id = "SHOOT_3P_SOUND", field = "Lcom/tacz/guns/sound/SoundManager;SHOOT_3P_SOUND:Ljava/lang/String;")
     @Definition(id = "equals", method = "Ljava/lang/String;equals(Ljava/lang/Object;)Z")
     @Expression("SHOOT_3P_SOUND.equals(?)")
-    @WrapOperation(method = "lambda$playMessageSound$1", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "lambda$playMessageSound$2", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static boolean tacztweaks$playMessageSound$forceFirstPersonShootingSound$mono(String instance, Object anObject, Operation<Boolean> original) {
         if (!Config.AudioAndVisuals.Audio.forceFirstPersonShootingSound()) return original.call(instance, anObject);
         return original.call(instance, anObject)

@@ -48,7 +48,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void tacztweaks$init$sableCompat(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, CallbackInfo ci) {
+    private void tacztweaks$init$sableCompat(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, boolean incendiary, CallbackInfo ci) {
         if (!Config.General.Compatibility.sableCompat()) return;
         tacztweaks$subLevel = Sable.HELPER.getContainingClient(pos);
         if (tacztweaks$subLevel != null) tacztweaks$subLevelPos = new Vector3d(x, y, z);

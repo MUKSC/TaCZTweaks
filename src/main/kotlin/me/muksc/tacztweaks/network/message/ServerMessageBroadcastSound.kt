@@ -1,17 +1,20 @@
 package me.muksc.tacztweaks.network.message
 
-import com.tacz.guns.client.sound.SoundPlayManager
+import com.tacz.guns.client.resource.pojo.display.SoundData
+import com.tacz.guns.config.client.SoundConfig
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.core.network.CustomPacketPayload
 import me.muksc.tacztweaks.core.network.CustomPacketPayloadType
 import me.muksc.tacztweaks.core.codec.StreamCodec
+import me.muksc.tacztweaks.core.extension.readSoundData
+import me.muksc.tacztweaks.core.extension.writeSoundData
+import me.muksc.tacztweaks.mixin.accessor.SoundPlayManagerAccessor
 import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
 
 class ServerMessageBroadcastSound(
     val entityId: Int,
-    val soundName: ResourceLocation,
+    val sound: SoundData,
     val volume: Float,
     val pitch: Float,
     val distance: Int
@@ -23,27 +26,30 @@ class ServerMessageBroadcastSound(
         val STREAM_CODEC: StreamCodec<FriendlyByteBuf, ServerMessageBroadcastSound> =
             StreamCodec.of({ buf, packet ->
                 buf.writeInt(packet.entityId)
-                buf.writeResourceLocation(packet.soundName)
+                buf.writeSoundData(packet.sound)
                 buf.writeFloat(packet.volume)
                 buf.writeFloat(packet.pitch)
                 buf.writeInt(packet.distance)
             }, { buf ->
                 val entityId = buf.readInt()
-                val soundName = buf.readResourceLocation()
+                val sound = buf.readSoundData()
                 val volume = buf.readFloat()
                 val pitch = buf.readFloat()
                 val distance = buf.readInt()
-                ServerMessageBroadcastSound(entityId, soundName, volume, pitch, distance)
+                ServerMessageBroadcastSound(entityId, sound, volume, pitch, distance)
             })
 
         fun handle(packet: ServerMessageBroadcastSound, minecraft: Minecraft) = minecraft.execute {
             val entity = minecraft.level?.getEntity(packet.entityId) ?: return@execute
-            SoundPlayManager.playClientSound(
+            SoundPlayManagerAccessor.`tacztweaks$invokePlayClientSound`(
                 entity,
-                packet.soundName,
+                packet.sound,
                 packet.volume,
                 packet.pitch,
                 packet.distance,
+                true,
+                SoundConfig.DEFAULT_SOUND_CONCURRENCY_LIMIT.get(),
+                true,
                 true
             )
         }

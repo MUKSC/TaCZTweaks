@@ -23,4 +23,9 @@ public abstract class LocalPlayerAimMixin {
         ReloadState.StateType type = state.getStateType();
         return original && (!type.isReloading() || (type.isReloadFinishing() && state.getCountDown() < 500L));
     }
+
+    @ModifyExpressionValue(method = "shouldBlockAim", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;isForceAimExitOnReload()Z"))
+    private boolean tacztweaks$shouldBlockAim$stopAimingWhileReloading$overrideBehaviour(boolean original) {
+        return original && !Config.AudioAndVisuals.Visuals.stopAimingWhileReloading();
+    }
 }

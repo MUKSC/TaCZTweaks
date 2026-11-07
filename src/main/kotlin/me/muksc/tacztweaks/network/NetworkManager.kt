@@ -4,7 +4,6 @@ import me.muksc.tacztweaks.config.ConfigManager
 import me.muksc.tacztweaks.core.network.CustomPacketPayload
 import me.muksc.tacztweaks.network.message.ClientMessageBroadcastSound
 import me.muksc.tacztweaks.network.message.ClientMessagePlayerShouldSlide
-import me.muksc.tacztweaks.network.message.ClientMessagePlayerUnload
 import me.muksc.tacztweaks.network.message.ClientMessageSyncConfig
 import me.muksc.tacztweaks.network.message.ServerMessageAirspaceSounds
 import me.muksc.tacztweaks.network.message.ServerMessageBroadcastSound
@@ -28,7 +27,6 @@ object NetworkManager {
             registerLoginS2C(ServerMessageSyncConfig.TYPE, ServerMessageSyncConfig.STREAM_CODEC, ConfigManager::handleLogin)
 
             registerC2S(ClientMessagePlayerShouldSlide.TYPE, ClientMessagePlayerShouldSlide.STREAM_CODEC, ClientMessagePlayerShouldSlide::handle)
-            registerC2S(ClientMessagePlayerUnload.TYPE, ClientMessagePlayerUnload.STREAM_CODEC, ClientMessagePlayerUnload::handle)
             registerC2S(ClientMessageBroadcastSound.TYPE, ClientMessageBroadcastSound.STREAM_CODEC, ClientMessageBroadcastSound::handle)
             registerS2C(ServerMessageBroadcastSound.TYPE, ServerMessageBroadcastSound.STREAM_CODEC, ServerMessageBroadcastSound::handle)
 

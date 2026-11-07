@@ -114,19 +114,19 @@ dependencies {
     modImplementation("dev.isxander:yet-another-config-lib:${libs("yacl")}")
     run {
         modImplementation("maven.modrinth:tacz-refabricated:${libs("tacz")}")
-        implementation("com.maydaymemory:mae:1.1.1")
+        implementation("com.maydaymemory:mae:1.1.4")
         implementation("org.apache.commons:commons-math3:3.6.1")
         localRuntime("com.github.FiguraMC.luaj:luaj-core:3.0.8-figura")
         localRuntime("com.github.FiguraMC.luaj:luaj-jse:3.0.8-figura")
         localRuntime("org.apache.bcel:bcel:6.6.1")
         if (sc.current.version == "1.20.1") {
-            modImplementation("libs:simplebedrockmodel-fabric:2.3.0.1+mc1.20.1")  // https://github.com/Sh1roCu/TACZ-Refabricated/blob/1.20.1/libs
+            modImplementation("libs:simplebedrockmodel-fabric:2.6.2+mc1.20.1")  // https://github.com/Sh1roCu/TACZ-Refabricated/blob/1.20.1/libs
             modLocalRuntime("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.3")
             modLocalRuntime("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.3")
             modLocalRuntime("maven.modrinth:modernkeybinding:1.20.X-1.2.0")
             modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:8.0.3")
         } else if (sc.current.version == "1.21.1") {
-            modImplementation("libs:simplebedrockmodel-fabric:2.3.0.1+mc1.21.1")  // https://github.com/Sh1roCu/TACZ-Refabricated/blob/1.21.1/libs
+            modImplementation("libs:simplebedrockmodel-fabric:2.6.2+mc1.21.1")  // https://github.com/Sh1roCu/TACZ-Refabricated/blob/1.21.1/libs
             modLocalRuntime("org.ladysnake.cardinal-components-api:cardinal-components-base:6.1.2")
             modLocalRuntime("org.ladysnake.cardinal-components-api:cardinal-components-entity:6.1.2")
             modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.6")
@@ -167,7 +167,8 @@ resourceProperties {
         "loader_version" to libs("fabric.loader"),
         "fabric_api_version" to libs("fabric.api"),
         "kotlin_loader_version" to libs("fabric.kotlin"),
-        "tacz_version_min" to prop("version.target.min")
+        "tacz_version_min" to prop("version.target.min"),
+        "tacz_version_max" to prop("version.target.max")
     ))
 }
 

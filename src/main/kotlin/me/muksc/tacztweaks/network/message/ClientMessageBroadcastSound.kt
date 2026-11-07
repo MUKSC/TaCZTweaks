@@ -1,18 +1,20 @@
 package me.muksc.tacztweaks.network.message
 
+import com.tacz.guns.client.resource.pojo.display.SoundData
 import me.muksc.tacztweaks.TaCZTweaks
 import me.muksc.tacztweaks.core.network.CustomPacketPayload
 import me.muksc.tacztweaks.core.network.CustomPacketPayloadType
 import me.muksc.tacztweaks.core.codec.StreamCodec
+import me.muksc.tacztweaks.core.extension.readSoundData
+import me.muksc.tacztweaks.core.extension.writeSoundData
 import me.muksc.tacztweaks.network.NetworkManager
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.ChunkPos
 
 class ClientMessageBroadcastSound(
-    val soundName: ResourceLocation,
+    val sound: SoundData,
     val volume: Float,
     val pitch: Float,
     val distance: Int
@@ -23,16 +25,16 @@ class ClientMessageBroadcastSound(
         )
         val STREAM_CODEC: StreamCodec<FriendlyByteBuf, ClientMessageBroadcastSound> =
             StreamCodec.of({ buf, packet ->
-                buf.writeResourceLocation(packet.soundName)
+                buf.writeSoundData(packet.sound)
                 buf.writeFloat(packet.volume)
                 buf.writeFloat(packet.pitch)
                 buf.writeInt(packet.distance)
             }, { buf ->
-                val soundName = buf.readResourceLocation()
+                val sound = buf.readSoundData()
                 val volume = buf.readFloat()
                 val pitch = buf.readFloat()
                 val distance = buf.readInt()
-                ClientMessageBroadcastSound(soundName, volume, pitch, distance)
+                ClientMessageBroadcastSound(sound, volume, pitch, distance)
             })
 
         fun handle(packet: ClientMessageBroadcastSound, server: MinecraftServer, player: ServerPlayer?) {
@@ -47,7 +49,7 @@ class ClientMessageBroadcastSound(
                 .forEach {
                     NetworkManager.sendS2C(it, ServerMessageBroadcastSound(
                         player.id,
-                        packet.soundName,
+                        packet.sound,
                         packet.volume,
                         packet.pitch,
                         packet.distance

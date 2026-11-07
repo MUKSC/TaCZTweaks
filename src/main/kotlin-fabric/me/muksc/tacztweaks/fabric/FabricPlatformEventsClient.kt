@@ -1,12 +1,12 @@
 package me.muksc.tacztweaks.fabric
 
-import cn.sh1rocu.tacz.api.event.ClientPlayerNetworkEvent
 import me.muksc.tacztweaks.platform.PlatformEventsClient
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 
 object FabricPlatformEventsClient : PlatformEventsClient {
     override fun onClientLoggingOut(callback: () -> Unit) {
-        ClientPlayerNetworkEvent.LOGGING_OUT.register { event ->
+        ClientPlayConnectionEvents.DISCONNECT.register { listener, minecraft ->
             callback()
         }
     }

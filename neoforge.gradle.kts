@@ -79,7 +79,7 @@ dependencies {
     implementation("thedarkcolour:kotlinforforge-neoforge:${libs("kff")}")
     implementation("dev.isxander:yet-another-config-lib:${libs("yacl")}")
     run {
-        implementation("maven.modrinth:tacz-1.21.1:${libs("tacz")}")
+        implementation("maven.modrinth:timeless-and-classics-zero:${libs("tacz")}")
         implementation("org.apache.commons:commons-math3:3.6.1")
     }
 

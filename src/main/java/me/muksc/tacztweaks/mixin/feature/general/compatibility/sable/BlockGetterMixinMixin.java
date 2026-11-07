@@ -21,7 +21,11 @@ import java.util.Set;
 public interface BlockGetterMixinMixin {
     @TargetHandler(
         mixin = "dev.ryanhcode.sable.mixin.clip_overwrite.BlockGetterMixin",
+        //? if fabric {
+        /^name = "method_17742"
+        ^///?} else {
         name = "clip"
+        //?}
     )
     @Inject(method = "@MixinSquared:Handler", at = @At("HEAD"))
     private void tacztweaks$clip$storeIgnores(
@@ -33,7 +37,11 @@ public interface BlockGetterMixinMixin {
 
     @TargetHandler(
         mixin = "dev.ryanhcode.sable.mixin.clip_overwrite.BlockGetterMixin",
+        //? if fabric {
+        /^name = "method_17742"
+        ^///?} else {
         name = "clip"
+        //?}
     )
     @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "NEW", target = "(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/level/ClipContext$Block;Lnet/minecraft/world/level/ClipContext$Fluid;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/level/ClipContext;"))
     private ClipContext tacztweaks$clip$copyIgnores(

@@ -170,8 +170,7 @@ publishMods {
         }
         requires("yacl")
         when (loader) {
-            "forge" -> requires("timeless-and-classics-zero")
-            "neoforge" -> requires("tacz-1.21.1")
+            "forge", "neoforge" -> requires("timeless-and-classics-zero")
             "fabric" -> requires("tacz-refabricated")
         }
     }
@@ -192,10 +191,12 @@ publishMods {
         }
         requires("yacl")
         when (loader) {
-            "forge" -> requires("timeless-and-classics-zero")
-            "neoforge" -> requires("tacz-1-21-1")
+            "forge", "neoforge" -> requires("timeless-and-classics-zero")
             "fabric" -> requires("tacz-refabricated")
         }
+
+        @Suppress("UNUSED_EXPRESSION")
+        Unit // ??????????
     }
 
     github {

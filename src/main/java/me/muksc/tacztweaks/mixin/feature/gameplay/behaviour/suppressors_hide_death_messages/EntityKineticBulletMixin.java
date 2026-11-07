@@ -1,8 +1,6 @@
 package me.muksc.tacztweaks.mixin.feature.gameplay.behaviour.suppressors_hide_death_messages;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.tacz.guns.api.GunProperties;
-import com.tacz.guns.api.GunProperty;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;

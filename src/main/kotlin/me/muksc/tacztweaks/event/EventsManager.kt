@@ -2,7 +2,6 @@ package me.muksc.tacztweaks.event
 
 import me.muksc.tacztweaks.client.input.BoltKey
 import me.muksc.tacztweaks.client.input.TiltGunKey
-import me.muksc.tacztweaks.client.input.UnloadKey
 import me.muksc.tacztweaks.config.ConfigManager
 import me.muksc.tacztweaks.core.notify.PlayerNotifier
 import me.muksc.tacztweaks.feature.datapack.legacy.manager.BaseDataManager
@@ -46,7 +45,6 @@ object EventsManager {
         platform.onEndClientTick {
             BoltKey.onEndClientTick()
             TiltGunKey.onEndClientTick()
-            UnloadKey.onEndClientTick()
         }
     }
 }

@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = EntityKineticBullet.class, remap = false)
 public abstract class EntityKineticBulletMixin {
+    @SuppressWarnings("MixinAnnotationTarget") // ???
     @Definition(id = "damage", local = @Local(type = float.class, name = "damage"))
     @Definition(id = "getDamage", method = "Lcom/tacz/guns/entity/EntityKineticBullet;getDamage(Lnet/minecraft/world/phys/Vec3;)F")
     @Expression("damage = @(this.getDamage(?))")
