@@ -1,1 +1,2 @@
-- Fixed some NPE crashes
+- TaCZ 1.2.0
+  - Removed the unload key and pitch lower/upper limit option as they're now implemented in the base mod
