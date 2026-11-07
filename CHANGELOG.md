@@ -18,7 +18,14 @@ The config file will be migrated automatically; this version should serve as a d
 - More attributes (suggestions welcome!)
 - More commands (suggestions welcome!)
 
-### Changes Over 3.0.0-alpha.9
-- Implemented additional Sable compat for the LesRaisins Tactical Equipment mod
-- Fixed compatibility with older versions of Sound Physics Remastered
-- Fixed crashes related to attributes
+### Changes Over 3.0.0-alpha.10
+- TaCZ 1.2.0
+  - Removed the unload key and pitch lower/upper limit option as they're now implemented in the base mod
+- Added new weight modifier config options
+- Added a new `suppressorsHideDeathMessages` option
+- Added a new option for Apothic Attributes compatibility
+- Valkyrien Skies and Sable compats are now enabled by default
+- Fixed `constant` and `whizz` bullet sounds not working at all
+- Fixed some datapack features acting weirdly with Sable active
+- Fixed incompatibility with Sound Physics Remastered 1.5.2
+- Fixed config synchronization not working correctly on LAN servers
