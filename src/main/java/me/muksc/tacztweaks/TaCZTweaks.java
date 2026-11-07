@@ -5,7 +5,6 @@ import com.tacz.guns.api.event.common.GunShootEvent;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import me.muksc.tacztweaks.client.input.ReduceSensitivityKey;
 import me.muksc.tacztweaks.client.input.TiltGunKey;
-import me.muksc.tacztweaks.client.input.UnloadKey;
 import me.muksc.tacztweaks.compat.lrtactical.LRTacticalCompat;
 import me.muksc.tacztweaks.compat.pillagers_gun.PillagersGunCompat;
 import me.muksc.tacztweaks.compat.soundphysics.SoundPhysicsCompat;
@@ -158,7 +157,6 @@ public class TaCZTweaks {
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(ReduceSensitivityKey.KEY);
             event.register(TiltGunKey.KEY);
-            event.register(UnloadKey.KEY);
         }
     }
 }

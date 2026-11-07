@@ -33,7 +33,7 @@ public abstract class BulletHoleParticleMixin extends TextureSheetParticle {
     private boolean tacztweaks$initialized = false;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void tacztweaks$init(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, CallbackInfo ci) {
+    private void tacztweaks$init(ClientLevel world, double x, double y, double z, Direction direction, BlockPos pos, String ammoId, String gunId, String gunDisplayId, boolean incendiary, CallbackInfo ci) {
         tacztweaks$initialized = true;
     }
 

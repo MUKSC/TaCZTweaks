@@ -1,5 +1,7 @@
 package me.muksc.tacztweaks.mixin.modifiers;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.resource.modifier.custom.RpmModifier;
 import me.muksc.tacztweaks.config.Config;
@@ -16,7 +18,9 @@ public abstract class RPMModifierMixin {
     }
 
     @OnlyIn(Dist.CLIENT)
-    @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getRoundsPerMinute(Lcom/tacz/guns/api/item/gun/FireMode;)I"))
+    @Definition(id = "getDisplayRpm", method = "Lcom/tacz/guns/resource/modifier/custom/RpmModifier;getDisplayRpm(Lcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/api/item/gun/FireMode;Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;Z)I")
+    @Expression("getDisplayRpm(?, ?, ?, false)")
+    @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int tacztweaks$getPropertyDiagramsData$rpmModifier(int original) {
         return (int) Config.Modifiers.RPM.INSTANCE.eval(original);
     }

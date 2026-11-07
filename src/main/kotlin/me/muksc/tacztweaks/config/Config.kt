@@ -90,7 +90,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             decoder = FriendlyByteBuf::readBoolean
         )
         val unloadBulletInBarrel by registerSyncable(
-            default = false,
+            default = true,
             codec = BOOL,
             encoder = FriendlyByteBuf::writeBoolean,
             decoder = FriendlyByteBuf::readBoolean
@@ -158,6 +158,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             accessor.setAddend(this@ModifierConfig.addend.syncedValue)
             accessor.setMultiplier(this@ModifierConfig.multiplier.syncedValue)
             accessor.setFunction(this@ModifierConfig.function.syncedValue)
+            compileFunction()
         }
     }
 
@@ -218,8 +219,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             encoder = FriendlyByteBuf::writeBoolean,
             decoder = FriendlyByteBuf::readBoolean
         )
-        val pitchUpperLimit by register(25.0F, FLOAT)
-        val pitchLowerLimit by register(-10.0F, FLOAT)
         val dynamicPitchLimit by register(false, BOOL)
         val visualTweak by register(true, BOOL)
         val tiltGun by register(ETiltGun.DEFAULT, ETiltGun.CODEC)
@@ -237,8 +236,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
         }
 
         fun enabled(): Boolean = enabled.syncedValue
-        fun pitchUpperLimit(): Float = pitchUpperLimit.value
-        fun pitchLowerLimit(): Float = pitchLowerLimit.value
         fun dynamicPitchLimit(): Boolean = dynamicPitchLimit.value
         fun visualTweak(): Boolean = visualTweak.value
         fun tiltGun(): ETiltGun = tiltGun.value
@@ -712,22 +709,6 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     binding(Crawl.enabled.asSyncedBinding())
                     controller(booleanController())
                     available(canUpdateServerConfig)
-                }.build())
-                option(Option.createBuilder<Float>().apply {
-                    name(TaCZTweaks.translatable("config.crawl.pitchUpperLimit.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.pitchUpperLimit.description")))
-                    binding(Crawl.pitchUpperLimit.asBinding())
-                    controller(slider(range = 0.0F..90.0F, step = 1.0F) {
-                        TaCZTweaks.translatable("config.label.degree", "%.1f".format(it))
-                    })
-                }.build())
-                option(Option.createBuilder<Float>().apply {
-                    name(TaCZTweaks.translatable("config.crawl.pitchLowerLimit.name"))
-                    description(OptionDescription.of(TaCZTweaks.translatable("config.crawl.pitchLowerLimit.description")))
-                    binding(Crawl.pitchLowerLimit.asBinding())
-                    controller(slider(range = -90.0F..0.0F, step = 1.0F) {
-                        TaCZTweaks.translatable("config.label.degree", "%.1f".format(it))
-                    })
                 }.build())
                 option(Option.createBuilder<Boolean>().apply {
                     name(TaCZTweaks.translatable("config.crawl.dynamicPitchLimit.name"))

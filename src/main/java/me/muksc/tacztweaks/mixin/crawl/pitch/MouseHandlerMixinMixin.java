@@ -1,6 +1,9 @@
 package me.muksc.tacztweaks.mixin.crawl.pitch;
 
 import com.bawnorton.mixinsquared.TargetHandler;
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -9,8 +12,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = MouseHandler.class, priority = 1500, remap = false)
 public abstract class MouseHandlerMixinMixin {
@@ -18,21 +20,16 @@ public abstract class MouseHandlerMixinMixin {
         mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",
         name = "getCrawlPitch"
     )
-    @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = 45.0F))
-    private static float tacztweaks$getCrawlPitch$modifyPitchUpperLimit(float original) {
-        return Config.Crawl.INSTANCE.pitchUpperLimit();
-    }
-
-    @TargetHandler(
-        mixin = "com.tacz.guns.mixin.client.MouseHandlerMixin",
-        name = "getCrawlPitch"
-    )
-    @ModifyConstant(method = "@MixinSquared:Handler", constant = @Constant(floatValue = -30.0F))
-    private static float tacztweaks$getCrawlPitch$modifyPitchLowerLimit(float original) {
-        if (!Config.Crawl.INSTANCE.dynamicPitchLimit()) return Config.Crawl.INSTANCE.pitchLowerLimit();
+    @Definition(id = "CRAWL_MAX_UP_ANGLE", field = "Lcom/tacz/guns/config/sync/SyncConfig;CRAWL_MAX_UP_ANGLE:Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;")
+    @Definition(id = "get", method = "Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;get()Ljava/lang/Object;")
+    @Definition(id = "Double", type = Double.class)
+    @Expression("-(Double) CRAWL_MAX_UP_ANGLE.get()")
+    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private static double tacztweaks$getCrawlPitch$dynamicPitchLimit(double original) {
+        if (!Config.Crawl.INSTANCE.dynamicPitchLimit()) return original;
 
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return Config.Crawl.INSTANCE.pitchLowerLimit();
+        if (player == null) return original;
         BlockHitResult result = player.clientLevel.clip(new ClipContext(
             player.getEyePosition(),
             player.getEyePosition().add(player.getLookAngle().scale(1.5)),
@@ -40,9 +37,9 @@ public abstract class MouseHandlerMixinMixin {
             ClipContext.Fluid.NONE,
             player
         ));
-        if (result.getType() == HitResult.Type.MISS) return Config.Crawl.INSTANCE.pitchLowerLimit();
+        if (result.getType() == HitResult.Type.MISS) return original;
 
         double distance = result.getLocation().distanceTo(player.getEyePosition());
-        return (float) Math.max(Math.acos(distance), Config.Crawl.INSTANCE.pitchLowerLimit());
+        return Math.max(Math.acos(distance), original);
     }
 }

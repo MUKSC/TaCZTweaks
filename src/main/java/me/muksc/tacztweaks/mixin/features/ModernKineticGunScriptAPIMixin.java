@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
+import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import me.muksc.tacztweaks.mixininterface.features.EntityKineticBulletExtension;
@@ -29,10 +30,10 @@ public abstract class ModernKineticGunScriptAPIMixin {
     }
 
     @WrapMethod(method = "lambda$shootOnce$2")
-    private boolean tacztweaks$shootOnce$onInitBurst(boolean consumeAmmo, GunData gunData, int bulletAmount, BulletData bulletData, IGunOperator gunOperator, float shotDamageMultiplier, float processedSpeed, float inaccuracy, int soundDistance, boolean useSilenceSound, Operation<Boolean> original) {
+    private Boolean tacztweaks$shootOnce$onInitBurst(boolean consumeAmmo, AttachmentCacheProperty cacheProperty, int bulletAmount, GunData gunData, BulletData bulletData, IGunOperator gunOperator, float shotDamageMultiplier, float processedSpeed, float inaccuracy, int soundDistance, boolean useSilenceSound, Operation<Boolean> original) {
         try {
             tacztweaks$pelletIndex = 0;
-            return original.call(consumeAmmo, gunData, bulletAmount, bulletData, gunOperator, shotDamageMultiplier, processedSpeed, inaccuracy, soundDistance, useSilenceSound);
+            return original.call(consumeAmmo, cacheProperty, bulletAmount, gunData, bulletData, gunOperator, shotDamageMultiplier, processedSpeed, inaccuracy, soundDistance, useSilenceSound);
         } finally {
             tacztweaks$burstIndex++;
         }

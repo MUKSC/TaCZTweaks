@@ -13,17 +13,18 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = RpmModifier.class, remap = false)
 public abstract class RPMModifierMixin {
     @OnlyIn(Dist.CLIENT)
-    @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/resource/pojo/data/gun/GunData;getRoundsPerMinute(Lcom/tacz/guns/api/item/gun/FireMode;)I"))
+    @Definition(id = "getDisplayRpm", method = "Lcom/tacz/guns/resource/modifier/custom/RpmModifier;getDisplayRpm(Lcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/api/item/gun/FireMode;Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;Z)I")
+    @Expression("getDisplayRpm(?, ?, ?, false)")
+    @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int tacztweaks$getPropertyDiagramsData$rps$original(int original) {
         return Config.Tweaks.INSTANCE.rps() ? original / 60 : original;
     }
 
     @OnlyIn(Dist.CLIENT)
-    @Definition(id = "Integer", type = Integer.class)
-    @Definition(id = "getCache", method = "Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;getCache(Ljava/lang/String;)Ljava/lang/Object;")
-    @Expression("(Integer) ?.getCache(?)")
+    @Definition(id = "getDisplayRpm", method = "Lcom/tacz/guns/resource/modifier/custom/RpmModifier;getDisplayRpm(Lcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/api/item/gun/FireMode;Lcom/tacz/guns/resource/modifier/AttachmentCacheProperty;Z)I")
+    @Expression("getDisplayRpm(?, ?, ?, true)")
     @ModifyExpressionValue(method = "getPropertyDiagramsData", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private <T> Integer tacztweaks$getPropertyDiagramsData$rps$modified(Integer original) {
+    private int tacztweaks$getPropertyDiagramsData$rps$modified(int original) {
         return Config.Tweaks.INSTANCE.rps() ? original / 60 : original;
     }
 
