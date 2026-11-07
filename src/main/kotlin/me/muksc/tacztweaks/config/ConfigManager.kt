@@ -37,7 +37,7 @@ object ConfigManager {
 
     fun handle(packet: ClientMessageSyncConfig, server: MinecraftServer, player: ServerPlayer?) = server.execute {
         if (player == null || (!server.isSingleplayer && !canUpdateServerConfig(player))) return@execute
-        if (!server.isSingleplayer) { /** Singleplayer (already handled in [saveAndSync]) */
+        if (!server.isSingleplayerOwner(player.gameProfile)) { /** Singleplayer (already handled in [saveAndSync]) */
             Config.decode(Unpooled.wrappedBuffer(packet.bytes))
             Config.sync(ESyncDirection.CLIENT_TO_SERVER)
             Config.saveToFile()
