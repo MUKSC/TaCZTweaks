@@ -259,7 +259,7 @@ object BulletInteractionManager : BaseDataManager<BulletInteraction>("bullet_int
         }
         *///?}
         val replaceWith = blockBreak.replaceWith
-        if (replaceWith.state.isAir && replaceWith.place(level, pos, Block.UPDATE_CLIENTS)) {
+        if (!replaceWith.state.isAir && replaceWith.place(level, pos, Block.UPDATE_CLIENTS)) {
             level.blockUpdated(pos, replaceWith.state.block)
         }
     }
