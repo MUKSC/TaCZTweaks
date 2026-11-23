@@ -26,8 +26,7 @@ public abstract class EntityKineticBulletMixin  {
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lcom/tacz/guns/entity/EntityKineticBullet;onBulletTick()V", shift = At.Shift.AFTER, remap = false), remap = true)
-    private void tacztweaks$onBulletTick$tick(CallbackInfo ci) {
-        if (EntityKineticBullet.class.cast(this).isRemoved()) return;
+    private void tacztweaks$tick$tick(CallbackInfo ci) {
         EntityKineticBullet instance = EntityKineticBullet.class.cast(this);
         BulletSoundsManager.INSTANCE.handleConstant(instance);
         BulletSoundsManager.INSTANCE.handleSoundWhizz(instance, tacztweaks$hitPlayers);
