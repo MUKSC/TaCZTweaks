@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.tacz.guns.client.model.functional.MuzzleFlashRender;
 import com.tacz.guns.client.model.functional.ShellRender;
+import com.tacz.guns.client.particle.ThirdPersonMuzzleParticleManager;
 import com.tacz.guns.client.renderer.other.HumanoidOffhandRender;
 import me.muksc.tacztweaks.config.Config;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -32,6 +33,7 @@ public abstract class ItemInHandLayerMixinMixin {
         if (!Config.General.Fixes.thirdPersonGunRenderingFix()) return;
         MuzzleFlashRender.isSelf = false;
         ShellRender.isSelf = false;
+        ThirdPersonMuzzleParticleManager.currentEntity = null;
         HumanoidOffhandRender.renderGun(livingEntity, poseStack, buffer, packedLight);
     }
 }
