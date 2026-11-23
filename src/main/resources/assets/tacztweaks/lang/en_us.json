@@ -88,6 +88,8 @@
   "tacztweaks.config.option.gameplay.handling.disableUnderwater.description": "Disables guns while underwater.",
   "tacztweaks.config.option.gameplay.handling.disableWhileRowing.name": "Disable While Rowing",
   "tacztweaks.config.option.gameplay.handling.disableWhileRowing.description": "Disables guns while rowing a boat.",
+  "tacztweaks.config.option.gameplay.handling.disableWhileMovingProne.name": "Disable While Moving Prone",
+  "tacztweaks.config.option.gameplay.handling.disableWhileMovingProne.description": "Disables guns while moving prone.",
   "tacztweaks.config.option.gameplay.handling.disableRefitOnAdventure.name": "Disable Refit on Adventure",
   "tacztweaks.config.option.gameplay.handling.disableRefitOnAdventure.description": "Disables the refit (attachment modification) function on adventure mode.",
   "tacztweaks.config.group.gameplay.behaviour.name": "Behaviour",

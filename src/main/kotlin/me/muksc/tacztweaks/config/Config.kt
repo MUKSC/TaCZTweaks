@@ -171,6 +171,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             val manualBolting by registerSyncable(EManualBoltingType.DISABLED, EManualBoltingType.CODEC, EManualBoltingType.STREAM_CODEC)
             val disableUnderwater by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val disableWhileRowing by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
+            val disableWhileMovingProne by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
             val disableRefitOnAdventure by registerSyncable(false, BOOL, ByteBufCodecs.BOOL)
 
             enum class EManualBoltingType : StringRepresentable {
@@ -193,6 +194,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             @JvmStatic fun manualBolting(): EManualBoltingType = manualBolting.syncedValue
             @JvmStatic fun disableUnderwater(): Boolean = disableUnderwater.syncedValue
             @JvmStatic fun disableWhileRowing(): Boolean = disableWhileRowing.syncedValue
+            @JvmStatic fun disableWhileMovingProne(): Boolean = disableWhileMovingProne.syncedValue
             @JvmStatic fun disableRefitOnAdventure(): Boolean = disableRefitOnAdventure.syncedValue
         }
 
@@ -483,6 +485,9 @@ object Config : SyncableJsonFileCodecConfig<Config>(
                     builder.controller(booleanController())
                 }
                 optionSynced(Gameplay.Handling::disableWhileRowing) {
+                    builder.controller(booleanController())
+                }
+                optionSynced(Gameplay.Handling::disableWhileMovingProne) {
                     builder.controller(booleanController())
                 }
                 optionSynced(Gameplay.Handling::disableRefitOnAdventure) {

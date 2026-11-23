@@ -106,6 +106,7 @@
     "feature.gameplay.behaviour.tilt_rework.InaccuracyTypeMixin",
     "feature.gameplay.handling.disable_underwater.LivingEntityShootMixin",
     "feature.gameplay.handling.disable_underwater.LocalPlayerShootMixin",
+    "feature.gameplay.handling.disable_while_moving_prone.LocalPlayerShootMixin",
     "feature.gameplay.handling.fire_select_interrupts_shooting.LocalPlayerFireSelectMixin",
     "feature.gameplay.handling.manual_bolting.LocalPlayerBoltMixin",
     "feature.gameplay.handling.manual_bolting.LocalPlayerDataHolderMixin",

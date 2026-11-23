@@ -88,6 +88,8 @@
   "tacztweaks.config.option.gameplay.handling.disableUnderwater.description": "水中では銃を無効にします。",
   "tacztweaks.config.option.gameplay.handling.disableWhileRowing.name": "漕ぎ中で無効化",
   "tacztweaks.config.option.gameplay.handling.disableWhileRowing.description": "ボートを漕いでいる間は銃を無効にします。",
+  "tacztweaks.config.option.gameplay.handling.disableWhileMovingProne.name": "匍匐移動中で無効化",
+  "tacztweaks.config.option.gameplay.handling.disableWhileMovingProne.description": "匍匐移動中は銃を無効にします。",
   "tacztweaks.config.option.gameplay.handling.disableRefitOnAdventure.name": "アドベンチャーでカスタマイズを無効化",
   "tacztweaks.config.option.gameplay.handling.disableRefitOnAdventure.description": "アドベンチャーモードでは銃のカスタマイズを無効化します。",
   "tacztweaks.config.group.gameplay.behaviour.name": "挙動",
