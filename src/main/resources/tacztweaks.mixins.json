@@ -127,6 +127,8 @@
     "feature.general.compatibility.mts.EntityUtilMixin",
     "feature.general.compatibility.sable.BlockGetterMixinMixin",
     "feature.general.compatibility.sable.BulletHoleParticleMixin",
+    "feature.general.compatibility.sable.EntityKineticBulletMixin",
+    "feature.general.compatibility.sable.EntityUtilMixin",
     "feature.general.compatibility.sable.ExplodeUtilMixin",
     "feature.general.compatibility.sable.ProjectileExplosionMixin",
     "feature.general.compatibility.sable.lrtactical.CustomExplosionMixin",

@@ -21,6 +21,7 @@ import me.muksc.tacztweaks.core.codec.ByteBufCodecs
 import me.muksc.tacztweaks.core.codec.StreamCodec
 import me.muksc.tacztweaks.core.extension.isDefault
 import me.muksc.tacztweaks.core.logger.withMarker
+import me.muksc.tacztweaks.feature.general.compatibility.SableManager
 import me.muksc.tacztweaks.mixin.accessor.ModifierAccessor
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.screens.Screen
@@ -72,7 +73,7 @@ object Config : SyncableJsonFileCodecConfig<Config>(
             @JvmStatic fun apothicAttributesCompat(): Boolean = apothicAttributesCompat.syncedValue
             @JvmStatic fun cuffedCompat(): Boolean = cuffedCompat.syncedValue
             @JvmStatic fun vsCompat(): Boolean = vsCompat.syncedValue
-            @JvmStatic fun sableCompat(): Boolean = sableCompat.syncedValue
+            @JvmStatic fun sableCompat(): Boolean = sableCompat.syncedValue && !SableManager.taczSableCompatEnabled()
             @JvmStatic fun mtsCompat(): Boolean = mtsCompat.syncedValue
         }
 

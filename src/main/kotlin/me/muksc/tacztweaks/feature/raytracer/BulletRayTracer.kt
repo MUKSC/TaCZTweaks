@@ -8,13 +8,16 @@ import me.muksc.tacztweaks.feature.general.compatibility.ValkyrienSkiesManager
 import me.muksc.tacztweaks.mixin.accessor.ClipContextAccessor
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.IgnoringClipContext
 import me.muksc.tacztweaks.mixininterface.feature.raytracer.RayTracingBullet
-import me.muksc.tacztweaks.mixininterop.*
+import me.muksc.tacztweaks.mixininterop.block
+import me.muksc.tacztweaks.mixininterop.collisionContext
+import me.muksc.tacztweaks.mixininterop.currentHitPosition
+import me.muksc.tacztweaks.mixininterop.fluid
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.HitResult.Type
 import net.minecraft.world.phys.shapes.EntityCollisionContext
 import java.util.function.BiFunction
 import java.util.function.Function
@@ -35,7 +38,11 @@ object BulletRayTracer {
             ext.currentHitPosition = args.context.from
             level = args.level
         }
-        operation(args)
+        if (SableManager.taczSableCompatEnabled()) {
+            rayTraceBlocksSable(args, operation)
+        } else {
+            operation(args)
+        }
     } finally {
         level = null
         result = null
@@ -83,7 +90,7 @@ object BulletRayTracer {
 
         val ignores = ObjectOpenHashSet<BlockPos>()
         var result = level.clip(args.context).also(this::result::set)
-        while (result.type != HitResult.Type.MISS) {
+        while (result.type != Type.MISS) {
             if (!ignores.add(result.blockPos)) continue
             val value = args.hitFunction.apply(args.context, result.blockPos)
             if (value != null) return value
@@ -96,6 +103,32 @@ object BulletRayTracer {
         }
 
         return args.missFactory.apply(args.context)
+    }
+
+    private fun rayTraceBlocksSable(
+        args: RayTraceBlocksArgs,
+        operation: (RayTraceBlocksArgs) -> BlockHitResult
+    ): BlockHitResult {
+        val level = args.level
+        val accessor = args.context as ClipContextAccessor
+        val entity = (accessor.collisionContext as? EntityCollisionContext)?.entity ?: return operation(args)
+
+        val ignores = ObjectOpenHashSet<BlockPos>()
+        var result = operation(args)
+        while (result.type != Type.MISS) {
+            if (!ignores.add(result.blockPos)) continue
+            val state = level.getBlockState(result.blockPos) ?: continue
+            val value = handle(args.context, result, state)
+            if (value != null) return value
+
+            val newContext = ClipContext(
+                result.location, args.context.to,
+                accessor.block, accessor.fluid, entity
+            ).apply { IgnoringClipContext.of(this).`tacztweaks$setIgnores`(ignores) }
+            result = operation(args.copy(context = newContext))
+        }
+
+        return result
     }
 
     private fun getBullet(context: ClipContext): EntityKineticBullet? {
