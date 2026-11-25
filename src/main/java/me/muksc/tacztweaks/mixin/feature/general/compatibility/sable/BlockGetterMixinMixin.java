@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,17 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Set;
 
-@Mixin(value = BlockGetter.class, priority = 1500, remap = false)
+@Mixin(value = BlockGetter.class, priority = 1500)
 public interface BlockGetterMixinMixin {
+    @Dynamic
     @TargetHandler(
         mixin = "dev.ryanhcode.sable.mixin.clip_overwrite.BlockGetterMixin",
-        //? if fabric {
-        /^name = "method_17742"
-        ^///?} else {
         name = "clip"
-        //?}
     )
-    @Inject(method = "@MixinSquared:Handler", at = @At("HEAD"))
+    @Inject(method = "clip", at = @At("HEAD"))
     private void tacztweaks$clip$storeIgnores(
         ClipContext clipContext, CallbackInfoReturnable<BlockHitResult> cir,
         @Share("ignores") LocalRef<Set<BlockPos>> ignoresRef
@@ -35,15 +33,12 @@ public interface BlockGetterMixinMixin {
         ignoresRef.set(IgnoringClipContext.of(clipContext).tacztweaks$getIgnores());
     }
 
+    @Dynamic
     @TargetHandler(
         mixin = "dev.ryanhcode.sable.mixin.clip_overwrite.BlockGetterMixin",
-        //? if fabric {
-        /^name = "method_17742"
-        ^///?} else {
         name = "clip"
-        //?}
     )
-    @ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "NEW", target = "(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/level/ClipContext$Block;Lnet/minecraft/world/level/ClipContext$Fluid;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/level/ClipContext;"))
+    @ModifyExpressionValue(method = "clip", at = @At(value = "NEW", target = "net/minecraft/world/level/ClipContext"))
     private ClipContext tacztweaks$clip$copyIgnores(
         ClipContext original,
         @Share("ignores") LocalRef<Set<BlockPos>> ignoresRef
